@@ -1,0 +1,48 @@
+.anchor-pane {
+    -fx-background-color: linear-gradient(to bottom right, cyan, magenta);
+}
+
+.vbox {
+    -fx-spacing: 10px;
+    -fx-alignment: center;
+}
+
+.button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-font-size: 1em;
+    -fx-font-weight: bold;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-border-color: gray;
+    -fx-border-width: 2px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+    -fx-alignment: center;
+}
+
+.button:hover {
+    -fx-background-color: lightgray;
+    -fx-text-fill: white;
+}
+
+.button:pressed {
+    -fx-background-color: darkgray;
+    -fx-text-fill: white;
+}
+
+.label{
+    -fx-background-color: rgb(200, 239, 255);
+    -fx-border-radius: 0px;
+    -fx-text-fill: rgb(47, 8, 53);
+    -fx-font-size: 2em;
+    -fx-font-weight: bold;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-border-color: gray;
+    -fx-border-width: 2px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+    -fx-alignment: center;
+}
+
