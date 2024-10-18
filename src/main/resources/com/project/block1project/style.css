@@ -35,7 +35,7 @@
     -fx-text-fill: white;
 }
 
-.label {
+.header-label {
     -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #54008f, #00388b);
     -fx-text-fill: rgb(255, 255, 255);
     -fx-font-size: 2em;

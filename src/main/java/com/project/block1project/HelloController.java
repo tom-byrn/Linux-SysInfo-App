@@ -49,16 +49,12 @@ public class HelloController {
     protected void onCPUButtonClick() {changeScene("cpu.fxml");}
 
     @FXML
-    protected void onMemoryButtonClick() {
-        System.out.println("Memory Button Clicked!");
-    }
+    protected void onMemoryButtonClick() {changeScene("memory.fxml");}
 
     @FXML
-    protected void onOperatingSystemButtonClick() {
-        System.out.println("OS Button Clicked!");
-    }
+    protected void onOperatingSystemButtonClick() {changeScene("operatingsystem.fxml");}
 
     @FXML
-    protected void onPeripheralsButtonClick() {System.out.println("Peripherals Button Clicked!");}
+    protected void onPeripheralsButtonClick() {changeScene("peripherals.fxml");}
 
 }

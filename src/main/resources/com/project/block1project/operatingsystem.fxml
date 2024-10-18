@@ -8,7 +8,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.block1project.HelloController">
    <children>
-      <Label id="header-label" alignment="CENTER" contentDisplay="CENTER" layoutX="145.0" layoutY="-3.0" prefHeight="75.0" prefWidth="815.0" styleClass="header-label" text="System Information" textAlignment="RIGHT">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="145.0" layoutY="-3.0" prefHeight="75.0" prefWidth="815.0" styleClass="header-label" text="System Information" textAlignment="RIGHT">
          <font>
             <Font size="18.0" />
          </font>
@@ -22,6 +22,6 @@
             <Button layoutX="10.0" layoutY="248.0" mnemonicParsing="false" onAction="#onPeripheralsButtonClick" prefHeight="108.0" prefWidth="147.0" text="Peripherals" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
-      <Label id="page-label" layoutX="366.0" layoutY="201.0" styleClass="page-label" text="Welcome to the Home Page" />
+      <Label layoutX="366.0" layoutY="201.0" text="Welcome to the Operating System Page" />
    </children>
 </AnchorPane>
