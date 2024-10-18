@@ -1,3 +1,7 @@
+* {
+    font-family: monospace, Arial, Helvetica, sans-serif;
+}
+
 .anchor-pane {
     -fx-background-color: linear-gradient(to bottom right, cyan, magenta);
 }
@@ -8,12 +12,12 @@
 }
 
 .button {
-    -fx-background-color: white;
-    -fx-text-fill: black;
+    -fx-background-color: #ffffff;
+    -fx-text-fill: rgb(0, 0, 0);
     -fx-font-size: 1em;
     -fx-font-weight: bold;
-    -fx-border-radius: 10px;
-    -fx-background-radius: 10px;
+    -fx-border-radius: 0px;
+    -fx-background-radius: 0px;
     -fx-border-color: gray;
     -fx-border-width: 2px;
     -fx-padding: 10px 20px;
@@ -31,18 +35,18 @@
     -fx-text-fill: white;
 }
 
-.label{
-    -fx-background-color: rgb(200, 239, 255);
-    -fx-border-radius: 0px;
-    -fx-text-fill: rgb(47, 8, 53);
+.label {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #54008f, #00388b);
+    -fx-text-fill: rgb(255, 255, 255);
     -fx-font-size: 2em;
+    font-family: monospace;
     -fx-font-weight: bold;
-    -fx-border-radius: 10px;
-    -fx-background-radius: 10px;
-    -fx-border-color: gray;
+    -fx-background-radius: 0px;
     -fx-border-width: 2px;
     -fx-padding: 10px 20px;
-    -fx-cursor: hand;
     -fx-alignment: center;
 }
 
+.rectangle {
+    -fx-fill: gray;
+}

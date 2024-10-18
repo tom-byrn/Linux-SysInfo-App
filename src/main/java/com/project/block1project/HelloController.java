@@ -1,14 +1,64 @@
 package com.project.block1project;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
 
 public class HelloController {
+    private Stage stage;
+
+    public void setStage(Stage stage){
+        this.stage = stage;
+    }
+
+
+    //Creating a change scene method
     @FXML
-    private Label welcomeText;
+    private void changeScene(String fxmlFile){
+        try{
+            FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource(fxmlFile)); //Load the fxml file given
+            Scene scene = new Scene(fxmlloader.load(), 960, 540);
+
+            //New Controller object, allows stages to be switched multiple times
+            HelloController newController = fxmlloader.getController();
+            if(newController != null){
+                newController.setStage(stage);
+            }
+
+            stage.setTitle("System Information");
+            stage.setScene(scene);
+            stage.setMinWidth(960);
+            stage.setMinHeight(577);
+            stage.setMaxWidth(960);
+            stage.setMaxHeight(577);
+
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX System Info Application!");
+    protected void onHomeButtonClick() {changeScene("home.fxml");}
+
+    @FXML
+    protected void onCPUButtonClick() {changeScene("cpu.fxml");}
+
+    @FXML
+    protected void onMemoryButtonClick() {
+        System.out.println("Memory Button Clicked!");
     }
+
+    @FXML
+    protected void onOperatingSystemButtonClick() {
+        System.out.println("OS Button Clicked!");
+    }
+
+    @FXML
+    protected void onPeripheralsButtonClick() {System.out.println("Peripherals Button Clicked!");}
+
 }
