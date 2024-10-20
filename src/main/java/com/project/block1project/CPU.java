@@ -10,6 +10,7 @@ public class CPU {
         cpuInfo cpuMethods = new cpuInfo();
 
         int cps = cpuMethods.coresPerSocket();
+        System.out.printf("Number of cores per socket: %d", cps);
     }
 
 }

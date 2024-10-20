@@ -11,7 +11,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("home.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 960, 577);
+        Scene scene = new Scene(fxmlLoader.load(), 1920, 1080);
 
         HelloController controller = fxmlLoader.getController();
         controller.setStage(primaryStage);
@@ -19,10 +19,10 @@ public class Main extends Application {
         primaryStage.setTitle("System Information");
         primaryStage.setScene(scene);
 
-        primaryStage.setMinWidth(960);
-        primaryStage.setMinHeight(577);
-        primaryStage.setMaxWidth(960);
-        primaryStage.setMaxHeight(577);
+        primaryStage.setMinWidth(1728);
+        primaryStage.setMinHeight(972);
+        primaryStage.setMaxWidth(1728);
+        primaryStage.setMaxHeight(972);
 
         primaryStage.show();
     }
