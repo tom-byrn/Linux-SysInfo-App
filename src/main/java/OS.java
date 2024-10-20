@@ -1,4 +1,4 @@
-//Imports
+//Imports Locale, Has a list of all country and language abbrivations
 import java.util.Locale;
 
 //New Class, OS
