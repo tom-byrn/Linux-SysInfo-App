@@ -1,9 +1,10 @@
 * {
-    font-family: monospace, Arial, Helvetica, sans-serif;
+    font-family: "Courier New", monospace, Arial, Helvetica, sans-serif;
+    -fx-text-fill: white;
 }
 
 .anchor-pane {
-    -fx-background-color: linear-gradient(to bottom right, cyan, magenta);
+    -fx-background-color: rgb(41, 41, 41);
 }
 
 .vbox {
@@ -12,13 +13,13 @@
 }
 
 .button {
-    -fx-background-color: #ffffff;
-    -fx-text-fill: rgb(0, 0, 0);
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: #00ffcc;
     -fx-font-size: 1em;
     -fx-font-weight: bold;
-    -fx-border-radius: 0px;
-    -fx-background-radius: 0px;
-    -fx-border-color: gray;
+    -fx-border-color: #00ffcc;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
     -fx-border-width: 2px;
     -fx-padding: 10px 20px;
     -fx-cursor: hand;
@@ -26,27 +27,32 @@
 }
 
 .button:hover {
-    -fx-background-color: lightgray;
-    -fx-text-fill: white;
+    -fx-background-color: #00ffcc;
+    -fx-text-fill: #1e1e1e;
 }
 
 .button:pressed {
-    -fx-background-color: darkgray;
-    -fx-text-fill: white;
+    -fx-background-color: #abffee;
+    -fx-text-fill: #1e1e1e;
 }
 
 .header-label {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #54008f, #00388b);
-    -fx-text-fill: rgb(255, 255, 255);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #00ffcc, #ff00ff);
+    -fx-text-fill: white;
     -fx-font-size: 2em;
-    font-family: monospace;
+    font-family: "Courier New", monospace;
     -fx-font-weight: bold;
     -fx-background-radius: 0px;
     -fx-border-width: 2px;
+    -fx-border-color: #000000;
     -fx-padding: 10px 20px;
     -fx-alignment: center;
 }
 
-.rectangle {
-    -fx-fill: gray;
+.side-bar {
+    -fx-fill: #2c2c2c;
+    -fx-border-color: #00ffcc;
+    -fx-border-width: 3px;
+    -fx-border-radius: 15px;
 }
+
