@@ -1,6 +1,7 @@
 module com.project.block1project {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.desktop;
 
 
     opens com.project.block1project to javafx.fxml;
