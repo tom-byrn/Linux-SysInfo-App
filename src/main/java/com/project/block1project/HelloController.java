@@ -21,7 +21,7 @@ public class HelloController {
     private void changeScene(String fxmlFile){
         try{
             FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource(fxmlFile)); //Load the fxml file given
-            Scene scene = new Scene(fxmlloader.load(), 960, 540);
+            Scene scene = new Scene(fxmlloader.load(), 1728, 972);
 
             //New Controller object, allows stages to be switched multiple times
             HelloController newController = fxmlloader.getController();
@@ -31,10 +31,10 @@ public class HelloController {
 
             stage.setTitle("System Information");
             stage.setScene(scene);
-            stage.setMinWidth(960);
-            stage.setMinHeight(577);
-            stage.setMaxWidth(960);
-            stage.setMaxHeight(577);
+            stage.setMinWidth(1728);
+            stage.setMinHeight(972);
+            stage.setMaxWidth(1728);
+            stage.setMaxHeight(972);
 
             stage.show();
         } catch (IOException e) {
