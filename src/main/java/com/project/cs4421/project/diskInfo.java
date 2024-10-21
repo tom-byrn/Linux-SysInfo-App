@@ -6,6 +6,8 @@
  *  TODO not currently implemented
  */
 
+package com.project.cs4421.project;
+
 public class diskInfo 
 {
      public native int diskCount ();
