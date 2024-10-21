@@ -3,6 +3,7 @@
  *
  *  Copyright (c) 2024 Mark Burkley (mark.burkley@ul.ie)
  */
+package com.project.cs4421.project;
 
 public class pciInfo 
 {
