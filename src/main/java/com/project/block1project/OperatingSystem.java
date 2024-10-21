@@ -19,6 +19,11 @@ public class OperatingSystem {
         String LanguageAbbreviation = System.getProperty("user.language");
         String user = System.getProperty("user.name");
 
+        if (country == null || LanguageAbbreviation == null) {
+            System.err.println("Country or language system properties are not set.");
+            return;
+        }
+
         //Converts country code into country name
         Locale locale = new Locale(LanguageAbbreviation, country);
         String CountryName = locale.getDisplayCountry();
