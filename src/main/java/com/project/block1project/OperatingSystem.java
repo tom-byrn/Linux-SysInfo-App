@@ -1,5 +1,6 @@
 package com.project.block1project;
 
+
 import java.util.Locale;
 
 public class OperatingSystem {
@@ -12,6 +13,7 @@ public class OperatingSystem {
         String LanguageAbbreviation = System.getProperty("user.language");
         String user = System.getProperty("user.name");
 
+        //checks if the country or language system properties are not set
         if (country == null || LanguageAbbreviation == null) {
             System.err.println("Country or language system properties are not set.");
             return;
