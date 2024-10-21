@@ -4,6 +4,8 @@
  *  Copyright (c) 2024 Mark Burkley (mark.burkley@ul.ie)
  */
 
+package com.project.cs4421.project;
+
 public class usbInfo 
 {
     // Refresh the current values and counters - call this before other methods
