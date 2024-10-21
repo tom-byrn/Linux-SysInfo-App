@@ -19,16 +19,36 @@ public class OperatingSystem {
         String LanguageAbbreviation = System.getProperty("user.language");
         String user = System.getProperty("user.name");
 
-        if (country == null || LanguageAbbreviation == null) {
-            System.err.println("Country or language system properties are not set.");
-            return;
+
+        //Initializes variables for Actual Country and language
+        String CountryName;
+        String language;
+
+
+        //Checks if country is set in JVM
+        if (country == null) {
+            System.err.println("Country system properties are not set");
+
+            CountryName = "Unknown";
+        }else {
+
+            //Converts country code into country name
+            Locale locale = new Locale("en", country);
+            CountryName = locale.getDisplayCountry();
         }
 
-        //Converts country code into country name
-        Locale locale = new Locale(LanguageAbbreviation, country);
-        String CountryName = locale.getDisplayCountry();
-        String language = locale.getDisplayLanguage();
+        //Checks if language is set in JVM
+        if( LanguageAbbreviation == null){
 
+            System.err.println("Country system properties are not set");
+
+            language = "Unknown";
+
+        }else{
+            //Converts language code into language name
+            Locale locale = new Locale(LanguageAbbreviation);
+            language = locale.getDisplayLanguage();
+        }
         //Formatting for OS type and build
         System.out.printf("%s%s%s%s%s%n%s%s%n%s%s%n","OS = ", OS, " ", OS_bit, "-bit ","Version = ", OS_Version, "OS Architecture = ", OS_Architecture );
 
