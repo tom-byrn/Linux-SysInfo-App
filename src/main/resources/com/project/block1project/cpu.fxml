@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="972.0" prefWidth="1728.0" style="-fx-background-color: rgb(41, 41, 41);" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.block1project.HelloController">
+   <children>
+      <Rectangle id="side-bar" arcHeight="15.0" arcWidth="15.0" fill="#f2f2f2" height="713.0" layoutX="17.0" layoutY="128.0" stroke="#ffffff00" strokeType="INSIDE" styleClass="side-bar" width="200.0">
+         <effect>
+            <DropShadow />
+         </effect></Rectangle>
+      <Label id="header-label" alignment="CENTER" contentDisplay="CENTER" layoutX="-8.0" layoutY="-3.0" prefHeight="93.0" prefWidth="1737.0" styleClass="header-label" text="System Information" textAlignment="CENTER">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <VBox />
+      <Label id="page-label" layoutX="366.0" layoutY="201.0" styleClass="page-label" text="Welcome to the CPU Page" />
+      <Button layoutX="43.0" layoutY="147.0" mnemonicParsing="false" onAction="#onHomeButtonClick" prefHeight="108.0" prefWidth="147.0" text="Home">
+         <effect>
+            <DropShadow>
+               <color>
+                  <Color opacity="0.5" />
+               </color>
+            </DropShadow>
+         </effect></Button>
+      <Button layoutX="43.0" layoutY="265.0" mnemonicParsing="false" onAction="#onCPUButtonClick" prefHeight="108.0" prefWidth="147.0" text="CPU">
+         <effect>
+            <DropShadow>
+               <color>
+                  <Color opacity="0.5" />
+               </color>
+            </DropShadow>
+         </effect></Button>
+      <Button layoutX="43.0" layoutY="385.0" mnemonicParsing="false" onAction="#onMemoryButtonClick" prefHeight="108.0" prefWidth="147.0" text="Memory">
+         <effect>
+            <DropShadow>
+               <color>
+                  <Color opacity="0.5" />
+               </color>
+            </DropShadow>
+         </effect></Button>
+      <Button layoutX="43.0" layoutY="503.0" mnemonicParsing="false" onAction="#onOperatingSystemButtonClick" prefHeight="108.0" prefWidth="147.0" text="OS">
+         <effect>
+            <DropShadow>
+               <color>
+                  <Color opacity="0.5" />
+               </color>
+            </DropShadow>
+         </effect></Button>
+      <Button layoutX="43.0" layoutY="623.0" mnemonicParsing="false" onAction="#onPeripheralsButtonClick" prefHeight="108.0" prefWidth="147.0" text="Peripherals">
+         <effect>
+            <DropShadow>
+               <color>
+                  <Color opacity="0.5" />
+               </color>
+            </DropShadow>
+         </effect></Button>
+   </children>
+   <effect>
+      <Blend />
+   </effect>
+</AnchorPane>
