@@ -149,28 +149,32 @@ public class HelloController {
         if (labelLanguageAbbreviation != null) labelLanguageAbbreviation.setText("Language: " + LanguageAbbreviation);
         if (labelUser != null) labelUser.setText("User: " + user);
 
-        //Battery Info
+        // Battery Info
         SystemInfo si = new SystemInfo();
         HardwareAbstractionLayer hal = si.getHardware();
         PowerSource[] powerSources = hal.getPowerSources().toArray(new PowerSource[0]);
-        PowerSource battery = powerSources[0];
 
-        double batteryRemaining = battery.getRemainingCapacityPercent() * 100;  // Battery remaining percentage
-        double batteryTimeRemaining = battery.getTimeRemainingInstant();  // Time remaining in seconds
+        if (powerSources.length > 0) {
+            PowerSource battery = powerSources[0];
+            double batteryRemaining = battery.getRemainingCapacityPercent() * 100;  // Battery remaining percentage
+            double batteryTimeRemaining = battery.getTimeRemainingInstant();  // Time remaining in seconds
 
-        batteryBar.setProgress(batteryRemaining / 100.0);
+            batteryBar.setProgress(batteryRemaining / 100.0);
 
-        // Convert time remaining to minutes and hours
-        long hours = (long) (batteryTimeRemaining / 3600);
-        long minutes = (long) ((batteryTimeRemaining % 3600) / 60);
+            // Convert time remaining to minutes and hours
+            long hours = (long) (batteryTimeRemaining / 3600);
+            long minutes = (long) ((batteryTimeRemaining % 3600) / 60);
 
-        // Display battery information
-        if (labelBattery != null) {
-            labelBatteryTime.setText(String.format("Time left: %d hours %d minutes", hours, minutes));
-            labelBattery.setText(String.format("Battery: %.1f%%", batteryRemaining));
-        }
-        if(hours == 0 && minutes == 0){
-            labelBatteryTime.setText("Time Left: Unknown");
+            // Display battery information
+            if (labelBattery != null) {
+                labelBatteryTime.setText(String.format("Time left: %d hours %d minutes", hours, minutes));
+                labelBattery.setText(String.format("Battery: %.1f%%", batteryRemaining));
+            }
+            if (hours == 0 && minutes == 0) {
+                labelBatteryTime.setText("Time Left: Unknown");
+            }
+        } else {
+            System.out.println("No power sources found.");
         }
 
     }
