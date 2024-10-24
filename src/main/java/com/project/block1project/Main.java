@@ -26,9 +26,7 @@ public class Main extends Application {
 
         primaryStage.show();
 
-        Home homeController = new Home();
-        homeController.initialize();// Call the initialization method for Home
-        System.out.println("Home Page Started");
+        controller.initializeHomePage();
     }
 
     public static void main(String[] args) {

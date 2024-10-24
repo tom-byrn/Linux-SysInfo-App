@@ -57,7 +57,7 @@
 }
 
 /* Label styling */
-.labelOS, .labelOSBit, .labelOSVersion, .labelOSArchitecture, .labelCountry, .labelLanguageAbbreviation, .labelUser {
+.homeLabels{
     -fx-font-size: 1.5em;
     -fx-font-weight: bold;
     -fx-text-fill: #ffffff;
@@ -70,10 +70,55 @@
     -fx-alignment: center-left;
 }
 
-/* Additional hover effect for labels */
-.labelOS:hover, .labelOSBit:hover, .labelOSVersion:hover, .labelOSArchitecture:hover, .labelCountry:hover, .labelLanguageAbbreviation:hover, .labelUser:hover {
-    -fx-background-color: #00ffcc;
-    -fx-text-fill: #1e1e1e;
+.homeLabels:hover{
+
+    -fx-border-color: #ff00ff;
+
+}
+
+.homeHeaderLabels {
+    -fx-font-size: 2em;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff00ff;
+    -fx-background-color: #2c2c2c;
+    -fx-padding: 10px 15px;
+    -fx-border-color: #ff00ff;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-alignment: center-left;
+}
+
+
+/* Battery Styling */
+.batteryBar {
+    -fx-accent: #00ffcc;
+    -fx-background-color: #1e1e1e;
+    -fx-border-color: #00ffcc;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+    -fx-background-radius: 10px;
+}
+
+.batteryBar:hover {
+    -fx-accent: #ff00ff;
     -fx-border-color: #ff00ff;
 }
+
+.batteryBar .track {
+    -fx-background-color: #333333;
+    -fx-background-radius: 10px;
+}
+
+.batteryBar .bar {
+    -fx-background-color: linear-gradient(0% 0% to 100% 100%, #00ffcc, #00ffee);
+    -fx-background-radius: 10px;
+}
+
+.batteryBar .bar : hover {
+    -fx-background-color: linear-gradient(0% 0% to 100% 100%, #00ffee, #00ffcc);
+}
+
+
+
 

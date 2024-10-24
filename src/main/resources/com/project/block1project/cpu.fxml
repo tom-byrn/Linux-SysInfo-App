@@ -19,7 +19,6 @@
          </font>
       </Label>
       <VBox />
-      <Label id="page-label" layoutX="366.0" layoutY="201.0" styleClass="page-label" text="Welcome to the CPU Page" />
       <Button layoutX="43.0" layoutY="147.0" mnemonicParsing="false" onAction="#onHomeButtonClick" prefHeight="108.0" prefWidth="147.0" text="Home">
          <effect>
             <DropShadow>
@@ -60,6 +59,15 @@
                </color>
             </DropShadow>
          </effect></Button>
+
+      <Label fx:id="labelCpuName" layoutX="338" layoutY="227.0" prefHeight="200.0" prefWidth="300.0" styleClass="homeLabels" text="[CPU Name]" />
+      <Label fx:id="labelCpuPhysicalCores" layoutX="338" layoutY="442.8" prefHeight="52.0" prefWidth="300.0" styleClass="homeLabels" text="[CPU Physical Cores]" />
+      <Label fx:id="labelCpuLogicalCores" layoutX="338" layoutY="513.8" prefHeight="52.0" prefWidth="300.0" styleClass="homeLabels" text="[CPU Logical Cores]" />
+      <Label fx:id="labelCpuMaxFrequency" layoutX="338" layoutY="583.8" prefHeight="52.0" prefWidth="300.0" styleClass="homeLabels" text="[CPU Max Frequency]" />
+
+      <Label layoutX="339.0" layoutY="137.0" prefHeight="64.0" prefWidth="300.0" styleClass="homeHeaderLabels" text="General" textAlignment="CENTER" />
+
+
    </children>
    <effect>
       <Blend />
