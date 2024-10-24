@@ -14,6 +14,7 @@ import oshi.hardware.*;
 
 
 import java.io.IOException;
+import java.util.List;
 
 public class HelloController {
     private Stage stage;
@@ -70,6 +71,8 @@ public class HelloController {
     private Label labelAvailableMemory;
     @FXML
     private Label labelMemoryUsed;
+    @FXML
+    private Label labelMemorySpeed;
 
 
     public void setStage(Stage stage) {
@@ -260,6 +263,21 @@ public class HelloController {
         if (labelTotalMemory != null) {
             labelTotalMemory.setText("Total Memory: " + totalMemory / (1024 * 1024) + " MB");
         }
+
+        // Get the list of physical memory modules
+        List<PhysicalMemory> physicalMemoryList = memory.getPhysicalMemory();
+        if (!physicalMemoryList.isEmpty()) {
+            // Assuming all memory modules have the same speed, get the speed of the first module
+            long memorySpeed = physicalMemoryList.get(0).getClockSpeed();
+            if (labelMemorySpeed != null) {
+                labelMemorySpeed.setText("Memory Speed: " + memorySpeed + " MHz");
+            }
+        } else {
+            if (labelMemorySpeed != null) {
+                labelMemorySpeed.setText("Memory Speed: Unknown");
+            }
+        }
+
         if (labelAvailableMemory != null) {
             labelAvailableMemory.setText("Available Memory: " + availableMemory / (1024 * 1024) + " MB");
         }
