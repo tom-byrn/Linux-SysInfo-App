@@ -3,15 +3,15 @@ package com.project.block1project;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 import oshi.SystemInfo;
-import oshi.hardware.CentralProcessor;
-import oshi.hardware.GlobalMemory;
-import oshi.hardware.HardwareAbstractionLayer;
-import oshi.hardware.PowerSource;
+import oshi.hardware.*;
+
 
 import java.io.IOException;
 
@@ -39,9 +39,15 @@ public class HelloController {
     private Label labelBattery;
     @FXML
     private Label labelBatteryTime;
+    @FXML
+    private Label labelCpuTemperature;
+    @FXML
+    private Label labelCpuVoltage;
+    @FXML
+    private Label labelFanSpeed;
 
 
-    // FXML components from the cpu.fxml file
+    //FXML components from the cpu.fxml file & declare anything that needs to be public
     @FXML
     private Label labelCpuName;
     @FXML
@@ -51,6 +57,12 @@ public class HelloController {
     @FXML
     private Label labelCpuMaxFrequency;
     @FXML
+    private LineChart<Number, Number> chartCpuUsage;
+    public static XYChart.Series<Number, Number> series; // Declaring the series needed for the Line Chart
+
+
+    //FXML Components for the memory page
+    @FXML
     private Label labelRam;
     @FXML
     private Label labelTotalMemory;
@@ -59,12 +71,9 @@ public class HelloController {
     @FXML
     private Label labelMemoryUsed;
 
-    // Public static series for CPU usage chart
-    public static XYChart.Series<Number, Number> series = new XYChart.Series<>();
 
     public void setStage(Stage stage) {
         this.stage = stage;
-
     }
 
     // Creating a change scene method
@@ -96,6 +105,7 @@ public class HelloController {
                     System.out.println("No matching FXML file found.");
                     break;
             }
+
 
             // New Controller object, allows stages to be switched multiple times
             HelloController newController = fxmlloader.getController();
@@ -130,10 +140,6 @@ public class HelloController {
         String LanguageAbbreviation = System.getProperty("user.language");
         String user = System.getProperty("user.name");
 
-        // Print statements to test if this is being run
-        System.out.println("OS: " + OS);
-        System.out.println("OS Bit: " + OS_bit);
-
         // Set the labels with values, ensuring they are not null
         if (labelOS != null) labelOS.setText("Operating System: " + OS);
         if (labelOSBit != null) labelOSBit.setText("OS Bit: " + OS_bit);
@@ -143,55 +149,99 @@ public class HelloController {
         if (labelLanguageAbbreviation != null) labelLanguageAbbreviation.setText("Language: " + LanguageAbbreviation);
         if (labelUser != null) labelUser.setText("User: " + user);
 
-        // Battery Info
+        //Battery Info
         SystemInfo si = new SystemInfo();
         HardwareAbstractionLayer hal = si.getHardware();
         PowerSource[] powerSources = hal.getPowerSources().toArray(new PowerSource[0]);
-        if (powerSources.length > 0) {
-            PowerSource battery = powerSources[0];
+        PowerSource battery = powerSources[0];
 
-            double batteryRemaining = battery.getRemainingCapacityPercent() * 100;  // Battery remaining percentage
-            double batteryTimeRemaining = battery.getTimeRemainingInstant();  // Time remaining in seconds
+        double batteryRemaining = battery.getRemainingCapacityPercent() * 100;  // Battery remaining percentage
+        double batteryTimeRemaining = battery.getTimeRemainingInstant();  // Time remaining in seconds
 
-            batteryBar.setProgress(batteryRemaining / 100.0);
+        batteryBar.setProgress(batteryRemaining / 100.0);
 
-            // Convert time remaining to minutes and hours
-            long hours = (long) (batteryTimeRemaining / 3600);
-            long minutes = (long) ((batteryTimeRemaining % 3600) / 60);
+        // Convert time remaining to minutes and hours
+        long hours = (long) (batteryTimeRemaining / 3600);
+        long minutes = (long) ((batteryTimeRemaining % 3600) / 60);
 
-            // Display battery information
-            if (labelBattery != null) {
-                labelBatteryTime.setText(String.format("Time left: %d hours %d minutes", hours, minutes));
-                labelBattery.setText(String.format("Battery: %.1f%%", batteryRemaining));
-            }
-            if (hours == 0 && minutes == 0) {
-                labelBatteryTime.setText("Time Left: Unknown");
-            }
-        } else {
-            System.out.println("No power sources found");
+        // Display battery information
+        if (labelBattery != null) {
+            labelBatteryTime.setText(String.format("Time left: %d hours %d minutes", hours, minutes));
+            labelBattery.setText(String.format("Battery: %.1f%%", batteryRemaining));
         }
+        if(hours == 0 && minutes == 0){
+            labelBatteryTime.setText("Time Left: Unknown");
+        }
+
     }
 
-    // Initialize the CPU page
-    public void initializeCPUPage() {
-        System.out.println("CPU page initialize() is running");
+    //Initialize the CPU page
+    public void initializeCPUPage(){
 
-        // Get CPU information
         SystemInfo si = new SystemInfo();
         HardwareAbstractionLayer hal = si.getHardware();
-        CentralProcessor cpu = hal.getProcessor();
+        CentralProcessor processor = hal.getProcessor();
 
-        // Set the labels with values, ensuring they are not null
-        if (labelCpuName != null) labelCpuName.setText("CPU: " + cpu.getProcessorIdentifier());
-        if (labelCpuPhysicalCores != null)
-            labelCpuPhysicalCores.setText("Physical Cores: " + cpu.getPhysicalProcessorCount());
-        if (labelCpuLogicalCores != null)
-            labelCpuLogicalCores.setText("Logical Cores: " + cpu.getLogicalProcessorCount());
-        if (labelCpuMaxFrequency != null) labelCpuMaxFrequency.setText("Max Frequency: " + cpu.getMaxFreq() + " Hz");
+        //Basic CPU Info
+        String cpuName = processor.getProcessorIdentifier().getName();
+        labelCpuName.setText("CPU: " + cpuName);
 
-        // Initialize the series for the CPU usage chart
-        series.setName("CPU Usage");
+        double maxFrequency = processor.getMaxFreq() / 1e9;
+        maxFrequency = Math.round(maxFrequency * 100.0) / 100.0;
+        labelCpuMaxFrequency.setText("Max Frequency: " + maxFrequency + " GHz");
+
+        int physicalCores = processor.getPhysicalProcessorCount();
+        labelCpuPhysicalCores.setText("Physical Cores: " + physicalCores);
+
+        int logicalCores = processor.getLogicalProcessorCount();
+        labelCpuLogicalCores.setText("Logical Cores: " + logicalCores);
+
+        double cpuTemperature = hal.getSensors().getCpuTemperature();
+        labelCpuTemperature.setText("CPU Temperature: " + cpuTemperature + " °C");
+
+        double cpuVoltage = hal.getSensors().getCpuVoltage();
+        labelCpuVoltage.setText("CPU Voltage: " + cpuVoltage + " V");
+
+        //int[] fanSpeeds = hal.getSensors().getFanSpeeds();
+        //int fanSpeed = fanSpeeds[0];
+        //if(fanSpeeds.length > 0)labelFanSpeed.setText(String.format("Fan Speed: %d RPM", fanSpeed));  fanSpeeds.lenght currently = 0
+
+
+
+        // CPU Usage Chart
+        NumberAxis CPUxAxis = new NumberAxis(0, 60, 1);  // Fixed range from 0 to 60
+        NumberAxis CPUyAxis = new NumberAxis(0, 100, 10);  // Fixed range for CPU percentage
+
+        CPUyAxis.setLabel("CPU Usage (%)");
+        CPUxAxis.setLabel("Time (Seconds)"); // Label for time axis
+        CPUxAxis.setAutoRanging(false);      // Disable auto-ranging for x-axis
+        CPUyAxis.setAutoRanging(false);      // Disable auto-ranging for y-axis
+
+        // Now apply the axes to the existing LineChart from FXML (chartCpuUsage)
+        chartCpuUsage.getXAxis().setAutoRanging(false);  // Disable auto-ranging on the x-axis
+        chartCpuUsage.getYAxis().setAutoRanging(false);  // Disable auto-ranging on the y-axis
+
+        // Setting the bounds for X and Y axis after fetching them from chartCpuUsage
+        NumberAxis xAxis = (NumberAxis) chartCpuUsage.getXAxis();
+        xAxis.setLowerBound(0);
+        xAxis.setUpperBound(60);
+
+        NumberAxis yAxis = (NumberAxis) chartCpuUsage.getYAxis();
+        yAxis.setLowerBound(0);
+        yAxis.setUpperBound(100);
+
+        // Creating a series to track CPU usage
+        series = new XYChart.Series<>();
+        chartCpuUsage.getData().add(series);
+
+        // Run the method to update CPU usage
+        CPU.runCpuUsageChart();
+
+
+
     }
+
+
 
     public void initializeMemoryPage() {
         System.out.println("Memory page initialize() is running");
@@ -213,6 +263,7 @@ public class HelloController {
             labelMemoryUsed.setText("Memory Used: " + (totalMemory - availableMemory) / (1024 * 1024) + " MB");
         }
     }
+
 
     @FXML
     protected void onHomeButtonClick() {
@@ -238,4 +289,6 @@ public class HelloController {
     protected void onPeripheralsButtonClick() {
         changeScene("peripherals.fxml");
     }
+
+
 }

@@ -1,8 +1,10 @@
 package com.project.block1project;
 
-public class Memory {
+public class Memory extends HelloController {
 
-    public void initialize(){
-
+    public static void ExampleMemoryMethod(){
+        System.out.print("Class extension for Memory working");
     }
+
+
 }

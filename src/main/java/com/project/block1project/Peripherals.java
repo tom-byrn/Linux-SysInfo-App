@@ -1,8 +1,10 @@
 package com.project.block1project;
 
-public class Peripherals {
+public class Peripherals extends HelloController {
 
-    public void initialize(){
-
+    public static void ExamplePeripheralsMethod(){
+        System.out.print("Class extension for Peripherals working");
     }
+
+
 }

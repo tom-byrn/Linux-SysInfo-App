@@ -8,7 +8,6 @@ import oshi.hardware.HardwareAbstractionLayer;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-
 public class CPU {
 
     // Method to start monitoring CPU usage

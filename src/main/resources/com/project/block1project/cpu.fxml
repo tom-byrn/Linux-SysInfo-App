@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
@@ -60,12 +61,24 @@
             </DropShadow>
          </effect></Button>
 
-      <Label fx:id="labelCpuName" layoutX="338" layoutY="227.0" prefHeight="200.0" prefWidth="300.0" styleClass="homeLabels" text="[CPU Name]" />
-      <Label fx:id="labelCpuPhysicalCores" layoutX="338" layoutY="442.8" prefHeight="52.0" prefWidth="300.0" styleClass="homeLabels" text="[CPU Physical Cores]" />
-      <Label fx:id="labelCpuLogicalCores" layoutX="338" layoutY="513.8" prefHeight="52.0" prefWidth="300.0" styleClass="homeLabels" text="[CPU Logical Cores]" />
-      <Label fx:id="labelCpuMaxFrequency" layoutX="338" layoutY="583.8" prefHeight="52.0" prefWidth="300.0" styleClass="homeLabels" text="[CPU Max Frequency]" />
+      <Label fx:id="labelCpuPhysicalCores" layoutX="338.0" layoutY="304.0" prefHeight="52.0" prefWidth="342.0" styleClass="homeLabels" text="[CPU Physical Cores]" />
+      <Label fx:id="labelCpuLogicalCores" layoutX="338.0" layoutY="373.0" prefHeight="52.0" prefWidth="342.0" styleClass="homeLabels" text="[CPU Logical Cores]" />
+      <Label fx:id="labelCpuMaxFrequency" layoutX="338.0" layoutY="239.0" prefHeight="52.0" prefWidth="342.0" styleClass="homeLabels" text="[CPU Max Frequency]" />
+      <Label fx:id="labelCpuTemperature" layoutX="338.0" layoutY="442.0" prefHeight="52.0" prefWidth="342.0" styleClass="homeLabels" text="[CPU Temperature]" />
+      <Label fx:id="labelCpuVoltage" layoutX="338.0" layoutY="511.0" prefHeight="52.0" prefWidth="342.0" styleClass="homeLabels" text="[CPU Voltage]" />
+      <Label fx:id="labelFanSpeed" layoutX="338.0" layoutY="580.0" prefHeight="52.0" prefWidth="342.0" styleClass="homeLabels" text="[Fan Speed]" />
 
-      <Label layoutX="339.0" layoutY="137.0" prefHeight="64.0" prefWidth="300.0" styleClass="homeHeaderLabels" text="General" textAlignment="CENTER" />
+      <Label fx:id="labelCpuName" layoutX="339.0" layoutY="137.0" prefHeight="64.0" prefWidth="1236.0" styleClass="homeHeaderLabels" text="[CPU name]" textAlignment="CENTER" />
+
+      <LineChart fx:id="chartCpuUsage" layoutX="693.0" layoutY="225.0" legendVisible="false" prefHeight="411.0" prefWidth="880.0" styleClass="usageChart" stylesheets="@chartStyle.css" title="CPU Usage Over Time (%)">
+         <xAxis>
+            <NumberAxis side="BOTTOM" />
+         </xAxis>
+         <yAxis>
+            <NumberAxis side="LEFT" />
+         </yAxis>
+      </LineChart>
+
 
 
    </children>

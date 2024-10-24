@@ -1,0 +1,58 @@
+.usageChart {
+    -fx-background-color: #2c2c2c;
+    -fx-border-color: #00ffcc;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+.usageChart .chart-title {
+    -fx-text-fill: #00ffcc;
+    -fx-font-size: 1.8em;
+    -fx-font-family: "Courier New", monospace;
+    -fx-font-weight: bold;
+}
+
+.usageChart .axis {
+    -fx-tick-label-fill: #ffffff;
+    -fx-label-font-size: 1.2em;
+    -fx-font-family: "Courier New", monospace;
+}
+
+.usageChart .axis .axis-line {
+    -fx-stroke: #00ffcc;
+}
+
+.usageChart .axis .tick-mark {
+    -fx-stroke: #00ffcc;
+}
+
+.usageChart .axis-label {
+    -fx-text-fill: #00ffcc;
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bold;
+}
+
+.usageChart .chart-horizontal-grid-lines,
+.usageChart .chart-vertical-grid-lines {
+    -fx-stroke: rgba(255, 255, 255, 0.2);
+}
+
+.usageChart .chart-series-line {
+    -fx-stroke-width: 2px;
+    -fx-stroke: #ff00ff;  /* Magenta line */
+}
+
+.usageChart .chart-line-symbol {
+    -fx-background-color: #ff00ff, white;  /* Magenta points */
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+}
+
+.usageChart .chart-legend {
+    visibility: hidden;
+    -fx-max-width: 0;
+    -fx-max-height: 0;
+    -fx-background-color: transparent;
+}
+
