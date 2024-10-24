@@ -3,14 +3,17 @@ package com.project.block1project;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ScrollBar;
 import javafx.stage.Stage;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.PowerSource;
+
 
 
 import java.io.IOException;
@@ -40,7 +43,7 @@ public class HelloController {
     @FXML
     private Label labelBatteryTime;
 
-    //FXML components from the cpu.fcml file
+    //FXML components from the cpu.fxml file & declare anything that needs to be public
     @FXML
     private Label labelCpuName;
     @FXML
@@ -49,6 +52,10 @@ public class HelloController {
     private Label labelCpuLogicalCores;
     @FXML
     private Label labelCpuMaxFrequency;
+    @FXML
+    private LineChart<Number, Number> chartCpuUsage;
+    public static XYChart.Series<Number, Number> series; // Declaring the series needed for the Line Chart
+
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -113,10 +120,6 @@ public class HelloController {
         String LanguageAbbreviation = System.getProperty("user.language");
         String user = System.getProperty("user.name");
 
-        // Print statements to test if this is being run
-        System.out.println("OS: " + OS);
-        System.out.println("OS Bit: " + OS_bit);
-
         // Set the labels with values, ensuring they are not null
         if (labelOS != null) labelOS.setText("Operating System: " + OS);
         if (labelOSBit != null) labelOSBit.setText("OS Bit: " + OS_bit);
@@ -159,10 +162,54 @@ public class HelloController {
         HardwareAbstractionLayer hal = si.getHardware();
         CentralProcessor processor = hal.getProcessor();
 
+        //Basic CPU Info
         String cpuName = processor.getProcessorIdentifier().getName();
         labelCpuName.setText("CPU: " + cpuName);
 
+        double maxFrequency = processor.getMaxFreq() / 1e9;
+        maxFrequency = Math.round(maxFrequency * 100.0) / 100.0;
+        labelCpuMaxFrequency.setText("Max Frequency: " + maxFrequency + " GHz");
+
+        int physicalCores = processor.getPhysicalProcessorCount();
+        labelCpuPhysicalCores.setText("Physical Cores: " + physicalCores);
+
+        int logicalCores = processor.getLogicalProcessorCount();
+        labelCpuLogicalCores.setText("Logical Cores: " + logicalCores);
+
+        // CPU Usage Chart
+        NumberAxis CPUxAxis = new NumberAxis(0, 60, 1);  // Fixed range from 0 to 60
+        NumberAxis CPUyAxis = new NumberAxis(0, 100, 10);  // Fixed range for CPU percentage
+
+        CPUyAxis.setLabel("CPU Usage (%)");
+        CPUxAxis.setLabel("Time (Seconds)"); // Label for time axis
+        CPUxAxis.setAutoRanging(false);      // Disable auto-ranging for x-axis
+        CPUyAxis.setAutoRanging(false);      // Disable auto-ranging for y-axis
+
+        // Now apply the axes to the existing LineChart from FXML (chartCpuUsage)
+        chartCpuUsage.getXAxis().setAutoRanging(false);  // Disable auto-ranging on the x-axis
+        chartCpuUsage.getYAxis().setAutoRanging(false);  // Disable auto-ranging on the y-axis
+
+        // Setting the bounds for X and Y axis after fetching them from chartCpuUsage
+        NumberAxis xAxis = (NumberAxis) chartCpuUsage.getXAxis();
+        xAxis.setLowerBound(0);
+        xAxis.setUpperBound(60);
+
+        NumberAxis yAxis = (NumberAxis) chartCpuUsage.getYAxis();
+        yAxis.setLowerBound(0);
+        yAxis.setUpperBound(100);
+
+        // Creating a series to track CPU usage
+        series = new XYChart.Series<>();
+        chartCpuUsage.getData().add(series);
+
+        // Run the method to update CPU usage
+        CPU.runCpuUsageChart();
+
+
+
     }
+
+
 
     @FXML
     protected void onHomeButtonClick() {
