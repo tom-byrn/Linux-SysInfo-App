@@ -24,10 +24,10 @@ public class OperatingSystem {
         if(Objects.equals(OS, "Linux")){
 
             // Execute the uname-a command
-            Process Uname_a = Runtime.getRuntime().exec("uname -a");
+            Process Uname = Runtime.getRuntime().exec("uname -a");
 
             // Read the output of the command
-            BufferedReader ReadUname = new BufferedReader(new InputStreamReader(Uname_a.getInputStream()));
+            BufferedReader ReadUname = new BufferedReader(new InputStreamReader(Uname.getInputStream()));
 
             //Changes OS to uname info prints out OS
             String OSInfo = ReadUname.readLine();
