@@ -5,13 +5,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ScrollBar;
 import javafx.stage.Stage;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
+import oshi.hardware.GlobalMemory;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.PowerSource;
-
 
 import java.io.IOException;
 
@@ -40,7 +39,8 @@ public class HelloController {
     @FXML
     private Label labelBatteryTime;
 
-    //FXML components from the cpu.fcml file
+
+    // FXML components from the cpu.fxml file
     @FXML
     private Label labelCpuName;
     @FXML
@@ -49,6 +49,16 @@ public class HelloController {
     private Label labelCpuLogicalCores;
     @FXML
     private Label labelCpuMaxFrequency;
+    @FXML
+    private Label labelRam;
+    @FXML
+    private Label labelTotalMemory;
+    @FXML
+    private Label labelAvailableMemory;
+    @FXML
+    private Label labelMemoryUsed;
+
+
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -73,12 +83,16 @@ public class HelloController {
                     cpuController.initializeCPUPage();
                     break;
 
+                case "memory.fxml":
+                    HelloController memoryController = fxmlloader.getController();
+                    memoryController.initializeMemoryPage();
+                    break;
+
                 default:
                     // Gives an error if there's no matching fxml file
                     System.out.println("No matching FXML file found.");
                     break;
             }
-
 
             // New Controller object, allows stages to be switched multiple times
             HelloController newController = fxmlloader.getController();
@@ -126,42 +140,72 @@ public class HelloController {
         if (labelLanguageAbbreviation != null) labelLanguageAbbreviation.setText("Language: " + LanguageAbbreviation);
         if (labelUser != null) labelUser.setText("User: " + user);
 
-        //Battery Info
+        // Battery Info
         SystemInfo si = new SystemInfo();
         HardwareAbstractionLayer hal = si.getHardware();
         PowerSource[] powerSources = hal.getPowerSources().toArray(new PowerSource[0]);
-        PowerSource battery = powerSources[0];
+        if (powerSources.length > 0) {
+            PowerSource battery = powerSources[0];
 
-        double batteryRemaining = battery.getRemainingCapacityPercent() * 100;  // Battery remaining percentage
-        double batteryTimeRemaining = battery.getTimeRemainingInstant();  // Time remaining in seconds
+            double batteryRemaining = battery.getRemainingCapacityPercent() * 100;  // Battery remaining percentage
+            double batteryTimeRemaining = battery.getTimeRemainingInstant();  // Time remaining in seconds
 
-        batteryBar.setProgress(batteryRemaining / 100.0);
+            batteryBar.setProgress(batteryRemaining / 100.0);
 
-        // Convert time remaining to minutes and hours
-        long hours = (long) (batteryTimeRemaining / 3600);
-        long minutes = (long) ((batteryTimeRemaining % 3600) / 60);
+            // Convert time remaining to minutes and hours
+            long hours = (long) (batteryTimeRemaining / 3600);
+            long minutes = (long) ((batteryTimeRemaining % 3600) / 60);
 
-        // Display battery information
-        if (labelBattery != null) {
-            labelBatteryTime.setText(String.format("Time left: %d hours %d minutes", hours, minutes));
-            labelBattery.setText(String.format("Battery: %.1f%%", batteryRemaining));
+            // Display battery information
+            if (labelBattery != null) {
+                labelBatteryTime.setText(String.format("Time left: %d hours %d minutes", hours, minutes));
+                labelBattery.setText(String.format("Battery: %.1f%%", batteryRemaining));
+            }
+            if (hours == 0 && minutes == 0) {
+                labelBatteryTime.setText("Time Left: Unknown");
+            }
+        } else {
+            System.out.println("No power sources found");
         }
-        if(hours == 0 && minutes == 0){
-            labelBatteryTime.setText("Time Left: Unknown");
-        }
-
     }
 
-    //Initialize the CPU page
-    public void initializeCPUPage(){
+    // Initialize the CPU page
+    public void initializeCPUPage() {
+        System.out.println("CPU page initialize() is running");
+
+        // Get CPU information
+        SystemInfo si = new SystemInfo();
+        HardwareAbstractionLayer hal = si.getHardware();
+        CentralProcessor cpu = hal.getProcessor();
+
+        // Set the labels with values, ensuring they are not null
+        if (labelCpuName != null) labelCpuName.setText("CPU: " + cpu.getProcessorIdentifier().getName());
+        if (labelCpuPhysicalCores != null)
+            labelCpuPhysicalCores.setText("Physical Cores: " + cpu.getPhysicalProcessorCount());
+        if (labelCpuLogicalCores != null)
+            labelCpuLogicalCores.setText("Logical Cores: " + cpu.getLogicalProcessorCount());
+        if (labelCpuMaxFrequency != null) labelCpuMaxFrequency.setText("Max Frequency: " + cpu.getMaxFreq() + " Hz");
+    }
+
+    public void initializeMemoryPage() {
+        System.out.println("Memory page initialize() is running");
 
         SystemInfo si = new SystemInfo();
         HardwareAbstractionLayer hal = si.getHardware();
-        CentralProcessor processor = hal.getProcessor();
+        GlobalMemory memory = hal.getMemory();
 
-        String cpuName = processor.getProcessorIdentifier().getName();
-        labelCpuName.setText("CPU: " + cpuName);
+        long totalMemory = memory.getTotal();
+        long availableMemory = memory.getAvailable();
 
+        if (labelTotalMemory != null) {
+            labelTotalMemory.setText("Total Memory: " + totalMemory / (1024 * 1024) + " MB");
+        }
+        if (labelAvailableMemory != null) {
+            labelAvailableMemory.setText("Available Memory: " + availableMemory / (1024 * 1024) + " MB");
+        }
+        if (labelMemoryUsed != null) {
+            labelMemoryUsed.setText("Memory Used: " + (totalMemory - availableMemory) / (1024 * 1024) + " MB");
+        }
     }
 
     @FXML
@@ -188,6 +232,4 @@ public class HelloController {
     protected void onPeripheralsButtonClick() {
         changeScene("peripherals.fxml");
     }
-
-
 }
