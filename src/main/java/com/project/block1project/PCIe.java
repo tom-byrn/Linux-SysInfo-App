@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Objects;
 
+
 public class PCIe {
+
+
 
 
     public static void main(String[] args) throws IOException {
@@ -13,14 +16,24 @@ public class PCIe {
         //Checks if OS is linux
         if (Objects.equals(System.getProperty("os.name"), "Linux")) {
             // Execute the lspci command
-            Process LSPCI = Runtime.getRuntime().exec("lspci -vv");
+            Process LSPCI = Runtime.getRuntime().exec("lspci -vvv -nn");
+            Process NoPCIDevices = Runtime.getRuntime().exec("lspci");
 
             // Read the output of the command
             BufferedReader PCIReader = new BufferedReader(new InputStreamReader(LSPCI.getInputStream()));
             String PCIPrintLine;
 
+            BufferedReader NoPCIDevicesReader = new BufferedReader(new InputStreamReader(NoPCIDevices.getInputStream()));
+            String NoPCIPrintLine;
+
+            int DeviceCount = 0;
+            while ((NoPCIPrintLine = NoPCIDevicesReader.readLine()) != null) {
+                DeviceCount++;
+            }
+
+
             //prints out the PCI device info line by line
-            System.out.println("PCIe Devices:");
+            System.out.println("There are " + DeviceCount + " PCIe devices connected");
             while ((PCIPrintLine = PCIReader.readLine()) != null) {
                 System.out.println(PCIPrintLine);
 
@@ -29,3 +42,6 @@ public class PCIe {
         }
     }
 }
+
+
+
