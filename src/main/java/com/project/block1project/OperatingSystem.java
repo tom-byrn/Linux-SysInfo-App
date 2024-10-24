@@ -20,6 +20,7 @@ public class OperatingSystem {
         String OS;
 
 
+
         // Checks if OS is linux
         if(Objects.equals(System.getProperty("os.name"), "Linux")){
 

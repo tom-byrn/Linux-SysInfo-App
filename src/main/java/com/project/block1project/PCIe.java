@@ -5,13 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Objects;
 
-
 public class PCIe {
 
 
     public static void main(String[] args) throws IOException {
-
-
 
         //Checks if OS is linux
         if (Objects.equals(System.getProperty("os.name"), "Linux")) {
@@ -19,13 +16,13 @@ public class PCIe {
             Process LSPCI = Runtime.getRuntime().exec("lspci -vv");
 
             // Read the output of the command
-            BufferedReader reader = new BufferedReader(new InputStreamReader(LSPCI.getInputStream()));
-            String line;
+            BufferedReader PCIReader = new BufferedReader(new InputStreamReader(LSPCI.getInputStream()));
+            String PCIPrintLine;
 
             //prints out the PCI device info line by line
             System.out.println("PCIe Devices:");
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
+            while ((PCIPrintLine = PCIReader.readLine()) != null) {
+                System.out.println(PCIPrintLine);
 
 
             }
