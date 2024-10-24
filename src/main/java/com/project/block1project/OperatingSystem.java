@@ -17,11 +17,10 @@ import javafx.scene.control.Label;
 public class OperatingSystem {
 
     public static void main(String[] args) throws IOException {
-        String OS = System.getProperty("os.name");
 
 
         // Checks if OS is linux
-        if(Objects.equals(OS, "Linux")){
+        if(Objects.equals(System.getProperty("os.name"), "Linux")){
 
             // Execute the uname-a command
             Process Uname = Runtime.getRuntime().exec("uname -a");
