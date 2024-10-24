@@ -17,6 +17,7 @@ import javafx.scene.control.Label;
 public class OperatingSystem {
 
     public static void main(String[] args) throws IOException {
+        String OS;
 
 
         // Checks if OS is linux
@@ -28,9 +29,10 @@ public class OperatingSystem {
             // Read the output of the command
             BufferedReader ReadUname = new BufferedReader(new InputStreamReader(Uname.getInputStream()));
 
-            //Changes OS to uname info prints out OS
-            String OSInfo = ReadUname.readLine();
-            System.out.println(OSInfo);
+            //Changes OS to ReadUname
+            OS = ReadUname.readLine();
+        }else{
+            OS = System.getProperty("os.name");
         }
     }
 
