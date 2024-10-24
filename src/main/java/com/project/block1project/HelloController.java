@@ -3,6 +3,7 @@ package com.project.block1project;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
@@ -58,10 +59,12 @@ public class HelloController {
     @FXML
     private Label labelMemoryUsed;
 
-
+    // Public static series for CPU usage chart
+    public static XYChart.Series<Number, Number> series = new XYChart.Series<>();
 
     public void setStage(Stage stage) {
         this.stage = stage;
+
     }
 
     // Creating a change scene method
@@ -179,12 +182,15 @@ public class HelloController {
         CentralProcessor cpu = hal.getProcessor();
 
         // Set the labels with values, ensuring they are not null
-        if (labelCpuName != null) labelCpuName.setText("CPU: " + cpu.getProcessorIdentifier().getName());
+        if (labelCpuName != null) labelCpuName.setText("CPU: " + cpu.getProcessorIdentifier());
         if (labelCpuPhysicalCores != null)
             labelCpuPhysicalCores.setText("Physical Cores: " + cpu.getPhysicalProcessorCount());
         if (labelCpuLogicalCores != null)
             labelCpuLogicalCores.setText("Logical Cores: " + cpu.getLogicalProcessorCount());
         if (labelCpuMaxFrequency != null) labelCpuMaxFrequency.setText("Max Frequency: " + cpu.getMaxFreq() + " Hz");
+
+        // Initialize the series for the CPU usage chart
+        series.setName("CPU Usage");
     }
 
     public void initializeMemoryPage() {
