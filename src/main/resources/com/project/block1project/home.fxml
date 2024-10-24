@@ -19,7 +19,6 @@
          </font>
       </Label>
       <VBox />
-      <Label id="page-label" layoutX="366.0" layoutY="201.0" styleClass="page-label" text="Welcome to the Home Page" />
       <Button layoutX="43.0" layoutY="147.0" mnemonicParsing="false" onAction="#onHomeButtonClick" prefHeight="108.0" prefWidth="147.0" text="Home">
          <effect>
             <DropShadow>
@@ -60,9 +59,20 @@
                </color>
             </DropShadow>
          </effect></Button>
-      <Label fx:id="labelOS" layoutX="366.0" layoutY="244.0" prefHeight="43.0" prefWidth="164.0" textFill="WHITE" />
-      <Label fx:id="labelOSBit" layoutX="352.0" layoutY="308.0" prefHeight="43.0" prefWidth="164.0" textFill="WHITE" />
-      <Label fx:id="labelOSVersion" layoutX="352.0" layoutY="396.0" prefHeight="43.0" prefWidth="164.0" />
+      <Label fx:id="labelOS" layoutX="339.0" layoutY="226.82" prefHeight="52.0" prefWidth="300.0" styleClass="homeLabels" text="[Operating System]" textFill="WHITE" />
+      <Label fx:id="labelOSBit" layoutX="339.0" layoutY="297.22" prefHeight="52.0" prefWidth="300.0" styleClass="homeLabels" text="[OS Bit ]" textFill="WHITE" />
+      <Label fx:id="labelOSVersion" layoutX="339.0" layoutY="367.62" prefHeight="52.0" prefWidth="300.0" styleClass="homeLabels" text="[OS Version]" />
+      <Label fx:id="labelOSArchitecture" layoutX="339.0" layoutY="438.02" prefHeight="52.0" prefWidth="300.0" styleClass="homeLabels" text="[OS Architecture]" />
+      <Label fx:id="labelCountry" layoutX="339.0" layoutY="508.42" prefHeight="52.0" prefWidth="300.0" styleClass="homeLabels" text="[Keyboard Layout]" />
+      <Label fx:id="labelLanguageAbbreviation" layoutX="339.0" layoutY="578.82" prefHeight="52.0" prefWidth="300.0" styleClass="homeLabels" text="[Language]" />
+      <Label fx:id="labelUser" layoutX="339.0" layoutY="649.22" prefHeight="52.0" prefWidth="300.0" styleClass="homeLabels" text="[User]" />
+      <Label fx:id="labelBattery" layoutX="711.0" layoutY="226.6" prefHeight="52.0" prefWidth="300.0" styleClass="homeLabels" text="[Battery]" textFill="WHITE" />
+      <ProgressBar fx:id="batteryBar" layoutX="711.0" layoutY="508.0" prefHeight="71.0" prefWidth="300.0" progress="0.0" styleClass="batteryBar" />
+
+      <Label layoutX="339.0" layoutY="137.0" prefHeight="64.0" prefWidth="300.0" styleClass="homeHeaderLabels" text="User Info" textAlignment="CENTER" />
+      <Label layoutX="711.0" layoutY="137.0" prefHeight="64.0" prefWidth="300.0" styleClass="homeHeaderLabels" text="Battery" textAlignment="CENTER" />
+      <Label fx:id="labelBatteryTime" layoutX="711.0" layoutY="302.0" prefHeight="184.0" prefWidth="300.0" styleClass="homeLabels" text="[Battery Time Remaining]" textFill="WHITE" />
+
    </children>
    <effect>
       <Blend />
