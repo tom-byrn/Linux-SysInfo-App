@@ -50,8 +50,6 @@ public class HelloController {
     @FXML
     private Label labelCpuMaxFrequency;
     @FXML
-    private Label labelRam;
-    @FXML
     private Label labelTotalMemory;
     @FXML
     private Label labelAvailableMemory;
