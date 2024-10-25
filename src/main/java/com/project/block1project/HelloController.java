@@ -201,7 +201,7 @@ public class HelloController {
         labelCpuPhysicalCores.setText("Physical Cores: " + physicalCores);
 
         int logicalCores = processor.getLogicalProcessorCount();
-        labelCpuLogicalCores.setText("Logical Cores: " + logicalCores);
+        labelCpuLogicalCores.setText("Threads: " + logicalCores);
 
         double cpuTemperature = hal.getSensors().getCpuTemperature();
         labelCpuTemperature.setText("CPU Temperature: " + cpuTemperature + " °C");
