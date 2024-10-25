@@ -3,6 +3,7 @@ module com.project.block1project {
     requires javafx.fxml;
     requires javafx.graphics;
     requires com.github.oshi;
+    requires bluecove;
 
 
     opens com.project.block1project to javafx.fxml;
