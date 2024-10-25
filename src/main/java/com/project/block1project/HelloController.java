@@ -305,7 +305,7 @@ public class HelloController {
             // Get the speed of the first module (All modules should be the same speed)
             long memorySpeed = physicalMemoryList.get(0).getClockSpeed();
             if (labelMemorySpeed != null) {
-                labelMemorySpeed.setText("Memory Speed: " + memorySpeed + " MHz");
+                labelMemorySpeed.setText("Memory Speed: " + memorySpeed / 1_000_000 + " MHz");
             }
         } else {
             if (labelMemorySpeed != null) {
