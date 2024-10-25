@@ -1,9 +1,9 @@
 package com.project.block1project;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Objects;
-import java.util.ArrayList;
+import java.util.*;
 
 
 public class PCIe {
@@ -11,7 +11,7 @@ public class PCIe {
 
 
 
-    public static void main(String[] args) throws IOException {
+    public void main(String[] args) throws IOException {
 
         //Checks if OS is linux
         if (Objects.equals(System.getProperty("os.name"), "Linux")) {
@@ -19,43 +19,61 @@ public class PCIe {
 
             // Execute the lspci command
             Process LSPCI = Runtime.getRuntime().exec("lspci -vvv -nn");
-            Process NoPCIDevices = Runtime.getRuntime().exec("lspci");
+            Process NoPCIDevices = Runtime.getRuntime().exec("lspci -nn");
 
             // Read the output of the command
             BufferedReader PCIReader = new BufferedReader(new InputStreamReader(LSPCI.getInputStream()));
-            String PCIPrintLine;
 
-            BufferedReader NoPCIDevicesReader = new BufferedReader(new InputStreamReader(NoPCIDevices.getInputStream()));
+            //read lspci output(Used for finding number of pcie device Functions)
+            BufferedReader NoPCIFunctionsReader = new BufferedReader(new InputStreamReader(NoPCIDevices.getInputStream()));
+            Set<String> pciBuses = new HashSet<>();
+            String CounterLineByLine;
 
-            int DeviceCount = 0;
-            while ((NoPCIDevicesReader.readLine()) != null) {
-                DeviceCount++;
+
+            //Counts number of outputs from lspci
+            int FunctionCount = 0;
+            while ((CounterLineByLine = NoPCIFunctionsReader.readLine()) != null) {
+                FunctionCount++;
+
+                // Extract the bus ID from the output
+                String[] WordByWord = CounterLineByLine.split( " ");
+                if (WordByWord.length > 0) {
+                    String busId = WordByWord[0];
+                    //count number of unique Pci Buses
+                    pciBuses.add(busId.substring(0, busId.indexOf(':')));
+                }
             }
 
 
-            //prints out the PCI device info line by line
-            System.out.println("There are " + DeviceCount + " PCIe devices connected");
-
-            //Create PCI Array
-            String[] array =new String[261] ;
+            //Creates an ArrayList
+            List<String> lspciOutput = new ArrayList<>();
+            String LineByLine;
 
 
-
-            while ((PCIPrintLine = PCIReader.readLine()) != null) {
-
-               array [260] = PCIPrintLine;
-
+            //Adds each line to the ArrayList
+            while ((LineByLine = PCIReader.readLine()) != null) {
+                lspciOutput.add(LineByLine);
             }
 
-            for(int counter = 1; counter<=array.length; counter++){
+            // Convert ArrayList to Array
+            String[] LSPCIOutputArray = lspciOutput.toArray(new String[0]);
 
-                System.out.println(counter + array[260]);
-
+            // Print the output
+            for (String entry : LSPCIOutputArray) {
+                System.out.println(entry);
             }
-            //System.out.println(PCIPrintLine);
+            System.out.println("There are " + FunctionCount + " PCIe Functions");
+
+            System.out.println("Number of PCIe buses: " + pciBuses.size());
+
+            //pciBuses.size() = int of the total number Buses
+            //FunctionCount = int with the total number of functions
+            //LSPCIOutputArray = Array of the output of lspci -vvv -nn
+            //lspciOutput = ArrayList of the output of lspci -vvv -nn
         }
     }
 }
+
 
 
 
