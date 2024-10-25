@@ -149,7 +149,7 @@ public class HelloController {
         if (labelOSBit != null) labelOSBit.setText("OS Bit: " + OS_bit);
         if (labelOSVersion != null) labelOSVersion.setText("OS Version: " + OS_Version);
         if (labelOSArchitecture != null) labelOSArchitecture.setText("OS Architecture: " + OS_Architecture);
-        if (labelCountry != null) labelCountry.setText("Keyboard Layout: " + country);
+        if (labelCountry != null) labelCountry.setText("Country: " + country);
         if (labelLanguageAbbreviation != null) labelLanguageAbbreviation.setText("Language: " + LanguageAbbreviation);
         if (labelUser != null) labelUser.setText("User: " + user);
 
@@ -198,7 +198,7 @@ public class HelloController {
         labelCpuPhysicalCores.setText("Physical Cores: " + physicalCores);
 
         int logicalCores = processor.getLogicalProcessorCount();
-        labelCpuLogicalCores.setText("Logical Cores: " + logicalCores);
+        labelCpuLogicalCores.setText("Threads: " + logicalCores);
 
         double cpuTemperature = hal.getSensors().getCpuTemperature();
         if(cpuTemperature != 0){
@@ -217,8 +217,11 @@ public class HelloController {
             if (fanSpeeds.length > 0) {
                 int fanSpeed = fanSpeeds[0];
                 labelFanSpeed.setText(String.format("Fan Speed: %d RPM", fanSpeed));
-            }
-            else{labelFanSpeed.setText("Fan Speed: N/A");}
+            }else if (fanSpeeds.length == 0) {
+                int fanSpeed = 0;
+                labelFanSpeed.setText(String.format("Fan Speed: %d RPM", fanSpeed));
+
+            } else{labelFanSpeed.setText("Fan Speed: N/A");}
         } catch (Exception e) {
             // Handle Errors if oshi can't pull fan speeds from computer
             labelFanSpeed.setText("Fan Speed: N/A");
