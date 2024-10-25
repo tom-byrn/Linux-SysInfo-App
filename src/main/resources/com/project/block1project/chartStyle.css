@@ -40,11 +40,11 @@
 
 .usageChart .chart-series-line {
     -fx-stroke-width: 2px;
-    -fx-stroke: #ff00ff;  /* Magenta line */
+    -fx-stroke: #ff00ff;
 }
 
 .usageChart .chart-line-symbol {
-    -fx-background-color: #ff00ff, white;  /* Magenta points */
+    -fx-background-color: #ff00ff, white;
     -fx-background-radius: 5px;
     -fx-padding: 2px;
 }

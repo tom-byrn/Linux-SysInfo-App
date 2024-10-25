@@ -19,10 +19,10 @@ public class Main extends Application {
         primaryStage.setTitle("System Information");
         primaryStage.setScene(scene);
 
-        /*primaryStage.setMinWidth(1728);
+        primaryStage.setMinWidth(1728);
         primaryStage.setMinHeight(972);
         primaryStage.setMaxWidth(1728);
-        primaryStage.setMaxHeight(972);*/
+        primaryStage.setMaxHeight(972);
 
         primaryStage.show();
 
@@ -31,6 +31,5 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch();
-
     }
 }

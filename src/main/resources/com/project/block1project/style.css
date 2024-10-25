@@ -39,14 +39,14 @@
 .header-label {
     -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #00ffcc, #ff00ff);
     -fx-text-fill: white;
-    -fx-font-size: 2em;
-    font-family: "Courier New", monospace;
+    -fx-font-size: 3em;
+    font-family: monospace;
     -fx-font-weight: bold;
     -fx-background-radius: 0px;
     -fx-border-width: 2px;
     -fx-border-color: #000000;
     -fx-padding: 10px 20px;
-    -fx-alignment: center;
+    -fx-alignment: center-left;
 }
 
 .side-bar {

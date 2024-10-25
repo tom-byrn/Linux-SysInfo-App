@@ -15,6 +15,7 @@ import oshi.hardware.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class HelloController {
     private Stage stage;
@@ -40,12 +41,6 @@ public class HelloController {
     private Label labelBattery;
     @FXML
     private Label labelBatteryTime;
-    @FXML
-    private Label labelCpuTemperature;
-    @FXML
-    private Label labelCpuVoltage;
-    @FXML
-    private Label labelFanSpeed;
 
 
     //FXML components from the cpu.fxml file & declare anything that needs to be public
@@ -58,8 +53,19 @@ public class HelloController {
     @FXML
     private Label labelCpuMaxFrequency;
     @FXML
+    private Label labelCpuTemperature;
+    @FXML
+    private Label labelCpuVoltage;
+    @FXML
+    private Label labelCpuMicroArchitecture;
+    @FXML
+    private Label labelFanSpeed;
+    @FXML
+    private Label labelCpuVendor;
+    @FXML
     private LineChart<Number, Number> chartCpuUsage;
     public static XYChart.Series<Number, Number> series; // Declaring the series needed for the Line Chart
+
 
 
     //FXML Components for the memory page
@@ -141,6 +147,7 @@ public class HelloController {
         String OS_Architecture = System.getProperty("os.arch");
         String country = System.getProperty("user.country");
         String LanguageAbbreviation = System.getProperty("user.language");
+        if(Objects.equals(LanguageAbbreviation, "en")) {LanguageAbbreviation = "English";}
         String user = System.getProperty("user.name");
 
         // Set the labels with values, ensuring they are not null
@@ -148,36 +155,32 @@ public class HelloController {
         if (labelOSBit != null) labelOSBit.setText("OS Bit: " + OS_bit);
         if (labelOSVersion != null) labelOSVersion.setText("OS Version: " + OS_Version);
         if (labelOSArchitecture != null) labelOSArchitecture.setText("OS Architecture: " + OS_Architecture);
-        if (labelCountry != null) labelCountry.setText("Keyboard Layout: " + country);
+        if (labelCountry != null) labelCountry.setText("Country: " + country);
         if (labelLanguageAbbreviation != null) labelLanguageAbbreviation.setText("Language: " + LanguageAbbreviation);
         if (labelUser != null) labelUser.setText("User: " + user);
 
-        // Battery Info
+        //Battery Info
         SystemInfo si = new SystemInfo();
         HardwareAbstractionLayer hal = si.getHardware();
         PowerSource[] powerSources = hal.getPowerSources().toArray(new PowerSource[0]);
+        PowerSource battery = powerSources[0];
 
-        if (powerSources.length > 0) {
-            PowerSource battery = powerSources[0];
-            double batteryRemaining = battery.getRemainingCapacityPercent() * 100;  // Battery remaining percentage
-            double batteryTimeRemaining = battery.getTimeRemainingInstant();  // Time remaining in seconds
+        double batteryRemaining = battery.getRemainingCapacityPercent() * 100;  // Battery remaining percentage
+        double batteryTimeRemaining = battery.getTimeRemainingInstant();  // Time remaining in seconds
 
-            batteryBar.setProgress(batteryRemaining / 100.0);
+        batteryBar.setProgress(batteryRemaining / 100.0);
 
-            // Convert time remaining to minutes and hours
-            long hours = (long) (batteryTimeRemaining / 3600);
-            long minutes = (long) ((batteryTimeRemaining % 3600) / 60);
+        // Convert time remaining to minutes and hours
+        long hours = (long) (batteryTimeRemaining / 3600);
+        long minutes = (long) ((batteryTimeRemaining % 3600) / 60);
 
-            // Display battery information
-            if (labelBattery != null) {
-                labelBatteryTime.setText(String.format("Time left: %d hours %d minutes", hours, minutes));
-                labelBattery.setText(String.format("Battery: %.1f%%", batteryRemaining));
-            }
-            if (hours == 0 && minutes == 0) {
-                labelBatteryTime.setText("Time Left: Unknown");
-            }
-        } else {
-            System.out.println("No power sources found.");
+        // Display battery information
+        if (labelBattery != null) {
+            labelBatteryTime.setText(String.format("Time left: %d hours %d minutes", hours, minutes));
+            labelBattery.setText(String.format("Battery: %.1f%%", batteryRemaining));
+        }
+        if(hours == 0 && minutes == 0){
+            labelBatteryTime.setText("Time Left: Unknown");
         }
 
     }
@@ -204,15 +207,34 @@ public class HelloController {
         labelCpuLogicalCores.setText("Logical Cores: " + logicalCores);
 
         double cpuTemperature = hal.getSensors().getCpuTemperature();
+        if(cpuTemperature != 0){
         labelCpuTemperature.setText("CPU Temperature: " + cpuTemperature + " °C");
+        }
+        else{labelCpuTemperature.setText("CPU Temperature: N/A");}
 
         double cpuVoltage = hal.getSensors().getCpuVoltage();
+        if(cpuVoltage != 0){
         labelCpuVoltage.setText("CPU Voltage: " + cpuVoltage + " V");
+        }
+        else{labelCpuVoltage.setText("CPU Voltage: N/A");}
 
-        //int[] fanSpeeds = hal.getSensors().getFanSpeeds();
-        //int fanSpeed = fanSpeeds[0];
-        //if(fanSpeeds.length > 0)labelFanSpeed.setText(String.format("Fan Speed: %d RPM", fanSpeed));  fanSpeeds.lenght currently = 0
+        try {
+            int[] fanSpeeds = hal.getSensors().getFanSpeeds();
+            if (fanSpeeds.length > 0) {
+                int fanSpeed = fanSpeeds[0];
+                labelFanSpeed.setText(String.format("Fan Speed: %d RPM", fanSpeed));
+            }
+            else{labelFanSpeed.setText("Fan Speed: N/A");}
+        } catch (Exception e) {
+            // Handle Errors if oshi can't pull fan speeds from computer
+            labelFanSpeed.setText("Fan Speed: N/A");
+        }
 
+        String microArchitecture = processor.getProcessorIdentifier().getMicroarchitecture();
+        labelCpuMicroArchitecture.setText("Microrchitecture: " + microArchitecture);
+
+        String vendorID = processor.getProcessorIdentifier().getVendor();
+        labelCpuVendor.setText("Vendor: " + vendorID);
 
 
         // CPU Usage Chart
@@ -220,7 +242,7 @@ public class HelloController {
         NumberAxis CPUyAxis = new NumberAxis(0, 100, 10);  // Fixed range for CPU percentage
 
         CPUyAxis.setLabel("CPU Usage (%)");
-        CPUxAxis.setLabel("Time (Seconds)"); // Label for time axis
+        CPUxAxis.setLabel("Time (Seconds)");
         CPUxAxis.setAutoRanging(false);      // Disable auto-ranging for x-axis
         CPUyAxis.setAutoRanging(false);      // Disable auto-ranging for y-axis
 
@@ -267,7 +289,7 @@ public class HelloController {
         // Get the list of physical memory modules
         List<PhysicalMemory> physicalMemoryList = memory.getPhysicalMemory();
         if (!physicalMemoryList.isEmpty()) {
-            // Assuming all memory modules have the same speed, get the speed of the first module
+            // Get the speed of the first module (All modules should be the same speed)
             long memorySpeed = physicalMemoryList.get(0).getClockSpeed();
             if (labelMemorySpeed != null) {
                 labelMemorySpeed.setText("Memory Speed: " + memorySpeed + " MHz");
@@ -314,4 +336,3 @@ public class HelloController {
 
 
 }
-
