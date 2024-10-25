@@ -15,6 +15,7 @@ import oshi.hardware.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class HelloController {
@@ -147,7 +148,6 @@ public class HelloController {
         String OS_Architecture = System.getProperty("os.arch");
         String country = System.getProperty("user.country");
         String LanguageAbbreviation = System.getProperty("user.language");
-        if(Objects.equals(LanguageAbbreviation, "en")) {LanguageAbbreviation = "English";}
         String user = System.getProperty("user.name");
 
         // Set the labels with values, ensuring they are not null
@@ -155,8 +155,21 @@ public class HelloController {
         if (labelOSBit != null) labelOSBit.setText("OS Bit: " + OS_bit);
         if (labelOSVersion != null) labelOSVersion.setText("OS Version: " + OS_Version);
         if (labelOSArchitecture != null) labelOSArchitecture.setText("OS Architecture: " + OS_Architecture);
-        if (labelCountry != null) labelCountry.setText("Country: " + country);
-        if (labelLanguageAbbreviation != null) labelLanguageAbbreviation.setText("Language: " + LanguageAbbreviation);
+        if (labelCountry != null) {
+            Locale locale = new Locale("en", country);
+
+            String Country = locale.getDisplayCountry();
+
+            labelCountry.setText("Country: " + Country);
+        }
+        if (labelLanguageAbbreviation != null){
+
+            Locale locale = new Locale(LanguageAbbreviation);
+
+            String Language = locale.getDisplayLanguage();
+
+            labelLanguageAbbreviation.setText("Language: " + Language);
+        }
         if (labelUser != null) labelUser.setText("User: " + user);
 
         //Battery Info
