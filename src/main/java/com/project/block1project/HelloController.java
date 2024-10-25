@@ -66,6 +66,12 @@ public class HelloController {
     @FXML
     private LineChart<Number, Number> chartCpuUsage;
     public static XYChart.Series<Number, Number> series; // Declaring the series needed for the Line Chart
+    @FXML
+    private Label labelL1Cache;
+    @FXML
+    private Label labelL2Cache;
+    @FXML
+    private Label labelL3Cache;
 
 
 
@@ -221,13 +227,13 @@ public class HelloController {
 
         double cpuTemperature = hal.getSensors().getCpuTemperature();
         if(cpuTemperature != 0){
-        labelCpuTemperature.setText("CPU Temperature: " + cpuTemperature + " °C");
+            labelCpuTemperature.setText("CPU Temperature: " + cpuTemperature + " °C");
         }
         else{labelCpuTemperature.setText("CPU Temperature: N/A");}
 
         double cpuVoltage = hal.getSensors().getCpuVoltage();
         if(cpuVoltage != 0){
-        labelCpuVoltage.setText("CPU Voltage: " + cpuVoltage + " V");
+            labelCpuVoltage.setText("CPU Voltage: " + cpuVoltage + " V");
         }
         else{labelCpuVoltage.setText("CPU Voltage: N/A");}
 
@@ -252,6 +258,17 @@ public class HelloController {
 
         String vendorID = processor.getProcessorIdentifier().getVendor();
         labelCpuVendor.setText("Vendor: " + vendorID);
+
+        List<CentralProcessor.ProcessorCache> caches = processor.getProcessorCaches();
+        if (caches.size() > 0) {
+            labelL1Cache.setText("L1 Cache: " + caches.get(2).getCacheSize() / 1024 + " KB");
+        }
+        if (caches.size() > 1) {
+            labelL2Cache.setText("L2 Cache: " + caches.get(1).getCacheSize() / 1024 + " KB");
+        }
+        if (caches.size() > 2) {
+            labelL3Cache.setText("L3 Cache: " + caches.get(0).getCacheSize() / 1024 + " KB");
+        }
 
 
         // CPU Usage Chart

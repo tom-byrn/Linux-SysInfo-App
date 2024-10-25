@@ -70,6 +70,10 @@
       <Label fx:id="labelCpuMicroArchitecture" layoutX="338.0" layoutY="650.0" prefHeight="52.0" prefWidth="342.0" styleClass="homeLabels" text="[CPU Architecture]" />
       <Label fx:id="labelCpuVendor" layoutX="338.0" layoutY="718.0" prefHeight="52.0" prefWidth="342.0" styleClass="homeLabels" text="[Processor Vendor]" />
 
+      <Label fx:id="labelL1Cache" layoutX="338" layoutY="800" prefHeight="52.0" prefWidth="342.0" styleClass="homeLabels" text="[L1 Cache]" />
+      <Label fx:id="labelL2Cache" layoutX="838" layoutY="800" prefHeight="52.0" prefWidth="342.0" styleClass="homeLabels" text="[L2 Cache]" />
+      <Label fx:id="labelL3Cache" layoutX="1338" layoutY="800" prefHeight="52.0" prefWidth="342.0" styleClass="homeLabels" text="[L3 Cache]" />
+
       <Label fx:id="labelCpuName" layoutX="339.0" layoutY="137.0" prefHeight="64.0" prefWidth="1236.0" styleClass="homeHeaderLabels" text="[CPU name]" textAlignment="CENTER" />
 
       <LineChart fx:id="chartCpuUsage" layoutX="695.0" layoutY="238.0" legendVisible="false" prefHeight="535.0" prefWidth="880.0" styleClass="usageChart" stylesheets="@chartStyle.css" title="CPU Usage Over Time (%)">
