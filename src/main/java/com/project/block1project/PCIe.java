@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Objects;
+import java.util.ArrayList;
 
 
 public class PCIe {
@@ -35,18 +36,23 @@ public class PCIe {
             //prints out the PCI device info line by line
             System.out.println("There are " + DeviceCount + " PCIe devices connected");
 
-
-
+            //Create PCI Array
+            String[] array =new String[261] ;
 
 
 
             while ((PCIPrintLine = PCIReader.readLine()) != null) {
 
-                String[] array =new String[260] ;
-
+               array [260] = PCIPrintLine;
 
             }
-            System.out.println(PCIPrintLine);
+
+            for(int counter = 1; counter<=array.length; counter++){
+
+                System.out.println(counter + array[260]);
+
+            }
+            //System.out.println(PCIPrintLine);
         }
     }
 }
