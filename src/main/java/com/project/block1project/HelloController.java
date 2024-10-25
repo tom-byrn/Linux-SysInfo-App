@@ -236,8 +236,12 @@ public class HelloController {
             if (fanSpeeds.length > 0) {
                 int fanSpeed = fanSpeeds[0];
                 labelFanSpeed.setText(String.format("Fan Speed: %d RPM", fanSpeed));
-            }
-            else{labelFanSpeed.setText("Fan Speed: N/A");}
+            } else if (fanSpeeds.length == 0) {
+
+                int fanSpeed = 0;
+                labelFanSpeed.setText(String.format("Fan Speed: %d RPM", fanSpeed));
+
+            } else{labelFanSpeed.setText("Fan Speed: N/A");}
         } catch (Exception e) {
             // Handle Errors if oshi can't pull fan speeds from computer
             labelFanSpeed.setText("Fan Speed: N/A");
