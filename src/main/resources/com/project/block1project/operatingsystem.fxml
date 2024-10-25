@@ -12,14 +12,18 @@
       <Rectangle id="side-bar" arcHeight="15.0" arcWidth="15.0" fill="#f2f2f2" height="713.0" layoutX="17.0" layoutY="128.0" stroke="#ffffff00" strokeType="INSIDE" styleClass="side-bar" width="200.0">
          <effect>
             <DropShadow />
-         </effect></Rectangle>
+         </effect>
+      </Rectangle>
+
       <Label id="header-label" alignment="CENTER" contentDisplay="CENTER" layoutX="-8.0" layoutY="-3.0" prefHeight="93.0" prefWidth="1737.0" styleClass="header-label" text="System Information" textAlignment="CENTER">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
+
       <VBox />
       <Label id="page-label" layoutX="366.0" layoutY="201.0" styleClass="page-label" text="Welcome to the Operating System Page" />
+
       <Button layoutX="43.0" layoutY="147.0" mnemonicParsing="false" onAction="#onHomeButtonClick" prefHeight="108.0" prefWidth="147.0" text="Home">
          <effect>
             <DropShadow>
@@ -27,7 +31,9 @@
                   <Color opacity="0.5" />
                </color>
             </DropShadow>
-         </effect></Button>
+         </effect>
+      </Button>
+
       <Button layoutX="43.0" layoutY="265.0" mnemonicParsing="false" onAction="#onCPUButtonClick" prefHeight="108.0" prefWidth="147.0" text="CPU">
          <effect>
             <DropShadow>
@@ -35,7 +41,9 @@
                   <Color opacity="0.5" />
                </color>
             </DropShadow>
-         </effect></Button>
+         </effect>
+      </Button>
+
       <Button layoutX="43.0" layoutY="385.0" mnemonicParsing="false" onAction="#onMemoryButtonClick" prefHeight="108.0" prefWidth="147.0" text="Memory">
          <effect>
             <DropShadow>
@@ -43,7 +51,9 @@
                   <Color opacity="0.5" />
                </color>
             </DropShadow>
-         </effect></Button>
+         </effect>
+      </Button>
+
       <Button layoutX="43.0" layoutY="503.0" mnemonicParsing="false" onAction="#onOperatingSystemButtonClick" prefHeight="108.0" prefWidth="147.0" text="OS">
          <effect>
             <DropShadow>
@@ -51,7 +61,9 @@
                   <Color opacity="0.5" />
                </color>
             </DropShadow>
-         </effect></Button>
+         </effect>
+      </Button>
+
       <Button layoutX="43.0" layoutY="623.0" mnemonicParsing="false" onAction="#onPeripheralsButtonClick" prefHeight="108.0" prefWidth="147.0" text="Peripherals">
          <effect>
             <DropShadow>
@@ -59,9 +71,35 @@
                   <Color opacity="0.5" />
                </color>
             </DropShadow>
-         </effect></Button>
+         </effect>
+      </Button>
+
+      <Label fx:id="osNameLabel" layoutX="338.0" layoutY="50.0" prefWidth="342.0" prefHeight="52.0" text="Operating System:" styleClass="homeLabels"/>
+      <Label fx:id="osVersionLabel" layoutX="338.0" layoutY="110.0" prefWidth="342.0" prefHeight="52.0" text="OS Version:" styleClass="homeLabels"/>
+      <Label fx:id="architectureLabel" layoutX="338.0" layoutY="170.0" prefWidth="342.0" prefHeight="52.0" text="Architecture:" styleClass="homeLabels"/>
+      <Label fx:id="processCountLabel" layoutX="338.0" layoutY="230.0" prefWidth="342.0" prefHeight="52.0" text="Process Count:" styleClass="homeLabels"/>
+      <Label fx:id="uptimeLabel" layoutX="338.0" layoutY="290.0" prefWidth="342.0" prefHeight="52.0" text="Uptime:" styleClass="homeLabels"/>
+      <Label fx:id="bootTimeLabel" layoutX="338.0" layoutY="350.0" prefWidth="342.0" prefHeight="52.0" text="Boot Time:" styleClass="homeLabels"/>
+
+      <Label fx:id="kernelModeLabel" layoutX="338.0" layoutY="410.0" prefWidth="342.0" prefHeight="52.0" text="Kernel Mode Time:" styleClass="homeLabels"/>
+      <Label fx:id="userModeLabel" layoutX="338.0" layoutY="470.0" prefWidth="342.0" prefHeight="52.0" text="User Mode Time:" styleClass="homeLabels"/>
+
+      <!-- ListView for displaying file system names -->
+      <ListView fx:id="fileSystemsListView" layoutX="400.0" layoutY="550.0" prefWidth="400.0" prefHeight="150.0"/>
+
+      <!-- TableView for displaying detailed file system information -->
+      <TableView fx:id="fileSystemTable" layoutX="400.0" layoutY="720.0" prefWidth="400.0" prefHeight="200.0">
+         <columns>
+            <TableColumn text="File System" prefWidth="150.0"/>
+            <TableColumn text="Total Space" prefWidth="125.0"/>
+            <TableColumn text="Usable Space" prefWidth="125.0"/>
+         </columns>
+      </TableView>
+
+
    </children>
    <effect>
       <Blend />
    </effect>
 </AnchorPane>
+
