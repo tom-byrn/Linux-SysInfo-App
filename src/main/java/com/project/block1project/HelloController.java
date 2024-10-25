@@ -11,12 +11,12 @@ import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 import oshi.SystemInfo;
 import oshi.hardware.*;
+import java.util.ResourceBundle;
 
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 public class HelloController {
     private Stage stage;
@@ -76,8 +76,6 @@ public class HelloController {
 
 
     //FXML Components for the memory page
-    @FXML
-    private Label labelRam;
     @FXML
     private Label labelTotalMemory;
     @FXML
@@ -162,15 +160,14 @@ public class HelloController {
         if (labelOSVersion != null) labelOSVersion.setText("OS Version: " + OS_Version);
         if (labelOSArchitecture != null) labelOSArchitecture.setText("OS Architecture: " + OS_Architecture);
         if (labelCountry != null) {
-            Locale locale = new Locale("en", country);
-
-            String Country = locale.getDisplayCountry();
-
+            ResourceBundle bundle = ResourceBundle.getBundle("com.project.block1project.Messages");
+            String Country = bundle.getString(country);
             labelCountry.setText("Country: " + Country);
+
         }
         if (labelLanguageAbbreviation != null){
 
-            Locale locale = new Locale(LanguageAbbreviation);
+            Locale locale = Locale.of(LanguageAbbreviation);
 
             String Language = locale.getDisplayLanguage();
 
@@ -239,35 +236,35 @@ public class HelloController {
 
         try {
             int[] fanSpeeds = hal.getSensors().getFanSpeeds();
+            int fanSpeed;
             if (fanSpeeds.length > 0) {
-                int fanSpeed = fanSpeeds[0];
-                labelFanSpeed.setText(String.format("Fan Speed: %d RPM", fanSpeed));
-            } else if (fanSpeeds.length == 0) {
+                fanSpeed = fanSpeeds[0];
+            } else {
 
-                int fanSpeed = 0;
-                labelFanSpeed.setText(String.format("Fan Speed: %d RPM", fanSpeed));
+                fanSpeed = 0;
 
-            } else{labelFanSpeed.setText("Fan Speed: N/A");}
+            }
+            labelFanSpeed.setText(String.format("Fan Speed: %d RPM", fanSpeed));
         } catch (Exception e) {
             // Handle Errors if oshi can't pull fan speeds from computer
             labelFanSpeed.setText("Fan Speed: N/A");
         }
 
         String microArchitecture = processor.getProcessorIdentifier().getMicroarchitecture();
-        labelCpuMicroArchitecture.setText("Microrchitecture: " + microArchitecture);
+        labelCpuMicroArchitecture.setText("Microarchitecture: " + microArchitecture);
 
         String vendorID = processor.getProcessorIdentifier().getVendor();
         labelCpuVendor.setText("Vendor: " + vendorID);
 
         List<CentralProcessor.ProcessorCache> caches = processor.getProcessorCaches();
-        if (caches.size() > 0) {
+        if (!caches.isEmpty()) {
             labelL1Cache.setText("L1 Cache: " + caches.get(2).getCacheSize() / 1024 + " KB");
         }
         if (caches.size() > 1) {
             labelL2Cache.setText("L2 Cache: " + caches.get(1).getCacheSize() / 1024 + " KB");
         }
         if (caches.size() > 2) {
-            labelL3Cache.setText("L3 Cache: " + caches.get(0).getCacheSize() / 1024 + " KB");
+            labelL3Cache.setText("L3 Cache: " + caches.getFirst().getCacheSize() / 1024 + " KB");
         }
 
 
@@ -324,7 +321,7 @@ public class HelloController {
         List<PhysicalMemory> physicalMemoryList = memory.getPhysicalMemory();
         if (!physicalMemoryList.isEmpty()) {
             // Get the speed of the first module (All modules should be the same speed)
-            long memorySpeed = physicalMemoryList.get(0).getClockSpeed();
+            long memorySpeed = physicalMemoryList.getFirst().getClockSpeed();
             if (labelMemorySpeed != null) {
                 labelMemorySpeed.setText("Memory Speed: " + memorySpeed / 1_000_000 + " MHz");
             }
