@@ -1,5 +1,3 @@
-package com.project.block1project;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,46 +16,51 @@ public class PCIe {
             Map<String, Integer> pciBusFunctionCount = new LinkedHashMap<>();
             Map<String, Integer> pciDeviceFunctionCount = new LinkedHashMap<>();
             // StringBuilder to accumulate results
-            StringBuilder NumberOfFunctionsForEachBus = new StringBuilder();
-            StringBuilder NumberOfFunctionsForEachDevice = new StringBuilder();
+            StringBuilder numberOfFunctionsForEachBus = new StringBuilder();
+            StringBuilder numberOfFunctionsForEachDevice = new StringBuilder();
             //Creates a new HashSet
             Set<String> pciBuses = new HashSet<>();
 
 
             // Execute the lspci command
-            Process LSPCI = Runtime.getRuntime().exec("lspci -vvv -nn");
-            Process NoPCIDevices = Runtime.getRuntime().exec("lspci -nn");
+            Process lSPCI = Runtime.getRuntime().exec("lspci -vvv -nn");
+            Process noPCIDevices = Runtime.getRuntime().exec("lspci -nn");
 
             // Read the output of the command lspci -vvv -nn
-            BufferedReader PCIReader = new BufferedReader(new InputStreamReader(LSPCI.getInputStream()));
+            BufferedReader pCIReader = new BufferedReader(new InputStreamReader(lSPCI.getInputStream()));
             //read lspci output
-            BufferedReader NoPCIFunctionsReader = new BufferedReader(new InputStreamReader(NoPCIDevices.getInputStream()));
-            String CounterLineByLine;
+            BufferedReader noPCIFunctionsReader = new BufferedReader(new InputStreamReader(noPCIDevices.getInputStream()));
+            //Used to temporarily stores each line from lspci -nn. Stores one and then the next and so on
+            String counterLineByLine;
 
             //Counts number of outputs from lspci
-            int FunctionCountTotal = 0;
-            while ((CounterLineByLine = NoPCIFunctionsReader.readLine()) != null) {
-                FunctionCountTotal++;
+            int functionCountTotal = 0;
+            while ((counterLineByLine = noPCIFunctionsReader.readLine()) != null) {
+                functionCountTotal++;
 
-                // Read the output line by line
+                // Read the output line by line and store it in an array
                 // Example output: "00:1f.0  SATA controller: Intel Corporation 82801AA SATA Controller"
-                String[] WordByWord = CounterLineByLine.split( " ");
+                String[] wordByWord = counterLineByLine.split( " ");
 
-                String busId = WordByWord[0];
+                //Creates a temporary string for the first word in each line
+                //This should be the bus:device:function E.g. 00:00:00
+                String busId = wordByWord[0];
+
+
                 //count number of unique Pci Buses
                 pciBuses.add(busId.substring(0, busId.indexOf(':')));
 
                 // Get the bus ID (first part) and stores it in an array
-                String BusIdFunction = WordByWord[0].split(":")[0];
+                String busIdFunction = wordByWord[0].split(":")[0];
 
                 // Count functions for each bus
-                pciBusFunctionCount.put(BusIdFunction, pciBusFunctionCount.getOrDefault(BusIdFunction, 0) + 1);
+                pciBusFunctionCount.put(busIdFunction, pciBusFunctionCount.getOrDefault(busIdFunction, 0) + 1);
 
                 // Get the Device ID (Second part) and stores it in an array
-                String DeviceId = WordByWord[0].split("\\.")[0];
+                String deviceId = wordByWord[0].split("\\.")[0];
 
                 // Count functions for each device
-                pciDeviceFunctionCount.put(DeviceId, pciDeviceFunctionCount.getOrDefault(DeviceId, 0) + 1);
+                pciDeviceFunctionCount.put(deviceId, pciDeviceFunctionCount.getOrDefault(deviceId, 0) + 1);
 
             }
 
@@ -65,58 +68,58 @@ public class PCIe {
             for (Map.Entry<String, Integer> entry : pciBusFunctionCount.entrySet()) {
                 //if else statement for correct grammar function for one ane functions for plural
                 if (entry.getValue() == 1) {
-                    NumberOfFunctionsForEachBus.append("Bus ").append(entry.getKey()).append(" has ").append(entry.getValue()).append(" function\n");
+                    numberOfFunctionsForEachBus.append("Bus ").append(entry.getKey()).append(" has ").append(entry.getValue()).append(" function\n");
                 } else{
-                    NumberOfFunctionsForEachBus.append("Bus ").append(entry.getKey()).append(" has ").append(entry.getValue()).append(" functions\n");
+                    numberOfFunctionsForEachBus.append("Bus ").append(entry.getKey()).append(" has ").append(entry.getValue()).append(" functions\n");
                 }
             }
             // Build the result string
             for (Map.Entry<String, Integer> entry : pciDeviceFunctionCount.entrySet()) {
                 //if else statement for correct grammar function for one ane functions for plural
                 if (entry.getValue() == 1) {
-                    NumberOfFunctionsForEachDevice.append("Device ").append(entry.getKey()).append(": ").append(entry.getValue()).append(" function\n");
+                    numberOfFunctionsForEachDevice.append("Device ").append(entry.getKey()).append(": ").append(entry.getValue()).append(" function\n");
                 } else{
-                    NumberOfFunctionsForEachDevice.append("Device ").append(entry.getKey()).append(": ").append(entry.getValue()).append(" functions\n");
+                    numberOfFunctionsForEachDevice.append("Device ").append(entry.getKey()).append(": ").append(entry.getValue()).append(" functions\n");
                 }
             }
             // Save the result as a string
-            String FunctionsPerBus = NumberOfFunctionsForEachBus.toString();
-            String FunctionsPerDevice = NumberOfFunctionsForEachDevice.toString();
+            String functionsPerBus = numberOfFunctionsForEachBus.toString();
+            String functionsPerDevice = numberOfFunctionsForEachDevice.toString();
 
 
             //Creates an ArrayList for lspci -vvv -nn
             List<String> lspciOutput = new ArrayList<>();
             //Adds each line to the ArrayList
-            String JustARandomStringWithToMakeThisFunctionWork = "";
-            while ((JustARandomStringWithToMakeThisFunctionWork = PCIReader.readLine()) != null) {
-                lspciOutput.add(JustARandomStringWithToMakeThisFunctionWork);
+            String justARandomStringWithToMakeThisFunctionWork = "";
+            while ((justARandomStringWithToMakeThisFunctionWork = pCIReader.readLine()) != null) {
+                lspciOutput.add(justARandomStringWithToMakeThisFunctionWork);
             }
 
             // Convert ArrayList to Array
-            String[] LSPCIOutputArray = lspciOutput.toArray(new String[0]);
+            String[] lSPCIOutputArray = lspciOutput.toArray(new String[0]);
 
             // Converts pciBuses.size() into an int
-            int NoOfBuses = pciBuses.size();
+            int noOfBuses = pciBuses.size();
 
             // Print the output
-            for (String entry : LSPCIOutputArray) {
-                System.out.println(entry);
+            for (String arrayEntry : lSPCIOutputArray) {
+                System.out.println(arrayEntry);
             }
 
-            System.out.println("There are " + FunctionCountTotal + " PCIe Functions\n");
+            System.out.println("There are " + functionCountTotal + " PCIe Functions\n");
 
-            System.out.println("Number of PCIe buses: " + NoOfBuses + "\n");
+            System.out.println("Number of PCIe buses: " + noOfBuses + "\n");
 
 
-            System.out.println(FunctionsPerBus);
-            System.out.println(FunctionsPerDevice);
+            System.out.println(functionsPerBus);
+            System.out.println(functionsPerDevice);
 
-            //NoOfBuses = int of the total number Buses
-            //FunctionCountTotal = int with the total number of functions
-            //LSPCIOutputArray = Array of the output of lspci -vvv -nn
+            //noOfBuses = int of the total number Buses
+            //functionCountTotal = int with the total number of functions
+            //lSPCIOutputArray = Array of the output of lspci -vvv -nn
             //lspciOutput = ArrayList of the output of lspci -vvv -nn
-            //FunctionsPerBus = String of how many pci functions each bus has
-            //FunctionPerDevice = String of how many pci functions each device has
+            //functionsPerBus = String of how many pci functions each bus has
+            //functionPerDevice = String of how many pci functions each device has
         }
     }
 }
