@@ -13,9 +13,10 @@ public class PCIe {
         //Checks if OS is linux
         if ((System.getProperty("os.name").equals("Linux"))) {
 
-            // Map to store the count of functions for each PCI bus and device
-            Map<String, Integer> pciBusFunctionCount = new HashMap<>();
-            Map<String, Integer> pciDeviceFunctionCount = new HashMap<>();
+            // Map to store the count of functions for each PCI bus and device.
+            // Changed from HashMap to Linked Hash Map to keep things in order
+            Map<String, Integer> pciBusFunctionCount = new LinkedHashMap<>();
+            Map<String, Integer> pciDeviceFunctionCount = new LinkedHashMap<>();
             // StringBuilder to accumulate results
             StringBuilder NumberOfFunctionsForEachBus = new StringBuilder();
             StringBuilder NumberOfFunctionsForEachDevice = new StringBuilder();
@@ -94,20 +95,23 @@ public class PCIe {
             // Convert ArrayList to Array
             String[] LSPCIOutputArray = lspciOutput.toArray(new String[0]);
 
+            // Converts pciBuses.size() into an int
+            int NoOfBuses = pciBuses.size();
+
             // Print the output
             for (String entry : LSPCIOutputArray) {
                 System.out.println(entry);
             }
 
-            System.out.println("There are " + FunctionCountTotal + " PCIe Functions");
+            System.out.println("There are " + FunctionCountTotal + " PCIe Functions\n");
 
-            System.out.println("Number of PCIe buses: " + pciBuses.size());
+            System.out.println("Number of PCIe buses: " + NoOfBuses + "\n");
 
 
             System.out.println(FunctionsPerBus);
             System.out.println(FunctionsPerDevice);
 
-            //pciBuses.size() = int of the total number Buses
+            //NoOfBuses = int of the total number Buses
             //FunctionCountTotal = int with the total number of functions
             //LSPCIOutputArray = Array of the output of lspci -vvv -nn
             //lspciOutput = ArrayList of the output of lspci -vvv -nn
