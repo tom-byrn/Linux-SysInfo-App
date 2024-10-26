@@ -1,3 +1,5 @@
+package com.project.block1project;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,11 +17,14 @@ public class PCIe {
             // Changed from HashMap to Linked Hash Map to keep things in order
             Map<String, Integer> pciBusFunctionCount = new LinkedHashMap<>();
             Map<String, Integer> pciDeviceFunctionCount = new LinkedHashMap<>();
-            // StringBuilder to accumulate results
+            Map<String, Integer> pciDevicePerBusCount = new LinkedHashMap<>();
+            // StringBuilder to accumulate results into one string
             StringBuilder numberOfFunctionsForEachBus = new StringBuilder();
             StringBuilder numberOfFunctionsForEachDevice = new StringBuilder();
-            //Creates a new HashSet
-            Set<String> pciBuses = new HashSet<>();
+            StringBuilder devicesPerBus = new StringBuilder();
+            //Creates a new ArrayList for Strings
+            ArrayList<String> pciBusesTotal = new ArrayList<>();
+            ArrayList<String> pciDevicesTotal = new ArrayList<>();
 
 
             // Execute the lspci command
@@ -46,9 +51,21 @@ public class PCIe {
                 //This should be the bus:device:function E.g. 00:00:00
                 String busId = wordByWord[0];
 
+                //Split busId into two parts - AA:BB.BB
+                String[] busSplitDeviceFunction = busId.split(":"); // Split bus from device
 
-                //count number of unique Pci Buses
-                pciBuses.add(busId.substring(0, busId.indexOf(':')));
+                // Check for unique bus ID
+                if (!pciBusesTotal.contains(busSplitDeviceFunction[0])) {
+                    pciBusesTotal.add(busSplitDeviceFunction[0]); // Add unique bus ID
+                }
+
+                //split busId into 2 parts - aa:aa.bb
+                String[] deviceSplitFunction = busId.split("\\."); // Split bus from device
+
+                //checks if device is already in Arraylist
+                if (!pciDevicesTotal.contains(deviceSplitFunction[0])) {
+                    pciDevicesTotal.add(deviceSplitFunction[0]); // Add unique device Id
+                }
 
                 // Get the bus ID (first part) and stores it in an array
                 String busIdFunction = wordByWord[0].split(":")[0];
@@ -66,20 +83,41 @@ public class PCIe {
 
             // Build the result string for number of functions for each pci bus
             for (Map.Entry<String, Integer> entry : pciBusFunctionCount.entrySet()) {
-                //if else statement for correct grammar function for one ane functions for plural
+                //if else statement for correct grammar function for one and functions for plural
                 if (entry.getValue() == 1) {
                     numberOfFunctionsForEachBus.append("Bus ").append(entry.getKey()).append(" has ").append(entry.getValue()).append(" function\n");
                 } else{
                     numberOfFunctionsForEachBus.append("Bus ").append(entry.getKey()).append(" has ").append(entry.getValue()).append(" functions\n");
                 }
             }
-            // Build the result string
-            for (Map.Entry<String, Integer> entry : pciDeviceFunctionCount.entrySet()) {
-                //if else statement for correct grammar function for one ane functions for plural
-                if (entry.getValue() == 1) {
-                    numberOfFunctionsForEachDevice.append("Device ").append(entry.getKey()).append(": ").append(entry.getValue()).append(" function\n");
+            // Build the result string for number of functions for each device
+            for (Map.Entry<String, Integer> entryDeviceFunctionCount : pciDeviceFunctionCount.entrySet()) {
+
+                //Creates a temporary string for Bus:Device = NoOfFunctions for each Device
+                String busDevicesEqualsNoFunctions = String.valueOf(entryDeviceFunctionCount);
+                //Creates an array for Bus,Device=NoOfFunctions
+                String[] busSplitDevice= busDevicesEqualsNoFunctions.split(":");
+                //Remove Device=NoOfFunctions leaving only the Bus which is repeated once for each device
+                String listOfBusesRepeatedForNoOfDevices = busSplitDevice[0].split("\\.")[0];
+                //Adds the Bus and number of times it occours to the linked hash map
+                pciDevicePerBusCount.put(listOfBusesRepeatedForNoOfDevices, pciDevicePerBusCount.getOrDefault(listOfBusesRepeatedForNoOfDevices, 0) + 1);
+
+                //if else statement for correct grammar function for one and functions for plural
+                if (entryDeviceFunctionCount.getValue() == 1) {
+                    numberOfFunctionsForEachDevice.append("Device ").append(entryDeviceFunctionCount.getKey()).append(" has ").append(entryDeviceFunctionCount.getValue()).append(" function\n");
                 } else{
-                    numberOfFunctionsForEachDevice.append("Device ").append(entry.getKey()).append(": ").append(entry.getValue()).append(" functions\n");
+                    numberOfFunctionsForEachDevice.append("Device ").append(entryDeviceFunctionCount.getKey()).append(" has ").append(entryDeviceFunctionCount.getValue()).append(" functions\n");
+                }
+
+            }
+
+            // Build the result string for number of devices per bus
+            for (Map.Entry<String, Integer> entryDevicesPerFunction : pciDevicePerBusCount.entrySet()){
+                //if else statement for correct grammar device for one and devices for plural
+                if (entryDevicesPerFunction.getValue() == 1) {
+                    devicesPerBus.append("Bus ").append(entryDevicesPerFunction.getKey()).append(" has ").append(entryDevicesPerFunction.getValue()).append(" device\n");
+                } else{
+                    devicesPerBus.append("Bus ").append(entryDevicesPerFunction.getKey()).append(" has ").append(entryDevicesPerFunction.getValue()).append(" devices\n");
                 }
             }
             // Save the result as a string
@@ -98,28 +136,34 @@ public class PCIe {
             // Convert ArrayList to Array
             String[] lSPCIOutputArray = lspciOutput.toArray(new String[0]);
 
-            // Converts pciBuses.size() into an int
-            int noOfBuses = pciBuses.size();
+            // Converts pciBusesTotal.size() into an int
+            int noOfBusesTotal = pciBusesTotal.size();
 
-            // Print the output
+            // Converts pciDevicesTotal.size() into an int
+            int noOfDevicesTotal = pciDevicesTotal.size();
+
+          /*  // Print the output
             for (String arrayEntry : lSPCIOutputArray) {
-                System.out.println(arrayEntry);
-            }
+                    System.out.println(arrayEntry);
+            }*/
 
-            System.out.println("There are " + functionCountTotal + " PCIe Functions\n");
-
-            System.out.println("Number of PCIe buses: " + noOfBuses + "\n");
+            System.out.println("\nThere are " + functionCountTotal + " PCIe Functions\n");
+            System.out.println("Number of PCIe buses: " + noOfBusesTotal + "\n");
+            System.out.println("Number of unique PCI devices: " + noOfDevicesTotal +  "\n");
+            System.out.println(devicesPerBus);
 
 
             System.out.println(functionsPerBus);
             System.out.println(functionsPerDevice);
 
-            //noOfBuses = int of the total number Buses
+            //noOfBusesTotal = int of the total number Buses
             //functionCountTotal = int with the total number of functions
             //lSPCIOutputArray = Array of the output of lspci -vvv -nn
             //lspciOutput = ArrayList of the output of lspci -vvv -nn
             //functionsPerBus = String of how many pci functions each bus has
             //functionPerDevice = String of how many pci functions each device has
+            //noOfDevicesTotal = int of the total number of pcie devices connected
+            //devicesPerBus = String for the number of devices connected to each bus
         }
     }
 }
