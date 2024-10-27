@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
@@ -66,6 +67,8 @@ public class HelloController {
     @FXML
     private LineChart<Number, Number> chartCpuUsage;
     public static XYChart.Series<Number, Number> series; // Declaring the series needed for the Line Chart
+    @FXML
+    private PieChart memoryPieChart;
     @FXML
     private Label labelL1Cache;
     @FXML
@@ -337,6 +340,16 @@ public class HelloController {
         if (labelMemoryUsed != null) {
             labelMemoryUsed.setText("Memory Used: " + (totalMemory - availableMemory) / (1024 * 1024) + " MB");
         }
+
+        // make pie chart data
+        PieChart.Data usedData = new PieChart.Data("Used", (totalMemory - availableMemory));
+        PieChart.Data availableData = new PieChart.Data("Free", availableMemory);
+
+        // add data to the pie chart
+        memoryPieChart.getData().addAll(usedData, availableData);
+
+        // set title
+        memoryPieChart.setTitle("Memory Usage");
     }
 
 

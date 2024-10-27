@@ -7,6 +7,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
+<?import javafx.scene.chart.PieChart?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="972.0" prefWidth="1728.0" style="-fx-background-color: rgb(41, 41, 41);" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.block1project.HelloController">
    <children>
       <Rectangle id="side-bar" arcHeight="15.0" arcWidth="15.0" fill="#f2f2f2" height="713.0" layoutX="17.0" layoutY="128.0" stroke="#ffffff00" strokeType="INSIDE" styleClass="side-bar" width="200.0">
@@ -64,6 +65,17 @@
       <Label fx:id="labelAvailableMemory" layoutX="338.0" layoutY="304.0" styleClass="homeLabels" text="[Available Memory]" />
       <Label fx:id="labelMemoryUsed" layoutX="338.0" layoutY="373.0" styleClass="homeLabels" text="[Used Memory]" />
       <Label fx:id="labelMemorySpeed" layoutX="338.0" layoutY="442.0" styleClass="homeLabels" text="[Memory Speed]" />
+
+      <PieChart fx:id="memoryPieChart"
+                layoutX="695.0"
+                layoutY="238.0"
+                prefHeight="535.0"
+                prefWidth="880.0"
+                styleClass="memoryChart"
+                stylesheets="@chartStyle.css"
+                title="Memory Usage"/>
+
+
    </children>
    <effect>
       <Blend />
