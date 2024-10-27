@@ -25,12 +25,12 @@ public class PCIe {
             StringBuilder numberOfFunctionsForEachBus = new StringBuilder();
             StringBuilder numberOfFunctionsForEachDevice = new StringBuilder();
             StringBuilder devicesPerBus = new StringBuilder();
-            StringBuilder vendorAndProductId = new StringBuilder();
             //Creates a new ArrayList for Strings
             ArrayList<String> pciBusesTotal = new ArrayList<>();
             ArrayList<String> pciDevicesTotal = new ArrayList<>();
             List<String> vendorIds = new ArrayList<>(); // Creates an arraylist for vendor Ids
             List<String> vendorNames = new ArrayList<>(); // creates an array list for vendor names
+            List<String> pciImportantDeviceInfoArrayList = new ArrayList<>(); // List to store results for a bunch of stats
 
 
 
@@ -40,6 +40,8 @@ public class PCIe {
 
             // Read the output of the command lspci -vvv -nn
             BufferedReader pCIReader = new BufferedReader(new InputStreamReader(lSPCI.getInputStream()));
+
+
 
             //read lspci output
             BufferedReader noPCIFunctionsReader = new BufferedReader(new InputStreamReader(noPCIDevices.getInputStream()));
@@ -67,10 +69,63 @@ public class PCIe {
             String vendorId = "";
             String productId = "";
             String vendorName = "";
+            String currentBusId = "";
+
+            //Creates an ArrayList for lspci -vvv -nn
+            List<String> lspciOutputArrayList = new ArrayList<>();
+            String lSPCIvvvString = "";
 
             // Regex to find PCI bus info, vendor and product IDs
             // Specific regex copied from stack overflow
             Pattern RegexPattern = Pattern.compile("^(\\S+)\\s+.*\\[([0-9a-f]{4}):([0-9a-f]{4})]");
+
+            while ((lSPCIvvvString = pCIReader.readLine()) != null) {
+
+                //Adds each line from lspci -vvv -nn  to the ArrayList
+                lspciOutputArrayList.add(lSPCIvvvString);
+
+                //Removes trailing whitespaces E.g \n
+                lSPCIvvvString = lSPCIvvvString.trim();
+
+                // Capture bus ID line. Uses regex to find XX:XX.X
+                if (lSPCIvvvString.matches("[0-9]{2}:[0-9]{2}\\.[0-9].*")) {
+                    // Get the bus ID. Splits the bus to word by word
+                    currentBusId = lSPCIvvvString.split(" ")[0];
+                }
+
+                // Capture kernel driver in use line
+                if (lSPCIvvvString.startsWith("Kernel driver in use:")) {
+                    String driverForCurrentDevice = lSPCIvvvString.split(":")[1].trim();  // Get the driver name. Splits by using :
+                    // Store the result if both bus ID and driver are available
+                    if (currentBusId != null) {
+                        //adds kernal driver to arraylist
+                        pciImportantDeviceInfoArrayList.add("\t\tKernal Driver: " + driverForCurrentDevice);
+                    }
+                }
+                // Use regex to find bus info, vendor and product IDs
+                Matcher FindRegex = RegexPattern.matcher(lSPCIvvvString);
+                if (FindRegex.find()) {
+                    busInfo = FindRegex.group(1); // Get the bus info
+                    vendorId = FindRegex.group(2); // Get the vendor ID
+                    productId = FindRegex.group(3); // Get the product ID
+                }
+
+                //Checks for bus ID line. Uses regex to find XX:XX.X
+                if(lSPCIvvvString.matches("[0-9]{2}:[0-9]{2}\\.[0-9].*")) {
+                    // Search for the vendor name
+                    // For loop searches for vendorId in file line by line
+                    for (int counterForVendroId = 0; counterForVendroId < vendorIds.size(); counterForVendroId++) {
+                        if (vendorIds.get(counterForVendroId).equals(vendorId)) {
+                            vendorName = vendorNames.get(counterForVendroId); // Found the vendor name
+                            break; //leaves the for loop cause vendorId is found. Improves performance
+                        }
+
+                    }
+                    //adds buslocation, vendor id, product id, and vendor to arraylist
+                    pciImportantDeviceInfoArrayList.add("\n" + busInfo + "\tVendor ID: " + vendorId + ", Product ID: " + productId + "\n"
+                            + "\t\tVendor Name: " + (vendorName != null ? vendorName : "Vendor ID not found. Please check the ID.") );
+                }
+            }
 
             //Counts number of outputs from lspci
             int functionCountTotal = 0;
@@ -113,27 +168,7 @@ public class PCIe {
                 // Count functions for each device
                 pciDeviceFunctionCount.put(deviceId, pciDeviceFunctionCount.getOrDefault(deviceId, 0) + 1);
 
-                // Use regex to find bus info, vendor and product IDs
-                Matcher FindRegex = RegexPattern.matcher(counterLineByLine);
-                if (FindRegex.find()) {
-                    busInfo = FindRegex.group(1); // Get the bus info
-                    vendorId = FindRegex.group(2); // Get the vendor ID
-                    productId = FindRegex.group(3); // Get the product ID
-                }
 
-                // Search for the vendor name
-                // For loop searches for vendorId in file line by line
-                for (int counterForVendroId = 0; counterForVendroId < vendorIds.size(); counterForVendroId++) {
-                    if (vendorIds.get(counterForVendroId).equals(vendorId)) {
-                        vendorName = vendorNames.get(counterForVendroId); // Found the vendor name
-                        break; //leaves the for loop cause vendorId is found
-                    }
-
-                }
-
-
-                vendorAndProductId.append("Bus Info " + busInfo).append(", Vendor ID: " + vendorId).append(", Product ID: " + productId + "\n")
-                        .append("Vendor Name: " + (vendorName != null ? vendorName : "Vendor ID not found. Please check the ID.") + "\n");
             }
 
             // Build the result string for number of functions for each pci bus
@@ -187,19 +222,12 @@ public class PCIe {
             String functionsPerBus = numberOfFunctionsForEachBus.toString();
             String functionsPerDevice = numberOfFunctionsForEachDevice.toString();
             String noDevicesPerBus = String.valueOf(devicesPerBus);
-            String vendorIdAndNameAndProductId = String.valueOf(vendorAndProductId);
 
-
-            //Creates an ArrayList for lspci -vvv -nn
-            List<String> lspciOutputArrayList = new ArrayList<>();
-            //Adds each line to the ArrayList
-            String justARandomStringWithToMakeThisFunctionWork = "";
-            while ((justARandomStringWithToMakeThisFunctionWork = pCIReader.readLine()) != null) {
-                lspciOutputArrayList.add(justARandomStringWithToMakeThisFunctionWork);
-            }
 
             // Convert ArrayList to Array
             String[] lSPCIOutputArray = lspciOutputArrayList.toArray(new String[0]);
+            String[] pciImportantDeviceInfoArray = pciImportantDeviceInfoArrayList.toArray(new String[0]);
+
             // Converts pciBusesTotal.size() into an int
             int noOfBusesTotal = pciBusesTotal.size();
             // Converts pciDevicesTotal.size() into an int
@@ -210,13 +238,16 @@ public class PCIe {
                     System.out.println(arrayEntry);
             }*/
 
+            for (String result : pciImportantDeviceInfoArray) {
+                System.out.println(result);
+            }
+
             System.out.println("\nThere are " + functionCountTotal + " PCIe Functions\n");
             System.out.println("Number of PCIe buses: " + noOfBusesTotal + "\n");
             System.out.println("Number of unique PCI devices: " + noOfDevicesTotal +  "\n");
             System.out.println(noDevicesPerBus);
             System.out.println(functionsPerBus);
             System.out.println(functionsPerDevice);
-            System.out.println(vendorIdAndNameAndProductId);
 
             //noOfBusesTotal = int of the total number Buses
             //functionCountTotal = int with the total number of functions
@@ -226,7 +257,11 @@ public class PCIe {
             //functionPerDevice = String of how many pci functions each device has
             //noOfDevicesTotal = int of the total number of pcie devices connected
             //noDevicesPerBus = String for the number of devices connected to each bus
-            //vendorIdAndNameAndProductId = String Containing Bus location, vendor Id, Product Id and Vendor Name
+            //pciImportantDeviceInfoArray = Array Containing Bus location, vendor Id, Product Id and Vendor Name and kernal driver
         }
     }
 }
+
+
+
+
