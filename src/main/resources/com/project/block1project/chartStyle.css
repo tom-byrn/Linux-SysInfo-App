@@ -1,3 +1,4 @@
+//CPU usage chart styling
 .usageChart {
     -fx-background-color: #2c2c2c;
     -fx-border-color: #00ffcc;
@@ -56,29 +57,6 @@
     -fx-background-color: transparent;
 }
 
-.memoryChart {
-    -fx-background-color: #2c2c2c;
-    -fx-border-color: #00ffcc;
-    -fx-border-width: 2px;
-    -fx-border-radius: 10px;
-    -fx-background-radius: 10px;
-}
 
-.memoryChart .chart-title {
-    -fx-text-fill: #00ffcc;
-    -fx-font-size: 1.8em;
-    -fx-font-family: "Courier New", monospace;
-    -fx-font-weight: bold;
-}
-.memoryChart .chart-legend {
-    visibility: hidden;
-    -fx-max-width: 0;
-    -fx-max-height: 0;
-    -fx-background-color: transparent;
-}
-.memoryChart .default-color0.chart-pie {
-    -fx-pie-color: #ff69b4;
-}
-.memoryChart .default-color1.chart-pie {
-    -fx-pie-color: #00BFFF;
-}
+
+
