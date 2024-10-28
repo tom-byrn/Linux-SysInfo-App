@@ -21,7 +21,6 @@
       </Label>
 
       <VBox />
-      <Label id="page-label" layoutX="366.0" layoutY="201.0" styleClass="page-label" text="Welcome to the Operating System Page" />
 
       <Button layoutX="43.0" layoutY="147.0" mnemonicParsing="false" onAction="#onHomeButtonClick" prefHeight="108.0" prefWidth="147.0" text="Home">
          <effect>
@@ -73,27 +72,18 @@
          </effect>
       </Button>
 
-      <Label fx:id="osNameLabel" layoutX="338.0" layoutY="50.0" prefWidth="342.0" prefHeight="52.0" text="Operating System:" styleClass="homeLabels"/>
-      <Label fx:id="osVersionLabel" layoutX="338.0" layoutY="110.0" prefWidth="342.0" prefHeight="52.0" text="OS Version:" styleClass="homeLabels"/>
-      <Label fx:id="architectureLabel" layoutX="338.0" layoutY="170.0" prefWidth="342.0" prefHeight="52.0" text="Architecture:" styleClass="homeLabels"/>
-      <Label fx:id="processCountLabel" layoutX="338.0" layoutY="230.0" prefWidth="342.0" prefHeight="52.0" text="Process Count:" styleClass="homeLabels"/>
-      <Label fx:id="uptimeLabel" layoutX="338.0" layoutY="290.0" prefWidth="342.0" prefHeight="52.0" text="Uptime:" styleClass="homeLabels"/>
-      <Label fx:id="bootTimeLabel" layoutX="338.0" layoutY="350.0" prefWidth="342.0" prefHeight="52.0" text="Boot Time:" styleClass="homeLabels"/>
+      <Label fx:id="labelOSName" layoutX="338.0" layoutY="239.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="Operating System:" />
+      <Label fx:id="labelOSVer" layoutX="338.0" layoutY="304.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="OS Version:" />
+      <Label fx:id="labelArchitecture" layoutX="338.0" layoutY="373.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="Architecture:" />
+      <Label fx:id="labelProcessCount" layoutX="338.0" layoutY="442.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="Process Count:" />
+      <Label fx:id="labelUptime" layoutX="338.0" layoutY="511.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="Uptime:" />
+      <Label fx:id="labelKernelMode" layoutX="338.0" layoutY="580" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="Kernel Mode Time:" />
+      <Label fx:id="labelUserMode" layoutX="338.0" layoutY="649" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="User Mode Time:" />
 
-      <Label fx:id="kernelModeLabel" layoutX="338.0" layoutY="410.0" prefWidth="342.0" prefHeight="52.0" text="Kernel Mode Time:" styleClass="homeLabels"/>
-      <Label fx:id="userModeLabel" layoutX="338.0" layoutY="470.0" prefWidth="342.0" prefHeight="52.0" text="User Mode Time:" styleClass="homeLabels"/>
+      <Label layoutX="338.0" layoutY="147.0" prefHeight="64.0" prefWidth="560.0" styleClass="homeHeaderLabels" text="Operating System Info" textAlignment="CENTER" />
 
-      <!-- ListView for displaying file system names -->
-      <ListView fx:id="fileSystemsListView" layoutX="400.0" layoutY="550.0" prefWidth="400.0" prefHeight="150.0"/>
-
-      <!-- TableView for displaying detailed file system information -->
-      <TableView fx:id="fileSystemTable" layoutX="400.0" layoutY="720.0" prefWidth="400.0" prefHeight="200.0">
-         <columns>
-            <TableColumn text="File System" prefWidth="150.0"/>
-            <TableColumn text="Total Space" prefWidth="125.0"/>
-            <TableColumn text="Usable Space" prefWidth="125.0"/>
-         </columns>
-      </TableView>
+      <ListView fx:id="listProcessCount" layoutX="958.0" layoutY="239.0" prefHeight="619.0" prefWidth="712.0" styleClass="processList" />
+      <Label layoutX="958.0" layoutY="147.0" prefHeight="64.0" prefWidth="712.0" styleClass="homeHeaderLabels" text="Active Processes" textAlignment="CENTER" />
 
 
    </children>
@@ -101,4 +91,3 @@
       <Blend />
    </effect>
 </AnchorPane>
-
