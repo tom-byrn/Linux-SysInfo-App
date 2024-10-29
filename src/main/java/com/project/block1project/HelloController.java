@@ -19,7 +19,9 @@ import oshi.software.os.OSProcess;
 import oshi.util.FormatUtil;
 
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.List;
 
@@ -256,7 +258,7 @@ public class HelloController {
     }
 
     //Initialize the CPU page
-    public void initializeCPUPage(){
+    public void initializeCPUPage() throws IOException {
 
         SystemInfo si = new SystemInfo();
         HardwareAbstractionLayer hal = si.getHardware();
@@ -307,15 +309,52 @@ public class HelloController {
         labelCpuVendor.setText("Vendor: " + vendorID);
 
 
-        List<CentralProcessor.ProcessorCache> caches = processor.getProcessorCaches();
-        String[] cacheSizesArray = new String[3];
-        for(int i = 2; i >= 0; i--) { //The getProcessorCaches has L3 @ 0 & L1 @ 2, so we need to loop through this backwards
-            if(caches.size() > i){
-                cacheSizesArray[i] = "L" + (3 - i) + " Cache: " + (caches.get(i).getCacheSize()) + " KB";
+        //For getting the cpu cache
+        //checks if the os is linux
+        if(System.getProperty("os.name").equals("Linux")) {
+            //Creates ArrayLists for cpu
+            ArrayList<String> cpuVulnerablitiesArrayList = new ArrayList<>(); //ArrayList for cpu
+            // StringBuilder to accumulate results into one string
+            StringBuilder cpuCacheWithSpace = new StringBuilder();
+            StringBuilder cpuCache = new StringBuilder();
+
+            // Create a process to run the lscpu command
+            Process lsCpu = Runtime.getRuntime().exec("lscpu");
+
+            // Read the output from the command lscpu
+            BufferedReader lsCpuReader = new BufferedReader(new InputStreamReader(lsCpu.getInputStream()));
+            String cpuLineByLine;
+
+            while ((cpuLineByLine = lsCpuReader.readLine()) != null) {
+
+                //Removes excess whitespaces
+                cpuLineByLine = cpuLineByLine.trim();
+
+                //Checks if it starts with cache
+                if (cpuLineByLine.contains("cache")) {
+                    //removes unnessisary spaces and the d from one of the L1 caches
+                    String cpuCacheByCache = cpuLineByLine.replaceAll("  ", "").replaceAll("d", "").replaceAll("cache", "Cache");
+                    //this it to prevent duplication of L1
+                    if (cpuCacheByCache.contains("L1 ") || cpuCacheByCache.contains("L2 ") || cpuCacheByCache.contains("L3 ")) {
+                        // Splits by using : and takes the second part
+                        String cpuCacheMissingSpace = cpuCacheByCache.split(":")[1];
+                        //checks if there is a space after the :
+                        //Sometimes removing unnessisary spaces removes one of the nessisary ones after the colon
+                        if (!cpuCacheMissingSpace.startsWith(" ")) {
+                            //Uses stringbuilder to add in the missing space
+                            cpuCacheWithSpace.append(cpuCacheByCache.split(":")[0]).append(": ").append(cpuCacheMissingSpace);
+
+                        } else {
+                            cpuCacheWithSpace = new StringBuilder(cpuCacheByCache);
+                        }
+                        cpuCache.append(cpuCacheWithSpace + "\n");
+                    }
+                }
             }
-            else{cacheSizesArray[i] = "L" + (3 - i) + " Cache: N/A";}
+            labelCacheSizes.setText(String.format("%s", cpuCache));
+        }else{
+            labelCacheSizes.setText(String.format("%s%n", "Unknown CPU Cache Size", "Please Switch to Linux"));
         }
-        labelCacheSizes.setText(String.format("%s%n%s%n%s", cacheSizesArray[2], cacheSizesArray[1], cacheSizesArray[0]));
 
 
         // CPU Usage Chart
