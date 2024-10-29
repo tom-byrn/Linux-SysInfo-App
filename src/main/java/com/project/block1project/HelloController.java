@@ -77,8 +77,6 @@ public class HelloController {
     @FXML
     private Label labelTimeRemaining;
     @FXML
-    private Label labelBatteryState;
-    @FXML
     private Label labelBatteryCharge;
     @FXML
     private Label labelBatteryVoltag;
@@ -325,12 +323,7 @@ public class HelloController {
                 labelTimeRemaining.setText(timeRemaining);
                 System.out.println(timeRemaining);
             }
-            if(upowerLineByLine.contains("state")){
-                batteryState = upowerLineByLine.replaceAll(" ", "").replaceAll("state:", "");
-                batteryState = "State: " + batteryState;
-                labelBatteryState.setText(batteryState);
-                System.out.println(batteryState);
-            }
+
             if(upowerLineByLine.contains("energy:")) {
                 batteryCharge = upowerLineByLine.replaceAll(" ", "").replaceAll("energy:", "").replaceAll("Wh","");
                 batteryCharge = "Battery Charge: " + batteryCharge + " Wh";

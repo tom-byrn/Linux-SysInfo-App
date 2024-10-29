@@ -72,16 +72,12 @@
       <Label fx:id="labelBatterySize" layoutX="775.0" layoutY="438.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[OS Architecture]" />
       <Label fx:id="labelPowerDraw" layoutX="775.0" layoutY="508.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Keyboard Layout]" />
       <Label fx:id="labelTimeRemaining" layoutX="775.0" layoutY="579.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="Time Remaining: N/A" />
-      <Label fx:id="labelBatteryState" layoutX="775.0" layoutY="649.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[User]" />
       <Label fx:id="labelBatteryCharge" layoutX="775.0" layoutY="719.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[User]" />
       <Label fx:id="labelBatteryVoltag" layoutX="775.0" layoutY="789.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[User]" />
-      <Label fx:id="labelTemperature" layoutX="775.0" layoutY="859.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[User]" />
+      <Label fx:id="labelTemperature" layoutX="775.0" layoutY="649.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[User]" />
       <Label fx:id="labelResolution" layoutX="1204.0" layoutY="227.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Display Resolution]" textFill="WHITE" />
       <Label fx:id="labelDPI" layoutX="1204.0" layoutY="297.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Pixels Per Inch]" textFill="WHITE" />
       <Label fx:id="labelRefreshRate" layoutX="1204.0" layoutY="368.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Refresh Rate]" />
-      <Label fx:id="labelLinkSpeed" layoutX="1204.0" layoutY="437.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[LInk Speed]" />
-      <Label fx:id="labelInterfaceName" layoutX="1204.0" layoutY="507.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Interface Name]" />
-      <Label fx:id="labelMacAddress" layoutX="1204.0" layoutY="577.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Mac Address]" />
 
       <Label layoutX="339.0" layoutY="137.0" prefHeight="64.0" prefWidth="345.0" styleClass="homeHeaderLabels" text="User Info" textAlignment="CENTER" />
       <Label layoutX="775.0" layoutY="137.0" prefHeight="64.0" prefWidth="345.0" styleClass="homeHeaderLabels" text="Battery" textAlignment="CENTER" />
