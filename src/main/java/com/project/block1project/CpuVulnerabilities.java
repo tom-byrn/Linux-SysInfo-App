@@ -15,10 +15,10 @@ public class CpuVulnerabilities {
         Process lsCpu = Runtime.getRuntime().exec("lscpu");
 
         // Read the output from the command
-        BufferedReader lsUSBReader = new BufferedReader(new InputStreamReader(lsCpu.getInputStream()));
+        BufferedReader lsCpuReader = new BufferedReader(new InputStreamReader(lsCpu.getInputStream()));
         String cpuLineByLine;
 
-        while ((cpuLineByLine = lsUSBReader.readLine()) != null) {
+        while ((cpuLineByLine = lsCpuReader.readLine()) != null) {
 
             //Removes excess whitespaces
             cpuLineByLine = cpuLineByLine.trim();
