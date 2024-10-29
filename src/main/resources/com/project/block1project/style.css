@@ -56,8 +56,7 @@
     -fx-border-radius: 15px;
 }
 
-/* Label styling */
-.homeLabels{
+.homeLabels {
     -fx-font-size: 1.5em;
     -fx-font-weight: bold;
     -fx-text-fill: #ffffff;
@@ -70,10 +69,8 @@
     -fx-alignment: center-left;
 }
 
-.homeLabels:hover{
-
+.homeLabels:hover {
     -fx-border-color: #ff00ff;
-
 }
 
 .homeHeaderLabels {
@@ -89,8 +86,6 @@
     -fx-alignment: center;
 }
 
-
-/* Battery Styling */
 .batteryBar {
     -fx-accent: #00ffcc;
     -fx-background-color: #1e1e1e;
@@ -115,12 +110,8 @@
     -fx-background-radius: 10px;
 }
 
-.batteryBar .bar : hover {
-    -fx-background-color: linear-gradient(0% 0% to 100% 100%, #00ffee, #00ffcc);
-}
 
-
-//OS Active Processes List Styling
+//Active Processes List
 .processList {
     -fx-background-color: #1e1e1e;
     -fx-border-color: #00ffcc;
@@ -148,5 +139,61 @@
 
 
 
+//Pie Chart
+.memoryChart {
+    -fx-background-color: transparent;
+    -fx-border-color: #00ffcc;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+}
 
+.memoryChart .chart-title {
+    -fx-text-fill: white;
+    -fx-font-size: 2em;
+    -fx-font-weight: bold;
+    font-family: "Courier New", monospace, Arial, Helvetica, sans-serif;
+}
 
+.memoryChart .chart-legend {
+    -fx-background-color: #1e1e1e;
+    -fx-border-color: #00ffcc;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-text-fill: white;
+}
+
+.memoryChart .chart-legend-item-symbol {
+    -fx-background-radius: 5px;
+    -fx-padding: 2px;
+}
+
+.memoryChart .chart-legend-item:hover .chart-legend-item-symbol {
+    -fx-background-color: #ff00ff;
+}
+
+.memoryChart .chart-pie {
+    -fx-border-color: #00ffcc;
+    -fx-border-width: 2px;
+}
+
+.memoryChart .data0.chart-pie {
+    -fx-pie-color: rgb(41, 41, 41);
+}
+
+.memoryChart .data1.chart-pie {
+    -fx-pie-color: #00ffcc;
+}
+
+.memoryChart .data0.chart-pie:hover {
+    -fx-pie-color: white;
+}
+
+.memoryChart .data1.chart-pie:hover {
+    -fx-pie-color: white;
+}
+
+.memoryChart .chart-pie-label, .memoryChart .chart-pie-label-text {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
