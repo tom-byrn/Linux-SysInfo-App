@@ -296,6 +296,7 @@ public class PCIe {
             //noOfDevicesTotal = int of the total number of pcie devices connected
             //noDevicesPerBus = String for the number of devices connected to each bus
             //pciImportantDeviceInfoArray = Array Containing Bus location, vendor Id, Product Id, Vendor Name, kernal driver, device name, subsystem informatnoin
+            //pciImportantDeviceInfoArrayList  = ArrayList Containing pci pciImportantDeviceInfoArray
         }
     }
 }
