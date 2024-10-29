@@ -312,16 +312,21 @@ public class HelloController {
         //For getting the cpu cache
         //checks if the os is linux
         if(System.getProperty("os.name").equals("Linux")) {
-            //Creates ArrayLists for cpu
+
+            //Creates ArrayLists
             ArrayList<String> cpuVulnerablitiesArrayList = new ArrayList<>(); //ArrayList for cpu
             // StringBuilder to accumulate results into one string
             StringBuilder cpuCacheWithSpace = new StringBuilder();
             StringBuilder cpuCache = new StringBuilder();
 
+            //Initilizes variables
+            int cachePerCoreInt = 0;
+            String cpuCachePerCore = "";
+
             // Create a process to run the lscpu command
             Process lsCpu = Runtime.getRuntime().exec("lscpu");
 
-            // Read the output from the command lscpu
+            // Read the output from the command
             BufferedReader lsCpuReader = new BufferedReader(new InputStreamReader(lsCpu.getInputStream()));
             String cpuLineByLine;
 
@@ -331,26 +336,47 @@ public class HelloController {
                 cpuLineByLine = cpuLineByLine.trim();
 
                 //Checks if it starts with cache
-                if (cpuLineByLine.contains("cache")) {
-                    //removes unnessisary spaces and the d from one of the L1 caches
+                if(cpuLineByLine.contains("cache")) {
+                    //removes unnessisary spaces and the d from one of the L1 caches and makes cache begin with a capital C
                     String cpuCacheByCache = cpuLineByLine.replaceAll("  ", "").replaceAll("d", "").replaceAll("cache", "Cache");
                     //this it to prevent duplication of L1
-                    if (cpuCacheByCache.contains("L1 ") || cpuCacheByCache.contains("L2 ") || cpuCacheByCache.contains("L3 ")) {
+                    if(cpuCacheByCache.contains("L1 ") ||  cpuCacheByCache.contains("L2 ") || cpuCacheByCache.contains("L3 ")){
                         // Splits by using : and takes the second part
                         String cpuCacheMissingSpace = cpuCacheByCache.split(":")[1];
                         //checks if there is a space after the :
                         //Sometimes removing unnessisary spaces removes one of the nessisary ones after the colon
-                        if (!cpuCacheMissingSpace.startsWith(" ")) {
+                        if(!cpuCacheMissingSpace.startsWith(" ")){
                             //Uses stringbuilder to add in the missing space
                             cpuCacheWithSpace.append(cpuCacheByCache.split(":")[0]).append(": ").append(cpuCacheMissingSpace);
 
-                        } else {
+                        }else{
                             cpuCacheWithSpace = new StringBuilder(cpuCacheByCache);
                         }
-                        cpuCache.append(cpuCacheWithSpace + "\n");
+
+                        //Replace Total Cache with cache per core
+                        // split based on spaces and take the third item which is the total cache size
+                        int totalCacheSize = Integer.parseInt(String.valueOf(cpuCacheWithSpace).split(" ")[2]);
+
+                        // split based on spaces and take the fifth item which is the number of times that cache is used and removes (
+                        int numberOfCaches = Integer.parseInt((String.valueOf(cpuCacheWithSpace).split(" ")[4]).replaceAll("\\(", ""));
+
+                        // Detects if the answer if in KiB or MiB
+                        if(String.valueOf(cpuCacheWithSpace).contains("KiB")) {
+                            //Divides the total cache size by the number of cores
+                            cachePerCoreInt = totalCacheSize / numberOfCaches;
+                            //Replaces the total cache size with the cache per core
+                            cpuCachePerCore = String.valueOf(cpuCacheWithSpace).replaceAll(String.valueOf(totalCacheSize), String.valueOf(cachePerCoreInt));
+                        } else if (String.valueOf(cpuCacheWithSpace).contains("MiB")) {
+                            //Divides the total cache size by 1024 by the number of cores
+                            cachePerCoreInt = (totalCacheSize * 1024) / numberOfCaches;
+                            //Replaces the total cache size with the cache per core
+                            cpuCachePerCore = String.valueOf(cpuCacheWithSpace).replaceAll("MiB", "KiB").replaceAll(String.valueOf(totalCacheSize), String.valueOf(cachePerCoreInt));
+                        }
+                        cpuCache.append(cpuCachePerCore + "\n");
                     }
                 }
             }
+            //cpuCache = String of all cpu caches
             labelCacheSizes.setText(String.format("%s", cpuCache));
         }else{
             labelCacheSizes.setText(String.format("%s%n", "Unknown CPU Cache Size", "Please Switch to Linux"));
