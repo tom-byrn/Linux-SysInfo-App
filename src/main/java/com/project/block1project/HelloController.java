@@ -19,6 +19,7 @@ import oshi.software.os.OSProcess;
 import oshi.util.FormatUtil;
 
 import java.awt.*;
+import java.awt.im.InputContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -208,13 +209,16 @@ public class HelloController {
             Locale localeCountry = new Locale(languageAbbreviation);
             language = localeCountry.getDisplayLanguage();
         }
+        //Gets Keyboard layout
+        InputContext keyboard = InputContext.getInstance();
+
         // Set the labels with values, ensuring they are not null
         if (labelOS != null) labelOS.setText("Operating System: " + stringOS);
         if (labelOSBit != null) labelOSBit.setText("OS Bit: " + osBit);
         if (labelOSVersion != null) labelOSVersion.setText("Version: " + osVersion);
         if (labelOSArchitecture != null) labelOSArchitecture.setText("OS Architecture: " + osArchitecture);
         if (labelCountry != null) labelCountry.setText("Country: " + country);
-        if (labelKeyboard != null) labelCountry.setText("Keyboard: " + country);
+        if (labelKeyboard != null) labelKeyboard.setText("Keyboard: " + keyboard.getLocale());
         if (labelLanguageAbbreviation != null) labelLanguageAbbreviation.setText("Language: " + language);
         if (labelUser != null) labelUser.setText("User: " + user);
 
