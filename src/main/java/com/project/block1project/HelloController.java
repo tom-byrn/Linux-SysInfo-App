@@ -575,7 +575,7 @@ public class HelloController {
         long availableMemory = memory.getAvailable();
 
         if (labelTotalMemory != null) {
-            labelTotalMemory.setText("Total Memory: " + totalMemory / (1000 * 1000) + " MB");
+            labelTotalMemory.setText("Total Memory: " + totalMemory / (1024 * 1024) + " MiB");
         }
 
         // Get the list of physical memory modules
@@ -593,10 +593,10 @@ public class HelloController {
         }
 
         if (labelAvailableMemory != null) {
-            labelAvailableMemory.setText("Available Memory: " + availableMemory / (1000 * 1000) + " MB");
+            labelAvailableMemory.setText("Available Memory: " + (availableMemory / (1024 * 1024)) + " MiB");
         }
         if (labelMemoryUsed != null) {
-            labelMemoryUsed.setText("Memory Used: " + (totalMemory - availableMemory) / (1000 * 1000) + " MB");
+            labelMemoryUsed.setText("Memory Used: " + ((totalMemory - availableMemory) / (1024 * 1024)) + " MiB");
 
             // make pie chart data
             PieChart.Data usedData = new PieChart.Data("Used", (totalMemory - availableMemory));
@@ -613,7 +613,7 @@ public class HelloController {
         long usedSwap = swapMemory.getSwapUsed();
 
         if (labelUsedSwapMemory != null) {
-            labelUsedSwapMemory.setText("Used Swap Memory: " + usedSwap / (1000 * 1000)  + " MB");
+            labelUsedSwapMemory.setText("Used Swap Memory: " + (usedSwap / (1024 * 1024))  + " MiB");
         }
 
         // Disk info
@@ -629,19 +629,19 @@ public class HelloController {
         }
         String unit = "Bytes";
 
-        if (diskSize > (1000 * 1000 * 1000) ){
-            diskSize /= (1000 * 1000 * 1000);
-            unit = "GB";
-        } else if (diskSize > (1000 * 1000 )) {
-            diskSize /= (1000 * 1000);
-            unit = "MB";
+        if (diskSize > (1024 * 1024 * 1024) ){
+            diskSize /= (1024 * 1024 * 1024);
+            unit = "GiB";
+        } else if (diskSize > (1024 * 1024 )) {
+            diskSize /= (1024 * 1024);
+            unit = "MiB";
         }
 
         if (labelDiskModel != null) {
             labelDiskModel.setText("Disk Model: " + model );}
 
         if (labelDiskSize != null) {
-            labelDiskSize.setText("Disk Size: " + diskSize / (1000 * 1000 * 1000) +" GB");}
+            labelDiskSize.setText("Disk Size: " + diskSize +" " + unit);}
     }
 
     public void initializeOperatingSystemPage(){
