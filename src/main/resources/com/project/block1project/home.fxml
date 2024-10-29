@@ -63,7 +63,8 @@
       <Label fx:id="labelOSBit" layoutX="339.0" layoutY="297.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[OS Bit ]" textFill="WHITE" />
       <Label fx:id="labelOSVersion" layoutX="339.0" layoutY="368.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[OS Version]" />
       <Label fx:id="labelOSArchitecture" layoutX="339.0" layoutY="438.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[OS Architecture]" />
-      <Label fx:id="labelCountry" layoutX="339.0" layoutY="508.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Keyboard Layout]" />
+      <Label fx:id="labelCountry" layoutX="339.0" layoutY="508.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Country]" />
+      <Label fx:id="labelKeyboard" layoutX="339.0" layoutY="508.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Keyboard Layout]" />
       <Label fx:id="labelLanguageAbbreviation" layoutX="339.0" layoutY="579.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Language]" />
       <Label fx:id="labelUser" layoutX="339.0" layoutY="649.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[User]" />
       <Label fx:id="labelBattery" layoutX="775.0" layoutY="227.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Battery]" textFill="WHITE" />
