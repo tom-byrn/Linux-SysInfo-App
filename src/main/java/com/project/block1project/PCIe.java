@@ -289,8 +289,8 @@ public class PCIe {
 
             //noOfBusesTotal = int of the total number Buses
             //functionCountTotal = int with the total number of functions
-            //lSPCIOutputArray = Array of the output of lspci -vvv -nn
-            //lspciOutputArrayList = ArrayList of the output of lspci -vvv -nn
+            //lSPCIOutputArray = Array of the output of lspci -vvv -nn not really nessesary because of other outputs
+            //lspciOutputArrayList = ArrayList of the output of lspci -vvv -nn not really nessesary because of other outputs
             //functionsPerBus = String of how many pci functions each bus has
             //functionPerDevice = String of how many pci functions each device has
             //noOfDevicesTotal = int of the total number of pcie devices connected
