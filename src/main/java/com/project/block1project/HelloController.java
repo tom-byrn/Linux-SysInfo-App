@@ -67,6 +67,23 @@ public class HelloController {
     private Label labelDPI;
     @FXML
     private Label labelRefreshRate;
+    //Battery Stuff
+    @FXML
+    private Label labelBatteryVendor;
+    @FXML
+    private Label labelBatterySize;
+    @FXML
+    private Label labelPowerDraw;
+    @FXML
+    private Label labelTimeRemaining;
+    @FXML
+    private Label labelBatteryState;
+    @FXML
+    private Label labelBatteryCharge;
+    @FXML
+    private Label labelBatteryVoltag;
+    @FXML
+    private Label labelTemperature;
 
 
     //FXML components from the cpu.fxml file & declare anything that needs to be public
@@ -217,7 +234,7 @@ public class HelloController {
 
     // Initialize the Home page (moved functionality from Home.java)
     @FXML
-    public void initializeHomePage() {
+    public void initializeHomePage() throws IOException {
         System.out.println("Home page initialize() is running");
 
         // Get system properties
@@ -260,24 +277,85 @@ public class HelloController {
         HardwareAbstractionLayer hal = si.getHardware();
         PowerSource[] powerSources = hal.getPowerSources().toArray(new PowerSource[0]);
         PowerSource battery = powerSources[0];
+        String batteryVendor = "";
+        String batterySize = "";
+        String powerDraw = "";
+        String timeRemaining = "";
+        String batteryState = "";
+        String batteryCharge = "";
+        String batteryVoltage = "";
+        String temperature = "";
+
+
+        // Execute the command to get battery information
+        Process upowerCommand = Runtime.getRuntime().exec("upower -i /org/freedesktop/UPower/devices/battery_BAT1");
+        BufferedReader readUpower = new BufferedReader(new InputStreamReader(upowerCommand.getInputStream()));
+        String upowerLineByLine;
+
+        // Read the output
+        while ((upowerLineByLine = readUpower.readLine()) != null) {
+            upowerLineByLine.trim();
+            if(upowerLineByLine.contains("vendor")) {
+                batteryVendor = upowerLineByLine.replaceAll(" ", "").replaceAll("vendor:", "");
+                batteryVendor = "Vendor: " + batteryVendor;
+                labelBatteryVendor.setText(batteryVendor);
+                System.out.println(batteryVendor);
+            }
+            if(upowerLineByLine.contains("energy-full") && !upowerLineByLine.contains("energy-full-design")){
+                batterySize = upowerLineByLine.replaceAll(" ", "").replaceAll("Wh","").replaceAll("energy-full:", "");
+                batterySize = "Battery Capacity: "+batterySize + " Wh";
+                labelBatterySize.setText(batterySize);
+                System.out.println(batterySize);
+            }
+            if(upowerLineByLine.contains("energy-rate")){
+                powerDraw = upowerLineByLine.replaceAll(" ", "").replaceAll("W","").replaceAll("energy-rate:", "");;
+                powerDraw = "Current Power Draw: " + powerDraw + " W";
+                labelPowerDraw.setText(powerDraw);
+                System.out.println(powerDraw);
+            }
+            if(upowerLineByLine.contains("time to empty")){
+                timeRemaining = upowerLineByLine.replaceAll("  ", "").replaceAll(" time to empty:", "").replaceAll("time to empty:", "");
+                timeRemaining = "Time Remaining: " + timeRemaining;
+                labelTimeRemaining.setText(timeRemaining);
+                System.out.println(timeRemaining);
+            }
+            if(upowerLineByLine.contains("state")){
+                batteryState = upowerLineByLine.replaceAll(" ", "").replaceAll("state:", "");
+                batteryState = "State: " + batteryState;
+                labelBatteryState.setText(batteryState);
+                System.out.println(batteryState);
+            }
+            if(upowerLineByLine.contains("energy:")) {
+                batteryCharge = upowerLineByLine.replaceAll(" ", "").replaceAll("energy:", "").replaceAll("Wh","");
+                batteryCharge = "Battery Charge: " + batteryCharge + " Wh";
+                labelBatteryCharge.setText(batteryCharge);
+                System.out.println(batteryCharge);
+            }
+            if(upowerLineByLine.contains("voltage:")) {
+                batteryVoltage = upowerLineByLine.replaceAll(" ", "").replaceAll("voltage:", "").replaceAll("V","");
+                batteryVoltage = "Battery Voltage: " + batteryVoltage + " V";
+                labelBatteryVoltag.setText(batteryVoltage);
+                System.out.println(batteryVoltage);
+            }
+            if(upowerLineByLine.contains("temperature")) {
+                temperature = upowerLineByLine.replaceAll(" ", "").replaceAll("temperature:", "").replaceAll("degreesC", "");
+                temperature = "Temperature: " + temperature + " °C";
+                labelTemperature.setText(temperature);
+                System.out.println(temperature);
+            }
+
+        }
 
         double batteryRemaining = battery.getRemainingCapacityPercent() * 100;  // Battery remaining percentage
-        double batteryTimeRemaining = battery.getTimeRemainingInstant();  // Time remaining in seconds
 
         batteryBar.setProgress(batteryRemaining / 100.0);
 
-        // Convert time remaining to minutes and hours
-        long hours = (long) (batteryTimeRemaining / 3600);
-        long minutes = (long) ((batteryTimeRemaining % 3600) / 60);
 
         // Display battery information
         if (labelBattery != null) {
-            labelBatteryTime.setText(String.format("Time Remaining:%n%d hours %n%d minutes", hours, minutes));
             labelBattery.setText(String.format("Battery: %.1f%%", batteryRemaining));
         }
-        if (hours == 0 && minutes == 0) {
-            labelBatteryTime.setText(String.format("Time Remaining:%n%nUnknown"));
-        }
+
 
 
         // Using native Java methods to get screen devices

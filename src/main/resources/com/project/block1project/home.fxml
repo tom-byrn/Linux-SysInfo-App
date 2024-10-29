@@ -67,7 +67,15 @@
       <Label fx:id="labelLanguageAbbreviation" layoutX="339.0" layoutY="579.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Language]" />
       <Label fx:id="labelUser" layoutX="339.0" layoutY="649.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[User]" />
       <Label fx:id="labelBattery" layoutX="775.0" layoutY="227.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Battery]" textFill="WHITE" />
-      <ProgressBar fx:id="batteryBar" layoutX="775.0" layoutY="297.0" prefHeight="71.0" prefWidth="345.0" progress="0.0" styleClass="batteryBar" />
+      <ProgressBar fx:id="batteryBar" layoutX="775.0" layoutY="297.0" prefHeight="52.0" prefWidth="345.0" progress="0.0" styleClass="batteryBar" />
+      <Label fx:id="labelBatteryVendor" layoutX="775.0" layoutY="368.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[OS Version]" />
+      <Label fx:id="labelBatterySize" layoutX="775.0" layoutY="438.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[OS Architecture]" />
+      <Label fx:id="labelPowerDraw" layoutX="775.0" layoutY="508.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Keyboard Layout]" />
+      <Label fx:id="labelTimeRemaining" layoutX="775.0" layoutY="579.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="Time Remaining: N/A" />
+      <Label fx:id="labelBatteryState" layoutX="775.0" layoutY="649.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[User]" />
+      <Label fx:id="labelBatteryCharge" layoutX="775.0" layoutY="719.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[User]" />
+      <Label fx:id="labelBatteryVoltag" layoutX="775.0" layoutY="789.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[User]" />
+      <Label fx:id="labelTemperature" layoutX="775.0" layoutY="859.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[User]" />
       <Label fx:id="labelResolution" layoutX="1204.0" layoutY="227.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Display Resolution]" textFill="WHITE" />
       <Label fx:id="labelDPI" layoutX="1204.0" layoutY="297.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Pixels Per Inch]" textFill="WHITE" />
       <Label fx:id="labelRefreshRate" layoutX="1204.0" layoutY="368.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Refresh Rate]" />
@@ -75,7 +83,6 @@
       <Label layoutX="339.0" layoutY="137.0" prefHeight="64.0" prefWidth="345.0" styleClass="homeHeaderLabels" text="User Info" textAlignment="CENTER" />
       <Label layoutX="775.0" layoutY="137.0" prefHeight="64.0" prefWidth="345.0" styleClass="homeHeaderLabels" text="Battery" textAlignment="CENTER" />
       <Label layoutX="1204.0" layoutY="137.0" prefHeight="64.0" prefWidth="345.0" styleClass="homeHeaderLabels" text="Display" textAlignment="CENTER" />
-      <Label fx:id="labelBatteryTime" layoutX="775.0" layoutY="385.0" prefHeight="184.0" prefWidth="345.0" styleClass="homeLabels" text="[Battery Time Remaining]" textFill="WHITE" />
 
    </children>
    <effect>
