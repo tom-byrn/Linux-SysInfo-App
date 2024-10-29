@@ -62,7 +62,7 @@
          </effect>
       </Button>
 
-      <Button layoutX="43.0" layoutY="623.0" mnemonicParsing="false" onAction="#onPeripheralsButtonClick" prefHeight="108.0" prefWidth="147.0" text="Peripherals">
+      <Button layoutX="43.0" layoutY="623.0" mnemonicParsing="false" onAction="#onPeripheralsButtonClick" prefHeight="108.0" prefWidth="147.0" text="Interconnects">
          <effect>
             <DropShadow>
                <color>
