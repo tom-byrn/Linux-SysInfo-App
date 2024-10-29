@@ -496,14 +496,21 @@ public class HelloController {
             diskSize = disk.getFirst().getSize();
         }
 
+ String unit = "Bytes";
+
+        if (diskSize > (1000 * 1000 * 1000) ){
+            diskSize /= (1000 * 1000 * 1000);
+            unit = "GB";
+        } else if (diskSize > (1000 * 1000 )) {
+            diskSize /= (1000 * 1000);
+            unit = "MB";
+        }
 
         if (labelDiskModel != null) {
             labelDiskModel.setText("Disk Model: " + model );}
 
         if (labelDiskSize != null) {
-            labelDiskSize.setText("Disk Size: " + diskSize / (1000 * 1000 * 1000) +" GB");}
-
-        
+            labelDiskSize.setText("Disk Size: " + diskSize  + unit);}
     }
 
     public void initializeOperatingSystemPage(){
