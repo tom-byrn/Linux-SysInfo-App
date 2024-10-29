@@ -67,6 +67,12 @@ public class HelloController {
     private Label labelDPI;
     @FXML
     private Label labelRefreshRate;
+    @FXML
+    private Label labelLinkSpeed;
+    @FXML
+    private Label labelInterfaceName;
+    @FXML
+    private Label labelMacAddress;
 
 
     //FXML components from the cpu.fxml file & declare anything that needs to be public
@@ -295,6 +301,32 @@ public class HelloController {
         GraphicsDevice gd = ge.getDefaultScreenDevice();
         int refreshRate = gd.getDisplayMode().getRefreshRate();
         labelRefreshRate.setText("Refresh Rate: " + refreshRate + " Hz");
+        
+        // Network info
+        List<NetworkIF> networkInterfaces = si.getHardware().getNetworkIFs();
+
+        NetworkIF net = networkInterfaces.getFirst();
+
+        String interfaceName = net.getName();
+
+        if (interfaceName.contains("en")) {
+            interfaceName = "Ethernet";
+        }   else {interfaceName = "Wi-Fi"; }
+
+
+        String macAddress = net.getMacaddr();
+        long linkSpeed = net.getSpeed();
+
+       if (linkSpeed > 0) {
+           linkSpeed /= (1000 * 1000);
+       }
+
+        if (labelLinkSpeed != null) {
+            labelLinkSpeed.setText("LInk Speed: " + linkSpeed + " Mbps");}
+        if (labelInterfaceName != null) {
+            labelInterfaceName.setText("Interface: " + interfaceName );}
+        if (labelMacAddress != null) {
+            labelMacAddress.setText("mac Address: " + macAddress );}
     }
 
     //Initialize the CPU page
@@ -524,7 +556,15 @@ public class HelloController {
             model = disk.getFirst().getModel();
             diskSize = disk.getFirst().getSize();
         }
+        String unit = "Bytes";
 
+        if (diskSize > (1000 * 1000 * 1000) ){
+            diskSize /= (1000 * 1000 * 1000);
+            unit = "GB";
+        } else if (diskSize > (1000 * 1000 )) {
+            diskSize /= (1000 * 1000);
+            unit = "MB";
+        }
 
         if (labelDiskModel != null) {
             labelDiskModel.setText("Disk Model: " + model );}
