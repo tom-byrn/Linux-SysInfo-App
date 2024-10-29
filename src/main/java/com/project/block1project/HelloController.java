@@ -501,7 +501,7 @@ public class HelloController {
             labelDiskModel.setText("Disk Model: " + model );}
 
         if (labelDiskSize != null) {
-            labelDiskSize.setText("Disk Size: " + diskSize / (1000 * 1000) +" MB");}
+            labelDiskSize.setText("Disk Size: " + diskSize / (1000 * 1000 * 1000) +" GB");}
 
         
     }
