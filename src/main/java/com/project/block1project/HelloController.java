@@ -1,22 +1,28 @@
 package com.project.block1project;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 import oshi.SystemInfo;
 import oshi.hardware.*;
-import java.util.ResourceBundle;
+import oshi.software.os.OperatingSystem;
+import oshi.software.os.OSProcess;
+import oshi.util.FormatUtil;
 
-
+import java.awt.*;
 import java.io.IOException;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
+
 
 public class HelloController {
     private Stage stage;
@@ -42,6 +48,12 @@ public class HelloController {
     private Label labelBattery;
     @FXML
     private Label labelBatteryTime;
+    @FXML
+    private Label labelResolution;
+    @FXML
+    private Label labelDPI;
+    @FXML
+    private Label labelRefreshRate;
 
 
     //FXML components from the cpu.fxml file & declare anything that needs to be public
@@ -65,17 +77,15 @@ public class HelloController {
     private Label labelCpuVendor;
     @FXML
     private LineChart<Number, Number> chartCpuUsage;
-    public static XYChart.Series<Number, Number> series; // Declaring the series needed for the Line Chart
+    public static XYChart.Series<Number, Number> series; // Declaring the series for the chart so it can be used in CPU class
     @FXML
-    private Label labelL1Cache;
-    @FXML
-    private Label labelL2Cache;
-    @FXML
-    private Label labelL3Cache;
+    private Label labelCacheSizes;
 
 
 
     //FXML Components for the memory page
+    @FXML
+    private Label labelRam;
     @FXML
     private Label labelTotalMemory;
     @FXML
@@ -84,6 +94,30 @@ public class HelloController {
     private Label labelMemoryUsed;
     @FXML
     private Label labelMemorySpeed;
+    @FXML
+    private PieChart memoryPieChart;
+
+
+    //FXML components for the Operating System Page
+    @FXML
+    private Label labelOSName;
+    @FXML
+    private Label labelOSVer;
+    @FXML
+    private Label labelArchitecture;
+    @FXML
+    private Label labelProcessCount;
+    @FXML
+    private Label labelUptime;
+    @FXML
+    private Label labelKernelMode;
+    @FXML
+    private Label labelUserMode;
+    @FXML
+    private ListView<String> listProcessCount;
+
+
+
 
 
     public void setStage(Stage stage) {
@@ -112,6 +146,11 @@ public class HelloController {
                 case "memory.fxml":
                     HelloController memoryController = fxmlloader.getController();
                     memoryController.initializeMemoryPage();
+                    break;
+
+                case "operatingsystem.fxml":
+                    HelloController osController = fxmlloader.getController();
+                    osController.initializeOperatingSystemPage();
                     break;
 
                 default:
@@ -146,33 +185,32 @@ public class HelloController {
         System.out.println("Home page initialize() is running");
 
         // Get system properties
-        String OS = System.getProperty("os.name");
-        String OS_bit = System.getProperty("sun.arch.data.model");
-        String OS_Version = System.getProperty("os.version");
-        String OS_Architecture = System.getProperty("os.arch");
+        String stringOS = System.getProperty("os.name");
+        String osBit = System.getProperty("sun.arch.data.model");
+        String osVersion = System.getProperty("os.version");
+        String osArchitecture = System.getProperty("os.arch");
         String country = System.getProperty("user.country");
-        String LanguageAbbreviation = System.getProperty("user.language");
+        String languageAbbreviation = System.getProperty("user.language");
+        if (Objects.equals(languageAbbreviation, "en")) {
+            languageAbbreviation = "English";
+        }
         String user = System.getProperty("user.name");
 
         // Set the labels with values, ensuring they are not null
-        if (labelOS != null) labelOS.setText("Operating System: " + OS);
-        if (labelOSBit != null) labelOSBit.setText("OS Bit: " + OS_bit);
-        if (labelOSVersion != null) labelOSVersion.setText("OS Version: " + OS_Version);
-        if (labelOSArchitecture != null) labelOSArchitecture.setText("OS Architecture: " + OS_Architecture);
-        if (labelCountry != null) {
-            ResourceBundle bundle = ResourceBundle.getBundle("com.project.block1project.Messages");
-            String Country = bundle.getString(country);
-            labelCountry.setText("Country: " + Country);
-
+        if (labelOS != null) labelOS.setText("Operating System: " + stringOS);
+        if (labelOSBit != null) labelOSBit.setText("OS Bit: " + osBit);
+        if (labelOSVersion != null) labelOSVersion.setText("OS Version: " + osVersion);
+        if (labelOSArchitecture != null) labelOSArchitecture.setText("OS Architecture: " + osArchitecture);
+        if (labelCountry != null){
+            try {
+                ResourceBundle bundle = ResourceBundle.getBundle("com.project.block1project.Messages", Locale.getDefault());
+                String Country = bundle.getString(country);
+                labelCountry.setText("Country: " + Country);
+            }
+            catch(MissingResourceException e){labelCountry.setText("Country: N/A");}
         }
-        if (labelLanguageAbbreviation != null){
 
-            Locale locale = Locale.of(LanguageAbbreviation);
-
-            String Language = locale.getDisplayLanguage();
-
-            labelLanguageAbbreviation.setText("Language: " + Language);
-        }
+        if (labelLanguageAbbreviation != null) labelLanguageAbbreviation.setText("Language: " + languageAbbreviation);
         if (labelUser != null) labelUser.setText("User: " + user);
 
         //Battery Info
@@ -192,13 +230,29 @@ public class HelloController {
 
         // Display battery information
         if (labelBattery != null) {
-            labelBatteryTime.setText(String.format("Time left: %d hours %d minutes", hours, minutes));
+            labelBatteryTime.setText(String.format("Time Remaining:%n%d hours %n%d minutes", hours, minutes));
             labelBattery.setText(String.format("Battery: %.1f%%", batteryRemaining));
         }
-        if(hours == 0 && minutes == 0){
-            labelBatteryTime.setText("Time Left: Unknown");
+        if (hours == 0 && minutes == 0) {
+            labelBatteryTime.setText(String.format("Time Remaining:%n%nUnknown"));
         }
 
+
+        // Using native Java methods to get screen devices
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] devices = ge.getScreenDevices();
+
+        for (GraphicsDevice device : devices) {
+            Rectangle bounds = device.getDefaultConfiguration().getBounds();
+            labelResolution.setText("Screen Width: " + bounds.width + ", Height: " + bounds.height);
+        }
+
+        int dpi = Toolkit.getDefaultToolkit().getScreenResolution();
+        labelDPI.setText("Pixels Per Inch: " + dpi);
+
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        int refreshRate = gd.getDisplayMode().getRefreshRate();
+        labelRefreshRate.setText("Refresh Rate: " + refreshRate + " Hz");
     }
 
     //Initialize the CPU page
@@ -224,27 +278,23 @@ public class HelloController {
 
         double cpuTemperature = hal.getSensors().getCpuTemperature();
         if(cpuTemperature != 0){
-            labelCpuTemperature.setText("CPU Temperature: " + cpuTemperature + " °C");
+        labelCpuTemperature.setText("CPU Temperature: " + cpuTemperature + " °C");
         }
         else{labelCpuTemperature.setText("CPU Temperature: N/A");}
 
         double cpuVoltage = hal.getSensors().getCpuVoltage();
         if(cpuVoltage != 0){
-            labelCpuVoltage.setText("CPU Voltage: " + cpuVoltage + " V");
+        labelCpuVoltage.setText("CPU Voltage: " + cpuVoltage + " V");
         }
         else{labelCpuVoltage.setText("CPU Voltage: N/A");}
 
         try {
             int[] fanSpeeds = hal.getSensors().getFanSpeeds();
-            int fanSpeed;
             if (fanSpeeds.length > 0) {
-                fanSpeed = fanSpeeds[0];
-            } else {
-
-                fanSpeed = 0;
-
+                int fanSpeed = fanSpeeds[0];
+                labelFanSpeed.setText(String.format("Fan Speed: %d RPM", fanSpeed));
             }
-            labelFanSpeed.setText(String.format("Fan Speed: %d RPM", fanSpeed));
+            else{labelFanSpeed.setText("Fan Speed: N/A");}
         } catch (Exception e) {
             // Handle Errors if oshi can't pull fan speeds from computer
             labelFanSpeed.setText("Fan Speed: N/A");
@@ -256,30 +306,30 @@ public class HelloController {
         String vendorID = processor.getProcessorIdentifier().getVendor();
         labelCpuVendor.setText("Vendor: " + vendorID);
 
+
         List<CentralProcessor.ProcessorCache> caches = processor.getProcessorCaches();
-        if (!caches.isEmpty()) {
-            labelL1Cache.setText("L1 Cache: " + caches.get(2).getCacheSize() / 1024 + " KB");
+        String[] cacheSizesArray = new String[3];
+        for(int i = 2; i >= 0; i--) { //The getProcessorCaches has L3 @ 0 & L1 @ 2, so we need to loop through this backwards
+            if(caches.size() > i){
+                cacheSizesArray[i] = "L" + (3 - i) + " Cache: " + (caches.get(i).getCacheSize() / 1024) + " KB";
+            }
+            else{cacheSizesArray[i] = "L" + (3 - i) + " Cache: N/A";}
         }
-        if (caches.size() > 1) {
-            labelL2Cache.setText("L2 Cache: " + caches.get(1).getCacheSize() / 1024 + " KB");
-        }
-        if (caches.size() > 2) {
-            labelL3Cache.setText("L3 Cache: " + caches.getFirst().getCacheSize() / 1024 + " KB");
-        }
+        labelCacheSizes.setText(String.format("%s%n%s%n%s", cacheSizesArray[2], cacheSizesArray[1], cacheSizesArray[0]));
 
 
         // CPU Usage Chart
-        NumberAxis CPUxAxis = new NumberAxis(0, 60, 1);  // Fixed range from 0 to 60
-        NumberAxis CPUyAxis = new NumberAxis(0, 100, 10);  // Fixed range for CPU percentage
+        NumberAxis CPUxAxis = new NumberAxis(0, 60, 5);  // Fixed range from 0 to 60 w/ space of 5 in between
+        NumberAxis CPUyAxis = new NumberAxis(0, 100, 10);  // Fixed range for CPU percentage w/ space of 10 in between
 
         CPUyAxis.setLabel("CPU Usage (%)");
-        CPUxAxis.setLabel("Time (Seconds)");
-        CPUxAxis.setAutoRanging(false);      // Disable auto-ranging for x-axis
-        CPUyAxis.setAutoRanging(false);      // Disable auto-ranging for y-axis
+        CPUxAxis.setLabel("Time (Seconds)"); //This doesn't actually show on the graph because of how it is styled
 
-        // Now apply the axes to the existing LineChart from FXML (chartCpuUsage)
-        chartCpuUsage.getXAxis().setAutoRanging(false);  // Disable auto-ranging on the x-axis
-        chartCpuUsage.getYAxis().setAutoRanging(false);  // Disable auto-ranging on the y-axis
+        CPUxAxis.setAutoRanging(false);      // Disable auto-ranging for x-axis (For the number axis part)
+        CPUyAxis.setAutoRanging(false);      // Disable auto-ranging for y-axis (For the number axis part)
+
+        chartCpuUsage.getXAxis().setAutoRanging(false);  // Disable auto-ranging on the x-axis (For the actual x-axis of the chart)
+        chartCpuUsage.getYAxis().setAutoRanging(false);  // Disable auto-ranging on the y-axis (For the actual y-axis of the chart)
 
         // Setting the bounds for X and Y axis after fetching them from chartCpuUsage
         NumberAxis xAxis = (NumberAxis) chartCpuUsage.getXAxis();
@@ -291,14 +341,11 @@ public class HelloController {
         yAxis.setUpperBound(100);
 
         // Creating a series to track CPU usage
-        series = new XYChart.Series<>();
+        series = new XYChart.Series<>(); //A series is a collection of data points to be plotted on a chart in JavaFX (Similar to an ArrayList but specifically for JavaFX charts)
         chartCpuUsage.getData().add(series);
 
-        // Run the method to update CPU usage
+        // Run the method to update CPU usage (Defined in the CPU class)
         CPU.runCpuUsageChart();
-
-
-
     }
 
 
@@ -314,7 +361,7 @@ public class HelloController {
         long availableMemory = memory.getAvailable();
 
         if (labelTotalMemory != null) {
-            labelTotalMemory.setText("Total Memory: " + totalMemory / (1024 * 1024) + " MB");
+            labelTotalMemory.setText("Total Memory: " + totalMemory / (1000 * 1000) + " MB");
         }
 
         // Get the list of physical memory modules
@@ -323,7 +370,7 @@ public class HelloController {
             // Get the speed of the first module (All modules should be the same speed)
             long memorySpeed = physicalMemoryList.getFirst().getClockSpeed();
             if (labelMemorySpeed != null) {
-                labelMemorySpeed.setText("Memory Speed: " + memorySpeed / 1_000_000 + " MHz");
+                labelMemorySpeed.setText("Memory Speed: " + memorySpeed + " MHz");
             }
         } else {
             if (labelMemorySpeed != null) {
@@ -332,11 +379,76 @@ public class HelloController {
         }
 
         if (labelAvailableMemory != null) {
-            labelAvailableMemory.setText("Available Memory: " + availableMemory / (1024 * 1024) + " MB");
+            labelAvailableMemory.setText("Available Memory: " + availableMemory / (1000 * 1000) + " MB");
         }
         if (labelMemoryUsed != null) {
-            labelMemoryUsed.setText("Memory Used: " + (totalMemory - availableMemory) / (1024 * 1024) + " MB");
+            labelMemoryUsed.setText("Memory Used: " + (totalMemory - availableMemory) / (1000 * 1000) + " MB");
+
+            // make pie chart data
+            PieChart.Data usedData = new PieChart.Data("Used", (totalMemory - availableMemory));
+            PieChart.Data availableData = new PieChart.Data("Free", availableMemory);
+            // add data to the pie chart
+            memoryPieChart.getData().addAll(usedData, availableData);
+            // set title
+            memoryPieChart.setTitle("Memory Usage");
         }
+    }
+
+    public void initializeOperatingSystemPage(){
+
+        SystemInfo si = new SystemInfo();
+        OperatingSystem os = si.getOperatingSystem();
+        HardwareAbstractionLayer hal = si.getHardware();
+        CentralProcessor processor = hal.getProcessor();
+
+        labelOSName.setText("Operating System: " + os.getFamily());
+
+        labelOSVer.setText("Version" + os.getVersionInfo().toString());
+
+        labelArchitecture.setText("Architecture: " + os.getBitness() + "-bit");
+
+        int processCount = os.getProcessCount();
+        labelProcessCount.setText("Process Count: " + processCount);
+
+        long upTime = os.getSystemUptime();
+        long upTimeSeconds = upTime % 60;
+        long upTimeMinutes = (upTime / 60) % 60;
+        long upTimeHours = (upTime / 3600);
+        labelUptime.setText(String.format("Up Time: %02d:%02d:%02d", upTimeHours, upTimeMinutes, upTimeSeconds)); //Formatted like Hours:Minutes:Seconds where each is 2 digits
+
+            OSProcess[] processes = os.getProcesses().toArray(new OSProcess[0]);
+            if (processes.length > 0) {
+                OSProcess process = processes[0];
+
+                long[] ticks = processor.getSystemCpuLoadTicks();
+                long userModeTime = ticks[CentralProcessor.TickType.USER.getIndex()];
+                long kernelModeTime = ticks[CentralProcessor.TickType.SYSTEM.getIndex()]; // SYSTEM refers to kernel mode
+
+                // Convert time from ticks (milliseconds) to readable format
+                long totalUserModeTimeInSeconds = userModeTime / processor.getLogicalProcessorCount();
+                long totalKernelModeTimeInSeconds = kernelModeTime / processor.getLogicalProcessorCount();
+
+                labelKernelMode.setText("Kernel Mode Time: " + FormatUtil.formatElapsedSecs(totalKernelModeTimeInSeconds));
+                labelUserMode.setText("User Mode Time: " + FormatUtil.formatElapsedSecs(totalUserModeTimeInSeconds));
+            }
+            else {
+                labelKernelMode.setText("Kernel Mode Time: N/A");
+                labelUserMode.setText("User Mode Time: N/A");
+            }
+
+            ObservableList<String> processInfoList = FXCollections.observableArrayList();
+            for(int i = 0; i < processCount; i++){
+
+                OSProcess process = processes[i];
+
+                int id = process.getProcessID();
+                String name = process.getName();
+                long memory = process.getResidentSetSize();
+
+                String processInfo = String.format("ID:%d, Name: %s, Memory: %d KB", id, name, memory / 1000);
+                processInfoList.add(processInfo);
+            }
+            listProcessCount.setItems(processInfoList);
     }
 
 
