@@ -48,6 +48,6 @@ public class CpuVulnerabilities {
         for (String result : cpuVulnerablitiesArray) {
             System.out.println(result);
         }
-        //cpuVulnerablitiesArray = Array with all cpu vulnerabilities and warnings next to the ones you're vulnerable to
+        //cpuVulnerablitiesArray = Array with all cpu vulnerabilities and warnings next to the ones you're vulnerable to and have no mitgations
     }
 }
