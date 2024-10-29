@@ -106,6 +106,12 @@ public class HelloController {
     private Label labelMemorySpeed;
     @FXML
     private PieChart memoryPieChart;
+    @FXML
+    private Label labelUsedSwapMemory;
+    @FXML
+    private Label labelDiskModel;
+    @FXML
+    private Label labelDiskSize;
 
 
     //FXML components for the Operating System Page
@@ -469,6 +475,35 @@ public class HelloController {
             // set title
             memoryPieChart.setTitle("Memory Usage");
         }
+        // swap memroy
+            VirtualMemory swapMemory = memory.getVirtualMemory();
+
+            long usedSwap = swapMemory.getSwapUsed();
+
+            if (labelUsedSwapMemory != null) {
+                labelUsedSwapMemory.setText("Used Swap Memory: " + usedSwap / (1000 * 1000)  + " MB");
+            }
+
+        // Disk info
+            List<HWDiskStore> disk = hal.getDiskStores();
+        String model = "Unknown";
+        long diskSize = 0;
+
+        if (!disk.isEmpty()) {
+            HWDiskStore diskStores = disk.getFirst();
+
+            model = disk.getFirst().getModel();
+            diskSize = disk.getFirst().getSize();
+        }
+
+
+        if (labelDiskModel != null) {
+            labelDiskModel.setText("Disk Model: " + model );}
+
+        if (labelDiskSize != null) {
+            labelDiskSize.setText("Disk Size: " + diskSize / (1000 * 1000) +" MB");}
+
+        
     }
 
     public void initializeOperatingSystemPage(){
