@@ -199,7 +199,7 @@ public class HelloController {
         // Set the labels with values, ensuring they are not null
         if (labelOS != null) labelOS.setText("Operating System: " + stringOS);
         if (labelOSBit != null) labelOSBit.setText("OS Bit: " + osBit);
-        if (labelOSVersion != null) labelOSVersion.setText("OS Version: " + osVersion);
+        if (labelOSVersion != null) labelOSVersion.setText("Version: " + osVersion);
         if (labelOSArchitecture != null) labelOSArchitecture.setText("OS Architecture: " + osArchitecture);
         if (labelCountry != null){
             try {
@@ -274,7 +274,7 @@ public class HelloController {
         labelCpuPhysicalCores.setText("Physical Cores: " + physicalCores);
 
         int logicalCores = processor.getLogicalProcessorCount();
-        labelCpuLogicalCores.setText("Logical Cores: " + logicalCores);
+        labelCpuLogicalCores.setText("Threads: " + logicalCores);
 
         double cpuTemperature = hal.getSensors().getCpuTemperature();
         if(cpuTemperature != 0){
@@ -311,7 +311,7 @@ public class HelloController {
         String[] cacheSizesArray = new String[3];
         for(int i = 2; i >= 0; i--) { //The getProcessorCaches has L3 @ 0 & L1 @ 2, so we need to loop through this backwards
             if(caches.size() > i){
-                cacheSizesArray[i] = "L" + (3 - i) + " Cache: " + (caches.get(i).getCacheSize() / 1024) + " KB";
+                cacheSizesArray[i] = "L" + (3 - i) + " Cache: " + (caches.get(i).getCacheSize()) + " KB";
             }
             else{cacheSizesArray[i] = "L" + (3 - i) + " Cache: N/A";}
         }
@@ -403,7 +403,7 @@ public class HelloController {
 
         labelOSName.setText("Operating System: " + os.getFamily());
 
-        labelOSVer.setText("Version" + os.getVersionInfo().toString());
+        labelOSVer.setText("Version: " + os.getVersionInfo().toString());
 
         labelArchitecture.setText("Architecture: " + os.getBitness() + "-bit");
 
