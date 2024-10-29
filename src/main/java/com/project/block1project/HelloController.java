@@ -19,7 +19,6 @@ import oshi.software.os.OSProcess;
 import oshi.util.FormatUtil;
 
 import java.awt.*;
-import java.awt.im.InputContext;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -31,6 +30,7 @@ import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 
 public class HelloController {
     private Stage stage;
@@ -46,8 +46,6 @@ public class HelloController {
     private Label labelOSArchitecture;
     @FXML
     private Label labelCountry;
-    @FXML
-    private Label labelKeyboard;
     @FXML
     private Label labelLanguageAbbreviation;
     @FXML
@@ -132,6 +130,18 @@ public class HelloController {
     @FXML
     private ListView<String> listProcessCount;
 
+    //FXML components for Peripherals Page
+    @FXML
+    private ListView<String> listPcie;
+    @FXML
+    private Label labelDevicesAmount;
+    @FXML
+    private Label labelTotalFunctions;
+    @FXML
+    private Label labelBusesAmount;
+    @FXML
+    private Label labelDevicesPerBus;
+
 
 
 
@@ -169,6 +179,11 @@ public class HelloController {
                     osController.initializeOperatingSystemPage();
                     break;
 
+                case "peripherals.fxml":
+                    HelloController peripheralsController = fxmlloader.getController();
+                    peripheralsController.initializePeripheralsPage();
+
+
                 default:
                     // Gives an error if there's no matching fxml file
                     System.out.println("No matching FXML file found.");
@@ -205,32 +220,28 @@ public class HelloController {
         String osBit = System.getProperty("sun.arch.data.model");
         String osVersion = System.getProperty("os.version");
         String osArchitecture = System.getProperty("os.arch");
-        String countryShort = System.getProperty("user.country");
+        String country = System.getProperty("user.country");
         String languageAbbreviation = System.getProperty("user.language");
+        if (Objects.equals(languageAbbreviation, "en")) {
+            languageAbbreviation = "English";
+        }
         String user = System.getProperty("user.name");
-        String country = "N/A";
-        String language = "N/A";
-
-        //converts Language and country into their full names
-        if(countryShort != null){
-            Locale localeCountry = new Locale("en", countryShort);
-            country = localeCountry.getDisplayCountry();
-        }
-        if(languageAbbreviation != null){
-            Locale localeCountry = new Locale(languageAbbreviation);
-            language = localeCountry.getDisplayLanguage();
-        }
-        //Gets Keyboard layout
-        InputContext keyboard = InputContext.getInstance();
 
         // Set the labels with values, ensuring they are not null
         if (labelOS != null) labelOS.setText("Operating System: " + stringOS);
         if (labelOSBit != null) labelOSBit.setText("OS Bit: " + osBit);
-        if (labelOSVersion != null) labelOSVersion.setText("Version: " + osVersion);
+        if (labelOSVersion != null) labelOSVersion.setText("OS Version: " + osVersion);
         if (labelOSArchitecture != null) labelOSArchitecture.setText("OS Architecture: " + osArchitecture);
-        if (labelCountry != null) labelCountry.setText("Country: " + country);
-        if (labelKeyboard != null) labelKeyboard.setText("Keyboard: " + keyboard.getLocale());
-        if (labelLanguageAbbreviation != null) labelLanguageAbbreviation.setText("Language: " + language);
+        if (labelCountry != null){
+            try {
+                ResourceBundle bundle = ResourceBundle.getBundle("com.project.block1project.Messages", Locale.getDefault());
+                String Country = bundle.getString(country);
+                labelCountry.setText("Country: " + Country);
+            }
+            catch(MissingResourceException e){labelCountry.setText("Country: N/A");}
+        }
+
+        if (labelLanguageAbbreviation != null) labelLanguageAbbreviation.setText("Language: " + languageAbbreviation);
         if (labelUser != null) labelUser.setText("User: " + user);
 
         //Battery Info
@@ -298,13 +309,13 @@ public class HelloController {
 
         double cpuTemperature = hal.getSensors().getCpuTemperature();
         if(cpuTemperature != 0){
-        labelCpuTemperature.setText("CPU Temperature: " + cpuTemperature + " °C");
+            labelCpuTemperature.setText("CPU Temperature: " + cpuTemperature + " °C");
         }
         else{labelCpuTemperature.setText("CPU Temperature: N/A");}
 
         double cpuVoltage = hal.getSensors().getCpuVoltage();
         if(cpuVoltage != 0){
-        labelCpuVoltage.setText("CPU Voltage: " + cpuVoltage + " V");
+            labelCpuVoltage.setText("CPU Voltage: " + cpuVoltage + " V");
         }
         else{labelCpuVoltage.setText("CPU Voltage: N/A");}
 
@@ -329,6 +340,8 @@ public class HelloController {
 
         //For getting the cpu cache
         //checks if the os is linux
+
+        // Commenting this out because of a 8.8 MiB glitch
         if(System.getProperty("os.name").equals("Linux")) {
 
             //Creates ArrayLists
@@ -373,7 +386,10 @@ public class HelloController {
 
                         //Replace Total Cache with cache per core
                         // split based on spaces and take the third item which is the total cache size
-                        int totalCacheSize = Integer.parseInt(String.valueOf(cpuCacheWithSpace).split(" ")[2]);
+                        // Replace Integer.parseInt with Double.parseDouble to handle decimal numbers
+                        double totalCacheSizeDouble = Double.parseDouble(String.valueOf(cpuCacheWithSpace).split(" ")[2]);
+                        int totalCacheSize = (int) totalCacheSizeDouble; // Cast to int if needed
+
 
                         // split based on spaces and take the fifth item which is the number of times that cache is used and removes (
                         int numberOfCaches = Integer.parseInt((String.valueOf(cpuCacheWithSpace).split(" ")[4]).replaceAll("\\(", ""));
@@ -400,6 +416,7 @@ public class HelloController {
             labelCacheSizes.setText(String.format("%s%n", "Unknown CPU Cache Size", "Please Switch to Linux"));
         }
 
+        // */
 
         // CPU Usage Chart
         NumberAxis CPUxAxis = new NumberAxis(0, 60, 5);  // Fixed range from 0 to 60 w/ space of 5 in between
@@ -475,17 +492,18 @@ public class HelloController {
             // set title
             memoryPieChart.setTitle("Memory Usage");
         }
+
         // swap memroy
-            VirtualMemory swapMemory = memory.getVirtualMemory();
+        VirtualMemory swapMemory = memory.getVirtualMemory();
 
-            long usedSwap = swapMemory.getSwapUsed();
+        long usedSwap = swapMemory.getSwapUsed();
 
-            if (labelUsedSwapMemory != null) {
-                labelUsedSwapMemory.setText("Used Swap Memory: " + usedSwap / (1000 * 1000)  + " MB");
-            }
+        if (labelUsedSwapMemory != null) {
+            labelUsedSwapMemory.setText("Used Swap Memory: " + usedSwap / (1000 * 1000)  + " MB");
+        }
 
         // Disk info
-            List<HWDiskStore> disk = hal.getDiskStores();
+        List<HWDiskStore> disk = hal.getDiskStores();
         String model = "Unknown";
         long diskSize = 0;
 
@@ -496,21 +514,12 @@ public class HelloController {
             diskSize = disk.getFirst().getSize();
         }
 
- String unit = "Bytes";
-
-        if (diskSize > (1000 * 1000 * 1000) ){
-            diskSize /= (1000 * 1000 * 1000);
-            unit = "GB";
-        } else if (diskSize > (1000 * 1000 )) {
-            diskSize /= (1000 * 1000);
-            unit = "MB";
-        }
 
         if (labelDiskModel != null) {
             labelDiskModel.setText("Disk Model: " + model );}
 
         if (labelDiskSize != null) {
-            labelDiskSize.setText("Disk Size: " + diskSize  + unit);}
+            labelDiskSize.setText("Disk Size: " + diskSize / (1000 * 1000 * 1000) +" GB");}
     }
 
     public void initializeOperatingSystemPage(){
@@ -522,7 +531,7 @@ public class HelloController {
 
         labelOSName.setText("Operating System: " + os.getFamily());
 
-        labelOSVer.setText("Version: " + os.getVersionInfo().toString());
+        labelOSVer.setText("Version" + os.getVersionInfo().toString());
 
         labelArchitecture.setText("Architecture: " + os.getBitness() + "-bit");
 
@@ -565,305 +574,319 @@ public class HelloController {
                 long memory = process.getResidentSetSize();
 
                 String processInfo = String.format("ID:%d, Name: %s, Memory: %d KB", id, name, memory / 1000);
+
+
                 processInfoList.add(processInfo);
+
             }
             listProcessCount.setItems(processInfoList);
     }
 
+    public void initializePeripheralsPage() throws IOException {
 
-        public void main(String[] args) throws IOException {
+        if ((System.getProperty("os.name").equals("Linux"))) {
 
-            //Checks if OS is linux
-            if ((System.getProperty("os.name").equals("Linux"))) {
-
-                // Map to store the count of functions for each PCI bus and device.
-                // Changed from HashMap to Linked Hash Map to keep things in order
-                Map<String, Integer> pciBusFunctionCount = new LinkedHashMap<>();
-                Map<String, Integer> pciDeviceFunctionCount = new LinkedHashMap<>();
-                Map<String, Integer> pciDevicePerBusCount = new LinkedHashMap<>();
-                // StringBuilder to accumulate results into one string
-                StringBuilder numberOfFunctionsForEachBus = new StringBuilder();
-                StringBuilder numberOfFunctionsForEachDevice = new StringBuilder();
-                StringBuilder devicesPerBus = new StringBuilder();
-                //Creates a new ArrayList for Strings
-                List<String> lspciOutputArrayList = new ArrayList<>();
-                ArrayList<String> pciBusesTotal = new ArrayList<>();
-                ArrayList<String> pciDevicesTotal = new ArrayList<>();
-                List<String> vendorIds = new ArrayList<>(); // Creates an arraylist for vendor Ids
-                List<String> vendorNames = new ArrayList<>(); // creates an array list for vendor names
-                List<String> pciImportantDeviceInfoArrayList = new ArrayList<>(); // List to store results for a bunch of stats
+            // Map to store the count of functions for each PCI bus and device.
+            // Changed from HashMap to Linked Hash Map to keep things in order
+            Map<String, Integer> pciBusFunctionCount = new LinkedHashMap<>();
+            Map<String, Integer> pciDeviceFunctionCount = new LinkedHashMap<>();
+            Map<String, Integer> pciDevicePerBusCount = new LinkedHashMap<>();
+            // StringBuilder to accumulate results into one string
+            StringBuilder numberOfFunctionsForEachBus = new StringBuilder();
+            StringBuilder numberOfFunctionsForEachDevice = new StringBuilder();
+            StringBuilder devicesPerBus = new StringBuilder();
+            //Creates a new ArrayList for Strings
+            List<String> lspciOutputArrayList = new ArrayList<>();
+            ArrayList<String> pciBusesTotal = new ArrayList<>();
+            ArrayList<String> pciDevicesTotal = new ArrayList<>();
+            List<String> vendorIds = new ArrayList<>(); // Creates an arraylist for vendor Ids
+            List<String> vendorNames = new ArrayList<>(); // creates an array list for vendor names
+            ArrayList<String> pciImportantDeviceInfoArrayList = new ArrayList<>();  // List to store results for a bunch of stats
 
 
-                // Execute the lspci command
-                Process lSPCI = Runtime.getRuntime().exec("lspci -vvv -nn");
-                Process noPCIDevices = Runtime.getRuntime().exec("lspci -nn");
+            // Execute the lspci command
+            Process lSPCI = Runtime.getRuntime().exec("lspci -vvv -nn");
+            Process noPCIDevices = Runtime.getRuntime().exec("lspci -nn");
 
-                // Read the output of the command lspci -vvv -nn
-                BufferedReader pCIReader = new BufferedReader(new InputStreamReader(lSPCI.getInputStream()));
-
-
-                //read lspci output
-                BufferedReader noPCIFunctionsReader = new BufferedReader(new InputStreamReader(noPCIDevices.getInputStream()));
-                //Used to temporarily stores each line from lspci -nn. Stores one and then the next and so on
-                String counterLineByLine;
+            // Read the output of the command lspci -vvv -nn
+            BufferedReader pCIReader = new BufferedReader(new InputStreamReader(lSPCI.getInputStream()));
 
 
-                // Load vendor IDs from the file
-                BufferedReader vendorIdFileReader = new BufferedReader(new FileReader("vendor_ids.txt"));
-                String idFileLineByLine;
+            //read lspci output
+            BufferedReader noPCIFunctionsReader = new BufferedReader(new InputStreamReader(noPCIDevices.getInputStream()));
+            //Used to temporarily stores each line from lspci -nn. Stores one and then the next and so on
+            String counterLineByLine;
 
-                // Read each line from the file and populate Arraylists for Vendor and VendorIds
-                while ((idFileLineByLine = vendorIdFileReader.readLine()) != null) {
-                    //Splits text in file
-                    String[] fileVendorIdSplitVendor = idFileLineByLine.split("///////////////");
 
-                    vendorIds.add(fileVendorIdSplitVendor[0].toLowerCase()); // Store vendor ID
-                    vendorNames.add(fileVendorIdSplitVendor[1]); // Store vendor name
+            // Load vendor IDs from the file
+            BufferedReader vendorIdFileReader = new BufferedReader(new FileReader("vendor_ids.txt"));
+            String idFileLineByLine;
+
+            // Read each line from the file and populate Arraylists for Vendor and VendorIds
+            while ((idFileLineByLine = vendorIdFileReader.readLine()) != null) {
+                //Splits text in file
+                String[] fileVendorIdSplitVendor = idFileLineByLine.split("///////////////");
+
+                vendorIds.add(fileVendorIdSplitVendor[0].toLowerCase()); // Store vendor ID
+                vendorNames.add(fileVendorIdSplitVendor[1]); // Store vendor name
+            }
+
+            //Create variables for bus vendor and product id
+            //Required if they're nested in other statements
+            String busInfo = "";
+            String vendorId = "";
+            String productId = "";
+            String vendorName = "";
+            String currentBusId = "";
+
+            String lSPCIvvvString = "";
+
+            // Regex to find PCI bus info, vendor and product IDs
+            // Finds String string [XXXX:XXXX]
+            Pattern regexPattern = Pattern.compile("^(\\S+)\\s+.*\\[([0-9a-f]{4}):([0-9a-f]{4})]");
+
+            while ((lSPCIvvvString = pCIReader.readLine()) != null) {
+
+                //Adds each line from lspci -vvv -nn  to the ArrayList
+                lspciOutputArrayList.add(lSPCIvvvString);
+
+
+                //Removes trailing whitespaces E.g \n
+                lSPCIvvvString = lSPCIvvvString.trim();
+
+                // Capture bus ID line. Uses regex to find XX:XX.X
+                if (lSPCIvvvString.matches("[0-9]{2}:[0-9]{2}\\.[0-9].*")) {
+                    // Get the bus ID. Splits the bus to word by word
+                    currentBusId = lSPCIvvvString.split(" ")[0];
                 }
 
-                //Create variables for bus vendor and product id
-                //Required if they're nested in other statements
-                String busInfo = "";
-                String vendorId = "";
-                String productId = "";
-                String vendorName = "";
-                String currentBusId = "";
+                // Capture kernel driver in use line
+                if (lSPCIvvvString.startsWith("Kernel driver in use:")) {
+                    String driverForCurrentDevice = lSPCIvvvString.split(":")[1].trim();  // Get the driver name. Splits by using :
+                    // Store the result if both bus ID and driver are available
+                    if (currentBusId != null) {
+                        //adds kernal driver to arraylist
+                        pciImportantDeviceInfoArrayList.add("\t\tKernal Driver: " + driverForCurrentDevice);
+                    }
+                }
+                //Capture Subsystem
+                if(lSPCIvvvString.contains("Subsystem: ")){
+                    // Get the subsystem name. Splits by using :
+                    String subsystemForCurrentDeviceSquare = lSPCIvvvString.split(": ")[1];
+                    //Removes the [AAAA:AAAA]
+                    String subsystemForCurrentDevice = subsystemForCurrentDeviceSquare.replaceAll("\\[[0-9a-fA-F]{4}:[0-9a-fA-F]{4}]", "");
+                    // Adds Subsystem to arraylist
+                    pciImportantDeviceInfoArrayList.add("\t\tSubsystem: " + subsystemForCurrentDevice);
+                }
 
-                String lSPCIvvvString = "";
+                //Capture Subsystem Vendor and Device id
+                if(lSPCIvvvString.contains("Subsystem: ")){
+                    // Finds [XXXX:XXXX]
+                    Pattern regexPatternSubsystem = Pattern.compile("\\[([0-9a-f]{4}):([0-9a-f]{4})]");
+                    // find [AAAA:AAAA]
+                    Matcher findRegexSubSystem = regexPatternSubsystem.matcher(lSPCIvvvString);
 
-                // Regex to find PCI bus info, vendor and product IDs
-                // Finds String string [XXXX:XXXX]
-                Pattern regexPattern = Pattern.compile("^(\\S+)\\s+.*\\[([0-9a-f]{4}):([0-9a-f]{4})]");
+                    if (findRegexSubSystem.find()) {
+                        vendorId = findRegexSubSystem.group(1); // Get the vendor ID
+                        productId = findRegexSubSystem.group(2); // Get the product ID
+                    }
 
-                while ((lSPCIvvvString = pCIReader.readLine()) != null) {
+                    pciImportantDeviceInfoArrayList.add("\t\tSubsystem Vendor ID: " + vendorId +
+                            ", Subsystem ProductID: " + productId);
 
-                    //Adds each line from lspci -vvv -nn  to the ArrayList
-                    lspciOutputArrayList.add(lSPCIvvvString);
+                    // Adds Subsystem to arraylist
+                    // pciImportantDeviceInfoArrayList.add("\t\tSubsystem: " + subsystemForCurrentDevice);
+                }
 
+                Matcher FindRegex = regexPattern.matcher(lSPCIvvvString);
+                if (FindRegex.find()) {
+                    busInfo = FindRegex.group(1); // Get the bus info
+                    vendorId = FindRegex.group(2); // Get the vendor ID
+                    productId = FindRegex.group(3); // Get the product ID
+                }
 
-                    //Removes trailing whitespaces E.g \n
-                    lSPCIvvvString = lSPCIvvvString.trim();
-
-                    // Capture bus ID line. Uses regex to find XX:XX.X
+                //Checks for bus ID line. Uses regex to find XX:XX.X
+                if (lSPCIvvvString.matches("[0-9]{2}:[0-9]{2}\\.[0-9].*")) {
+                    // Search for the vendor name
+                    // For loop searches for vendorId in file line by line
+                    for (int counterForVendroId = 0; counterForVendroId < vendorIds.size(); counterForVendroId++) {
+                        if (vendorIds.get(counterForVendroId).equals(vendorId)) {
+                            vendorName = vendorNames.get(counterForVendroId); // Found the vendor name
+                            break; //leaves the for loop cause vendorId is found. Improves performance
+                        }
+                    }
+                    //adds buslocation, vendor id, product id, and vendor to arraylist
+                    pciImportantDeviceInfoArrayList.add("\n" + busInfo + "\tVendor ID: " + vendorId + ", Product ID: " + productId + "\n"
+                            + "\t\tVendor Name: " + (vendorName != null ? vendorName : "Vendor ID not found. Please check the ID."));
+                    // Detects XX:XX:X using regex
                     if (lSPCIvvvString.matches("[0-9]{2}:[0-9]{2}\\.[0-9].*")) {
-                        // Get the bus ID. Splits the bus to word by word
-                        currentBusId = lSPCIvvvString.split(" ")[0];
-                    }
+                        // Finds XX.X Device [XXXX]. Splits by using :
+                        String intIntSpaceDeviceSquareBrackets = lSPCIvvvString.split(":")[1].trim();
 
-                    // Capture kernel driver in use line
-                    if (lSPCIvvvString.startsWith("Kernel driver in use:")) {
-                        String driverForCurrentDevice = lSPCIvvvString.split(":")[1].trim();  // Get the driver name. Splits by using :
-                        // Store the result if both bus ID and driver are available
-                        if (currentBusId != null) {
-                            //adds kernal driver to arraylist
-                            pciImportantDeviceInfoArrayList.add("\t\tKernal Driver: " + driverForCurrentDevice);
-                        }
-                    }
-                    //Capture Subsystem
-                    if(lSPCIvvvString.contains("Subsystem: ")){
-                        // Get the subsystem name. Splits by using :
-                        String subsystemForCurrentDeviceSquare = lSPCIvvvString.split(": ")[1];
-                        //Removes the [AAAA:AAAA]
-                        String subsystemForCurrentDevice = subsystemForCurrentDeviceSquare.replaceAll("\\[[0-9a-fA-F]{4}:[0-9a-fA-F]{4}]", "");
-                        // Adds Subsystem to arraylist
-                        pciImportantDeviceInfoArrayList.add("\t\tSubsystem: " + subsystemForCurrentDevice);
-                    }
-
-                    //Capture Subsystem Vendor and Device id
-                    if(lSPCIvvvString.contains("Subsystem: ")){
-                        // Finds [XXXX:XXXX]
-                        Pattern regexPatternSubsystem = Pattern.compile("\\[([0-9a-f]{4}):([0-9a-f]{4})]");
-                        // find [AAAA:AAAA]
-                        Matcher findRegexSubSystem = regexPatternSubsystem.matcher(lSPCIvvvString);
-
-                        if (findRegexSubSystem.find()) {
-                            vendorId = findRegexSubSystem.group(1); // Get the vendor ID
-                            productId = findRegexSubSystem.group(2); // Get the product ID
-                        }
-
-                        pciImportantDeviceInfoArrayList.add("\t\tSubsystem Vendor ID: " + vendorId +
-                                ", Subsystem ProductID: " + productId);
-
-                        // Adds Subsystem to arraylist
-                        // pciImportantDeviceInfoArrayList.add("\t\tSubsystem: " + subsystemForCurrentDevice);
-                    }
-
-                    Matcher FindRegex = regexPattern.matcher(lSPCIvvvString);
-                    if (FindRegex.find()) {
-                        busInfo = FindRegex.group(1); // Get the bus info
-                        vendorId = FindRegex.group(2); // Get the vendor ID
-                        productId = FindRegex.group(3); // Get the product ID
-                    }
-
-                    //Checks for bus ID line. Uses regex to find XX:XX.X
-                    if (lSPCIvvvString.matches("[0-9]{2}:[0-9]{2}\\.[0-9].*")) {
-                        // Search for the vendor name
-                        // For loop searches for vendorId in file line by line
-                        for (int counterForVendroId = 0; counterForVendroId < vendorIds.size(); counterForVendroId++) {
-                            if (vendorIds.get(counterForVendroId).equals(vendorId)) {
-                                vendorName = vendorNames.get(counterForVendroId); // Found the vendor name
-                                break; //leaves the for loop cause vendorId is found. Improves performance
-                            }
-                        }
-                        //adds buslocation, vendor id, product id, and vendor to arraylist
-                        pciImportantDeviceInfoArrayList.add("\n" + busInfo + "\tVendor ID: " + vendorId + ", Product ID: " + productId + "\n"
-                                + "\t\tVendor Name: " + (vendorName != null ? vendorName : "Vendor ID not found. Please check the ID."));
-                        // Detects XX:XX:X using regex
-                        if (lSPCIvvvString.matches("[0-9]{2}:[0-9]{2}\\.[0-9].*")) {
-                            // Finds XX.X Device [XXXX]. Splits by using :
-                            String intIntSpaceDeviceSquareBrackets = lSPCIvvvString.split(":")[1].trim();
-
-                            // Replace the matched pattern with an empty string
-                            //Detects Int.IntSpace using regex and replaces it with nothing
-                            String deviceNameSquareBrackets = intIntSpaceDeviceSquareBrackets.replaceAll("\\d+\\.\\d+\\s", "");
-                            //Detects [AAAA] and replaces it with nothing where A is a letter or number
-                            String deviceName = deviceNameSquareBrackets.replaceAll("\\[[0-9a-fA-F]{4}]", "");
-                            // Store the deviceName into the Important Array list
-                            pciImportantDeviceInfoArrayList.add("\t\tDevice Name: " + deviceName);
-                        }
+                        // Replace the matched pattern with an empty string
+                        //Detects Int.IntSpace using regex and replaces it with nothing
+                        String deviceNameSquareBrackets = intIntSpaceDeviceSquareBrackets.replaceAll("\\d+\\.\\d+\\s", "");
+                        //Detects [AAAA] and replaces it with nothing where A is a letter or number
+                        String deviceName = deviceNameSquareBrackets.replaceAll("\\[[0-9a-fA-F]{4}]", "");
+                        // Store the deviceName into the Important Array list
+                        pciImportantDeviceInfoArrayList.add("\t\tDevice Name: " + deviceName);
                     }
                 }
+            }
 
-                //Counts number of outputs from lspci
-                int functionCountTotal = 0;
-                while ((counterLineByLine = noPCIFunctionsReader.readLine()) != null) {
-                    functionCountTotal++;
+            //Counts number of outputs from lspci
+            int functionCountTotal = 0;
+            while ((counterLineByLine = noPCIFunctionsReader.readLine()) != null) {
+                functionCountTotal++;
 
-                    // Read the output line by line and store it in an array
-                    // Example output: "00:1f.0  SATA controller: Intel Corporation 82801AA SATA Controller"
-                    String[] wordByWord = counterLineByLine.split(" ");
+                // Read the output line by line and store it in an array
+                // Example output: "00:1f.0  SATA controller: Intel Corporation 82801AA SATA Controller"
+                String[] wordByWord = counterLineByLine.split(" ");
 
-                    //Creates a temporary string for the first word in each line
-                    //This should be the bus:device:function E.g. 00:00:00
-                    String busId = wordByWord[0];
+                //Creates a temporary string for the first word in each line
+                //This should be the bus:device:function E.g. 00:00:00
+                String busId = wordByWord[0];
 
-                    //Split busId into two parts - AA:BB.BB
-                    String[] busSplitDeviceFunction = busId.split(":"); // Split bus from device
+                //Split busId into two parts - AA:BB.BB
+                String[] busSplitDeviceFunction = busId.split(":"); // Split bus from device
 
-                    // Check for unique bus ID
-                    if (!pciBusesTotal.contains(busSplitDeviceFunction[0])) {
-                        pciBusesTotal.add(busSplitDeviceFunction[0]); // Add unique bus ID
-                    }
-
-                    //split busId into 2 parts - aa:aa.bb
-                    String[] deviceSplitFunction = busId.split("\\."); // Split bus from device
-
-                    //checks if device is already in Arraylist
-                    if (!pciDevicesTotal.contains(deviceSplitFunction[0])) {
-                        pciDevicesTotal.add(deviceSplitFunction[0]); // Add unique device Id
-                    }
-
-                    // Get the bus ID (first part) and stores it in an array
-                    String busIdFunction = wordByWord[0].split(":")[0];
-
-                    // Count functions for each bus
-                    pciBusFunctionCount.put(busIdFunction, pciBusFunctionCount.getOrDefault(busIdFunction, 0) + 1);
-
-                    // Get the Device ID (Second part) and stores it in an array
-                    String deviceId = wordByWord[0].split("\\.")[0];
-
-                    // Count functions for each device
-                    pciDeviceFunctionCount.put(deviceId, pciDeviceFunctionCount.getOrDefault(deviceId, 0) + 1);
-
-
+                // Check for unique bus ID
+                if (!pciBusesTotal.contains(busSplitDeviceFunction[0])) {
+                    pciBusesTotal.add(busSplitDeviceFunction[0]); // Add unique bus ID
                 }
 
-                // Build the result string for number of functions for each pci bus
-                for (Map.Entry<String, Integer> entry : pciBusFunctionCount.entrySet()) {
-                    //if else statement for correct grammar function for one and functions for plural
-                    if (entry.getValue() == 1) {
-                        numberOfFunctionsForEachBus.append("Bus ").append(entry.getKey()).append(" has ").append(entry.getValue())
-                                .append(" function\n");
-                    } else {
-                        numberOfFunctionsForEachBus.append("Bus ").append(entry.getKey()).append(" has ").append(entry.getValue())
-                                .append(" functions\n");
-                    }
-                }
-                // Build the result string for number of functions for each device
-                for (Map.Entry<String, Integer> entryDeviceFunctionCount : pciDeviceFunctionCount.entrySet()) {
+                //split busId into 2 parts - aa:aa.bb
+                String[] deviceSplitFunction = busId.split("\\."); // Split bus from device
 
-                    //Creates a temporary string for Bus:Device = NoOfFunctions for each Device
-                    String busDevicesEqualsNoFunctions = String.valueOf(entryDeviceFunctionCount);
-                    //Creates an array for Bus,Device=NoOfFunctions
-                    String[] busSplitDevice = busDevicesEqualsNoFunctions.split(":");
-                    //Remove Device=NoOfFunctions leaving only the Bus which is repeated once for each device
-                    String listOfBusesRepeatedForNoOfDevices = busSplitDevice[0].split("\\.")[0];
-
-                    //Adds the Bus and number of times it occurs to the linked hash map
-                    pciDevicePerBusCount.put(listOfBusesRepeatedForNoOfDevices,
-                            pciDevicePerBusCount.getOrDefault(listOfBusesRepeatedForNoOfDevices, 0) + 1);
-
-                    //if else statement for correct grammar function for one and functions for plural
-                    if (entryDeviceFunctionCount.getValue() == 1) {
-                        numberOfFunctionsForEachDevice.append("Device ").append(entryDeviceFunctionCount.getKey())
-                                .append(" has ").append(entryDeviceFunctionCount.getValue()).append(" function\n");
-                    } else {
-                        numberOfFunctionsForEachDevice.append("Device ").append(entryDeviceFunctionCount.getKey())
-                                .append(" has ").append(entryDeviceFunctionCount.getValue()).append(" functions\n");
-                    }
-
+                //checks if device is already in Arraylist
+                if (!pciDevicesTotal.contains(deviceSplitFunction[0])) {
+                    pciDevicesTotal.add(deviceSplitFunction[0]); // Add unique device Id
                 }
 
-                // Build the result string for number of devices per bus
-                for (Map.Entry<String, Integer> entryDevicesPerFunction : pciDevicePerBusCount.entrySet()) {
-                    //if else statement for correct grammar device for one and devices for plural
-                    if (entryDevicesPerFunction.getValue() == 1) {
-                        devicesPerBus.append("Bus ").append(entryDevicesPerFunction.getKey())
-                                .append(" has ").append(entryDevicesPerFunction.getValue()).append(" device\n");
-                    } else {
-                        devicesPerBus.append("Bus ").append(entryDevicesPerFunction.getKey())
-                                .append(" has ").append(entryDevicesPerFunction.getValue()).append(" devices\n");
-                    }
+                // Get the bus ID (first part) and stores it in an array
+                String busIdFunction = wordByWord[0].split(":")[0];
+
+                // Count functions for each bus
+                pciBusFunctionCount.put(busIdFunction, pciBusFunctionCount.getOrDefault(busIdFunction, 0) + 1);
+
+                // Get the Device ID (Second part) and stores it in an array
+                String deviceId = wordByWord[0].split("\\.")[0];
+
+                // Count functions for each device
+                pciDeviceFunctionCount.put(deviceId, pciDeviceFunctionCount.getOrDefault(deviceId, 0) + 1);
+
+
+            }
+
+            // Build the result string for number of functions for each pci bus
+            for (Map.Entry<String, Integer> entry : pciBusFunctionCount.entrySet()) {
+                //if else statement for correct grammar function for one and functions for plural
+                if (entry.getValue() == 1) {
+                    numberOfFunctionsForEachBus.append("Bus ").append(entry.getKey()).append(" has ").append(entry.getValue())
+                            .append(" function\n");
+                } else {
+                    numberOfFunctionsForEachBus.append("Bus ").append(entry.getKey()).append(" has ").append(entry.getValue())
+                            .append(" functions\n");
                 }
-                // Save the result as a string
-                String functionsPerBus = numberOfFunctionsForEachBus.toString();
-                String functionsPerDevice = numberOfFunctionsForEachDevice.toString();
-                String noDevicesPerBus = String.valueOf(devicesPerBus);
+            }
+            // Build the result string for number of functions for each device
+            for (Map.Entry<String, Integer> entryDeviceFunctionCount : pciDeviceFunctionCount.entrySet()) {
+
+                //Creates a temporary string for Bus:Device = NoOfFunctions for each Device
+                String busDevicesEqualsNoFunctions = String.valueOf(entryDeviceFunctionCount);
+                //Creates an array for Bus,Device=NoOfFunctions
+                String[] busSplitDevice = busDevicesEqualsNoFunctions.split(":");
+                //Remove Device=NoOfFunctions leaving only the Bus which is repeated once for each device
+                String listOfBusesRepeatedForNoOfDevices = busSplitDevice[0].split("\\.")[0];
+
+                //Adds the Bus and number of times it occurs to the linked hash map
+                pciDevicePerBusCount.put(listOfBusesRepeatedForNoOfDevices,
+                        pciDevicePerBusCount.getOrDefault(listOfBusesRepeatedForNoOfDevices, 0) + 1);
+
+                //if else statement for correct grammar function for one and functions for plural
+                if (entryDeviceFunctionCount.getValue() == 1) {
+                    numberOfFunctionsForEachDevice.append("Device ").append(entryDeviceFunctionCount.getKey())
+                            .append(" has ").append(entryDeviceFunctionCount.getValue()).append(" function\n");
+                } else {
+                    numberOfFunctionsForEachDevice.append("Device ").append(entryDeviceFunctionCount.getKey())
+                            .append(" has ").append(entryDeviceFunctionCount.getValue()).append(" functions\n");
+                }
+
+            }
+
+            // Build the result string for number of devices per bus
+            for (Map.Entry<String, Integer> entryDevicesPerFunction : pciDevicePerBusCount.entrySet()) {
+                //if else statement for correct grammar device for one and devices for plural
+                if (entryDevicesPerFunction.getValue() == 1) {
+                    devicesPerBus.append("Bus ").append(entryDevicesPerFunction.getKey())
+                            .append(" has ").append(entryDevicesPerFunction.getValue()).append(" device\n");
+                } else {
+                    devicesPerBus.append("Bus ").append(entryDevicesPerFunction.getKey())
+                            .append(" has ").append(entryDevicesPerFunction.getValue()).append(" devices\n");
+                }
+            }
+            // Save the result as a string
+            String functionsPerBus = numberOfFunctionsForEachBus.toString();
+            String functionsPerDevice = numberOfFunctionsForEachDevice.toString();
+            String noDevicesPerBus = String.valueOf(devicesPerBus);
 
 
-                // Convert ArrayList to Array
-                String[] lSPCIOutputArray = lspciOutputArrayList.toArray(new String[0]);
-                String[] pciImportantDeviceInfoArray = pciImportantDeviceInfoArrayList.toArray(new String[0]);
+            // Convert ArrayList to Array
+            String[] lSPCIOutputArray = lspciOutputArrayList.toArray(new String[0]);
+            String[] pciImportantDeviceInfoArray = pciImportantDeviceInfoArrayList.toArray(new String[0]);
 
-                // Converts pciBusesTotal.size() into an int
-                int noOfBusesTotal = pciBusesTotal.size();
-                // Converts pciDevicesTotal.size() into an int
-                int noOfDevicesTotal = pciDevicesTotal.size();
+            // Converts pciBusesTotal.size() into an int
+            int noOfBusesTotal = pciBusesTotal.size();
+            // Converts pciDevicesTotal.size() into an int
+            int noOfDevicesTotal = pciDevicesTotal.size();
 
           /*  // Print the output
             for (String arrayEntry : lSPCIOutputArray) {
                     System.out.println(arrayEntry);
             }*/
 
-                for (String result : pciImportantDeviceInfoArray) {
-                    System.out.println(result);
-                }
+            //for (String result : pciImportantDeviceInfoArray) {
+            //    System.out.println(result);
+            //}
 
-                System.out.println("\nThere are " + functionCountTotal + " PCIe Functions\n");
-                System.out.println("Number of PCIe buses: " + noOfBusesTotal + "\n");
-                System.out.println("Number of unique PCI devices: " + noOfDevicesTotal + "\n");
-                System.out.println(noDevicesPerBus);
-                System.out.println(functionsPerBus);
-                System.out.println(functionsPerDevice);
 
-                //noOfBusesTotal = int of the total number Buses
-                //functionCountTotal = int with the total number of functions
-                //lSPCIOutputArray = Array of the output of lspci -vvv -nn not really nessesary because of other outputs
-                //lspciOutputArrayList = ArrayList of the output of lspci -vvv -nn not really nessesary because of other outputs
-                //functionsPerBus = String of how many pci functions each bus has
-                //functionPerDevice = String of how many pci functions each device has
-                //noOfDevicesTotal = int of the total number of pcie devices connected
-                //noDevicesPerBus = String for the number of devices connected to each bus
-                //pciImportantDeviceInfoArray = Array Containing Bus location, vendor Id, Product Id, Vendor Name, kernal driver, device name, subsystem informatnoin
-                //pciImportantDeviceInfoArrayList  = ArrayList Containing pci pciImportantDeviceInfoArray
-            }
+
+            //Adding pciImportantDeviceInfoArray to an Array List to be used in GUI
+            //List<String> pciInfoArrayListForGUI = new ArrayList<>();
+            //pciInfoArrayListForGUI.addAll(pciImportantDeviceInfoArrayList);
+            //System.out.println("ARRAY LIST FOR GUI: " + pciInfoArrayListForGUI);
+
+            //noOfBusesTotal = int of the total number Buses
+            //functionCountTotal = int with the total number of functions
+            //lSPCIOutputArray = Array of the output of lspci -vvv -nn not really nessesary because of other outputs
+            //lspciOutputArrayList = ArrayList of the output of lspci -vvv -nn not really nessesary because of other outputs
+            //functionsPerBus = String of how many pci functions each bus has
+            //functionPerDevice = String of how many pci functions each device has
+            //noOfDevicesTotal = int of the total number of pcie devices connected
+            //noDevicesPerBus = String for the number of devices connected to each bus
+            //pciImportantDeviceInfoArray = String Array Containing Bus location, vendor Id, Product Id, Vendor Name, kernal driver, device name, subsystem informatnoin
+            //pciImportantDeviceInfoArrayList = List for GUI
+
+            // Convert ArrayList to ObservableList
+            ObservableList<String> pciListForGUI = FXCollections.observableArrayList(pciImportantDeviceInfoArrayList);
+
+            // Set the ObservableList as the items for the ListView
+            System.out.println("PCI LIST FOR GUI" + pciListForGUI);
+            listPcie.setItems(pciListForGUI);
+
+            labelDevicesAmount.setText("Number of PCI Devices: " + noOfDevicesTotal);
+
+            labelTotalFunctions.setText("Total Number of Functions across PCI Devices: " + functionCountTotal);
+
+            labelBusesAmount.setText("Number of Buses: " + noOfBusesTotal);
+
+            labelDevicesPerBus.setText("Number of Devices Per Bus: " + noDevicesPerBus);
+
+
         }
 
 
-
-
-
-
+    }
 
 
     @FXML
@@ -890,6 +913,5 @@ public class HelloController {
     protected void onPeripheralsButtonClick() {
         changeScene("peripherals.fxml");
     }
-
 
 }
