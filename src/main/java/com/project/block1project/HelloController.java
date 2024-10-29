@@ -19,6 +19,7 @@ import oshi.software.os.OSProcess;
 import oshi.util.FormatUtil;
 
 import java.awt.*;
+import java.awt.im.InputContext;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -47,7 +48,11 @@ public class HelloController {
     @FXML
     private Label labelCountry;
     @FXML
+    private Label labelKeyboard;
+    @FXML
     private Label labelLanguageAbbreviation;
+    @FXML
+    private Label labelEndian;
     @FXML
     private Label labelUser;
     @FXML
@@ -220,28 +225,34 @@ public class HelloController {
         String osBit = System.getProperty("sun.arch.data.model");
         String osVersion = System.getProperty("os.version");
         String osArchitecture = System.getProperty("os.arch");
-        String country = System.getProperty("user.country");
+        String countryShort = System.getProperty("user.country");
         String languageAbbreviation = System.getProperty("user.language");
-        if (Objects.equals(languageAbbreviation, "en")) {
-            languageAbbreviation = "English";
-        }
+        String endian = System.getProperty("sun.cpu.endian");
         String user = System.getProperty("user.name");
+        String country = "N/A";
+        String language = "N/A";
+
+        //converts Language and country into their full names
+        if(countryShort != null){
+            Locale localeCountry = new Locale("en", countryShort);
+            country = localeCountry.getDisplayCountry();
+        }
+        if(languageAbbreviation != null){
+            Locale localeCountry = new Locale(languageAbbreviation);
+            language = localeCountry.getDisplayLanguage();
+        }
+        //Gets Keyboard layout
+        InputContext keyboard = InputContext.getInstance();
 
         // Set the labels with values, ensuring they are not null
-        if (labelOS != null) labelOS.setText("Operating System: " + stringOS);
-        if (labelOSBit != null) labelOSBit.setText("OS Bit: " + osBit);
-        if (labelOSVersion != null) labelOSVersion.setText("OS Version: " + osVersion);
-        if (labelOSArchitecture != null) labelOSArchitecture.setText("OS Architecture: " + osArchitecture);
-        if (labelCountry != null){
-            try {
-                ResourceBundle bundle = ResourceBundle.getBundle("com.project.block1project.Messages", Locale.getDefault());
-                String Country = bundle.getString(country);
-                labelCountry.setText("Country: " + Country);
-            }
-            catch(MissingResourceException e){labelCountry.setText("Country: N/A");}
-        }
-
-        if (labelLanguageAbbreviation != null) labelLanguageAbbreviation.setText("Language: " + languageAbbreviation);
+        if (labelOS != null) labelOS.setText("Kernal: " + stringOS);
+        if (labelOSBit != null) labelOSBit.setText("Bits: " + osBit +  "-bit");
+        if (labelOSVersion != null) labelOSVersion.setText("Version: " + osVersion);
+        if (labelOSArchitecture != null) labelOSArchitecture.setText("Architecture: " + osArchitecture);
+        if (labelEndian != null) labelEndian.setText("Endian: " + endian + " endian");
+        if (labelCountry != null) labelCountry.setText("Country: " + country);
+        if (labelKeyboard != null) labelKeyboard.setText("Keyboard: " + keyboard.getLocale());
+        if (labelLanguageAbbreviation != null) labelLanguageAbbreviation.setText("Language: " + language);
         if (labelUser != null) labelUser.setText("User: " + user);
 
         //Battery Info

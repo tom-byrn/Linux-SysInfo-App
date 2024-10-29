@@ -67,12 +67,12 @@
       <Label fx:id="labelKeyboard" layoutX="339.0" layoutY="508.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Keyboard Layout]" />
       <Label fx:id="labelLanguageAbbreviation" layoutX="339.0" layoutY="579.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Language]" />
       <Label fx:id="labelUser" layoutX="339.0" layoutY="649.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[User]" />
+      <Label fx:id="labelEndian" layoutX="339.0" layoutY="508.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Endian]" />
       <Label fx:id="labelBattery" layoutX="775.0" layoutY="227.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Battery]" textFill="WHITE" />
       <ProgressBar fx:id="batteryBar" layoutX="775.0" layoutY="297.0" prefHeight="71.0" prefWidth="345.0" progress="0.0" styleClass="batteryBar" />
       <Label fx:id="labelResolution" layoutX="1204.0" layoutY="227.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Display Resolution]" textFill="WHITE" />
       <Label fx:id="labelDPI" layoutX="1204.0" layoutY="297.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Pixels Per Inch]" textFill="WHITE" />
       <Label fx:id="labelRefreshRate" layoutX="1204.0" layoutY="368.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="[Refresh Rate]" />
-
       <Label layoutX="339.0" layoutY="137.0" prefHeight="64.0" prefWidth="345.0" styleClass="homeHeaderLabels" text="User Info" textAlignment="CENTER" />
       <Label layoutX="775.0" layoutY="137.0" prefHeight="64.0" prefWidth="345.0" styleClass="homeHeaderLabels" text="Battery" textAlignment="CENTER" />
       <Label layoutX="1204.0" layoutY="137.0" prefHeight="64.0" prefWidth="345.0" styleClass="homeHeaderLabels" text="Display" textAlignment="CENTER" />
