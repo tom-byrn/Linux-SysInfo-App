@@ -67,7 +67,9 @@
       <Label fx:id="labelDevicesAmount" layoutX="338.0" layoutY="239.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="[Bus Amount]" />
       <Label fx:id="labelTotalFunctions" layoutX="338.0" layoutY="304.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="[Function Amount]" />
       <Label fx:id="labelBusesAmount" layoutX="338.0" layoutY="373.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="[Buses Amount]" />
-      <Label fx:id="labelDevicesPerBus" layoutX="338.0" layoutY="442.0" prefHeight="415.0" prefWidth="560.0" styleClass="smallText" text="[Devices Per Bus]"  />
+      <Label fx:id="labelDevicesPerBus" layoutX="338.0" layoutY="442.0" prefHeight="415.0" prefWidth="200.0" styleClass="smallText" text="[Devices Per Bus]"  />
+      <Label fx:id="labelFunctionsPerBus" layoutX="338.0" layoutY="442.0" prefHeight="415.0" prefWidth="200.0" styleClass="smallText" text="[Devices Per Bus]"  />
+      <Label fx:id="labelFunctionsPerDevice" layoutX="338.0" layoutY="442.0" prefHeight="415.0" prefWidth="200.0" styleClass="smallText" text="[Devices Per Bus]"  />
       <ToggleButton fx:id="toggleUSB" layoutX="42.0" layoutY="759.0" mnemonicParsing="false" onAction="#onUSBButtonClick" prefHeight="44.0" prefWidth="147.0" text="USB" />
 
    </children>

@@ -169,8 +169,12 @@ public class HelloController {
     private Label labelBusesAmount;
     @FXML
     private Label labelDevicesPerBus;
+  //  @FXML
+  //  private Label labelDevicesPerBus;
     @FXML
-    private ListView<String> listUSB;
+    private Label labelFunctionsPerBus;
+    @FXML
+    private Label labelFunctionsPerDevice;
 
 
 
@@ -1020,6 +1024,12 @@ public class HelloController {
             labelBusesAmount.setText("Number of Buses: " + noOfBusesTotal);
 
             labelDevicesPerBus.setText("Number of Devices Per Bus: " + noDevicesPerBus);
+
+            labelFunctionsPerBus.setText("No. Functions Per Bus: " + functionsPerBus);
+
+            labelFunctionsPerDevice.setText("No. Functions Per Device" + functionsPerDevice);
+
+            labelDevicesPerBus.setText("No. Devices Per Bus: " + devicesPerBus);
 
 
         }
