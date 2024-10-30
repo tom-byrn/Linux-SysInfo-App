@@ -20,10 +20,7 @@ import oshi.util.FormatUtil;
 
 import java.awt.*;
 import java.awt.im.InputContext;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -138,6 +135,9 @@ public class HelloController {
     private Label labelDiskModel;
     @FXML
     private Label labelDiskSize;
+    @FXML
+    private Label labelDiskfree;
+
 
 
     //FXML components for the Operating System Page
@@ -588,7 +588,7 @@ public class HelloController {
         long availableMemory = memory.getAvailable();
 
         if (labelTotalMemory != null) {
-            labelTotalMemory.setText("Total Memory: " + totalMemory / (1000 * 1000) + " MB");
+            labelTotalMemory.setText("Total Memory: " + totalMemory / (1024 * 1024) + " MiB");
         }
 
         // Get the list of physical memory modules
@@ -597,7 +597,7 @@ public class HelloController {
             // Get the speed of the first module (All modules should be the same speed)
             long memorySpeed = physicalMemoryList.getFirst().getClockSpeed();
             if (labelMemorySpeed != null) {
-                labelMemorySpeed.setText("Memory Speed: " + memorySpeed + " MHz");
+                labelMemorySpeed.setText("Memory Speed: " + memorySpeed + " Hz");
             }
         } else {
             if (labelMemorySpeed != null) {
@@ -606,10 +606,10 @@ public class HelloController {
         }
 
         if (labelAvailableMemory != null) {
-            labelAvailableMemory.setText("Available Memory: " + availableMemory / (1000 * 1000) + " MB");
+            labelAvailableMemory.setText("Available Memory: " + availableMemory / (1024 * 1024) + " MiB");
         }
         if (labelMemoryUsed != null) {
-            labelMemoryUsed.setText("Memory Used: " + (totalMemory - availableMemory) / (1000 * 1000) + " MB");
+            labelMemoryUsed.setText("Memory Used: " + (totalMemory - availableMemory) / (1024 * 1024) + " MiB");
 
             // make pie chart data
             PieChart.Data usedData = new PieChart.Data("Used", (totalMemory - availableMemory));
@@ -626,19 +626,28 @@ public class HelloController {
         long usedSwap = swapMemory.getSwapUsed();
 
         if (labelUsedSwapMemory != null) {
-            labelUsedSwapMemory.setText("Used Swap Memory: " + usedSwap / (1000 * 1000)  + " MB");
+            labelUsedSwapMemory.setText("Used Swap Memory: " + usedSwap / (1024 * 1024)  + " MiB");
         }
 
         // Disk info
         List<HWDiskStore> disk = hal.getDiskStores();
         String model = "Unknown";
-        long diskSize = 0;
 
         if (!disk.isEmpty()) {
-            HWDiskStore diskStores = disk.getFirst();
-
             model = disk.getFirst().getModel();
-            diskSize = disk.getFirst().getSize();
+        }
+
+        long totalSpace = 0;
+        long freeSpace = 0;
+
+        // Get the list of all file system roots (/ directory)
+        File[] roots = File.listRoots();
+
+        // Iterate through each root
+        for (File root : roots) {
+            // Get total, free, and usable space
+            totalSpace = root.getTotalSpace();
+            freeSpace = root.getFreeSpace();
         }
 
 
@@ -646,7 +655,10 @@ public class HelloController {
             labelDiskModel.setText("Disk Model: " + model );}
 
         if (labelDiskSize != null) {
-            labelDiskSize.setText("Disk Size: " + diskSize / (1000 * 1000 * 1000) +" GB");}
+            labelDiskSize.setText("Disk Size: " + totalSpace / (1024 * 1024 * 1024) +" GiB");}
+        if(labelDiskfree !=null){
+            labelDiskfree.setText(("Disk free: " + freeSpace/1024/1024/1024 + " GiB"));
+        }
     }
 
     public void initializeOperatingSystemPage(){
@@ -658,7 +670,7 @@ public class HelloController {
 
         labelOSName.setText("Operating System: " + os.getFamily());
 
-        labelOSVer.setText("Version" + os.getVersionInfo().toString());
+        labelOSVer.setText("Version: " + os.getVersionInfo().toString());
 
         labelArchitecture.setText("Architecture: " + os.getBitness() + "-bit");
 
