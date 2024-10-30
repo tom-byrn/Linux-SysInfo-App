@@ -293,6 +293,7 @@ public class HelloController {
 
         // Execute the command to get battery information
         Process upowerCommand = Runtime.getRuntime().exec("upower -i /org/freedesktop/UPower/devices/battery_BAT1");
+        // reads the battery power info
         BufferedReader readUpower = new BufferedReader(new InputStreamReader(upowerCommand.getInputStream()));
         String upowerLineByLine;
 
