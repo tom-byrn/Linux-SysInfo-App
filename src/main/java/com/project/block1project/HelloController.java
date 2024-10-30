@@ -653,7 +653,7 @@ public class HelloController {
 
         labelOSName.setText("Operating System: " + os.getFamily());
 
-        labelOSVer.setText("Version" + os.getVersionInfo().toString());
+        labelOSVer.setText("Version: " + os.getVersionInfo().toString());
 
         labelArchitecture.setText("Architecture: " + os.getBitness() + "-bit");
 
