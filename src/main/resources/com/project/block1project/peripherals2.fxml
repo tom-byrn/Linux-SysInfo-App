@@ -65,7 +65,7 @@
 
         <Label layoutX="338.0" layoutY="147.0" prefHeight="64.0" prefWidth="560.0" styleClass="homeHeaderLabels" text="USB Information" textAlignment="CENTER" />
         <Label fx:id="labelBusesAmountUsb" layoutX="338.0" layoutY="239.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="[Bus Amount]" />
-        <Label fx:id="labelDevicesPerBusUsb" layoutX="338.0" layoutY="381.0" prefHeight="545.0" prefWidth="560.0" styleClass="homeLabels" text="[Devices Per Bus]" />
+        <Label fx:id="labelDevicesPerBusUsb" layoutX="338.0" layoutY="381.0" prefHeight="310.0" prefWidth="560.0" styleClass="homeLabels" text="[Devices Per Bus]" />
         <Label fx:id="labelNoDevicesUSB" layoutX="338.0" layoutY="310.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="[Devices Per Bus]" />
         <ToggleButton fx:id="togglePCIe" layoutX="42.0" layoutY="759.0" mnemonicParsing="false" onAction="#onPeripheralsButtonClick" prefHeight="44.0" prefWidth="147.0" text="PCIe" />
 
