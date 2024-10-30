@@ -183,6 +183,8 @@ public class HelloController {
     private Label labelBusesAmountUsb;
     @FXML
     private ListView<String> listUSB;
+    @FXML
+    private Label labelNoDevicesUSB;
 
 
 
@@ -1167,6 +1169,9 @@ public class HelloController {
             labelDevicesPerBusUsb.setText("Number of Devices Per Bus:\n\n" + devicesPerUsbBus);
         }
 
+        if(labelNoDevicesUSB !=null){
+            labelNoDevicesUSB.setText("Number of Devices: " + usbDeviceCount);
+        }
 
     }
 

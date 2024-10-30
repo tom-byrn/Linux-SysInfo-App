@@ -1,4 +1,4 @@
-package com.project.block1project;
+/*package com.project.block1project;
 import javax.bluetooth.*;
 
 public class Bluetooth {
@@ -46,4 +46,4 @@ public class Bluetooth {
     }
 }
 
-
+*/
