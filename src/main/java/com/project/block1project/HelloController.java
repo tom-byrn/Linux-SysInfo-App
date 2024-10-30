@@ -290,7 +290,7 @@ public class HelloController {
         String temperature = "";
 
 
-        // Execute the command to get battery information
+        // Execute the command to get battery information from system
         Process upowerCommand = Runtime.getRuntime().exec("upower -i /org/freedesktop/UPower/devices/battery_BAT1");
         // Reads the battery power info
         BufferedReader readUpower = new BufferedReader(new InputStreamReader(upowerCommand.getInputStream()));
