@@ -5,6 +5,7 @@ module com.project.block1project {
     requires com.github.oshi;
     requires bluecove;
     requires java.desktop;
+    requires javafx.base;
 
 
     opens com.project.block1project to javafx.fxml;

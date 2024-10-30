@@ -179,6 +179,8 @@ public class HelloController {
     private Label labelTotalFunctionsUsb;
     @FXML
     private Label labelBusesAmountUsb;
+    @FXML
+    private Labe listUSB;
 
 
 
@@ -1159,6 +1161,7 @@ public class HelloController {
         //usbImportantInfoArray = array containing bus id, device id, vendor id, vendor name, product id, product name
 
 
+        listPcie.setItems((ObservableList<String>) usbImportantInfoArrayList);
         labelBusesAmountUsb.setText("Number of USB Buses: " + totalNoOfUsbBuses);
         labelDevicesPerBus.setText("Number of Devices Per Bus: " + devicesPerUsbBus);
         labelDevicesPerBus.setText("Number of Devices Total: " + usbDeviceCount);
