@@ -79,7 +79,7 @@ public class HelloController {
     @FXML
     private Label labelBatteryCharge;
     @FXML
-    private Label labelBatteryVoltag;
+    private Label labelBatteryVoltage;
     @FXML
     private Label labelTemperature;
     @FXML
@@ -114,6 +114,8 @@ public class HelloController {
     public static XYChart.Series<Number, Number> series; // Declaring the series for the chart so it can be used in CPU class
     @FXML
     private Label labelCacheSizes;
+    @FXML
+    private ListView<String> listCPUVulnerabilities;
 
 
 
@@ -168,9 +170,7 @@ public class HelloController {
     @FXML
     private Label labelDevicesPerBus;
     @FXML
-    private Label labelFunctionsPerDevice;
-    @FXML
-    private Label labelFunctionsPerBus;
+    private ListView<String> listUSB;
 
 
 
@@ -199,6 +199,11 @@ public class HelloController {
                     cpuController.initializeCPUPage();
                     break;
 
+                case "cpu2.fxml":
+                    HelloController cpu2Controller = fxmlloader.getController();
+                    cpu2Controller.initializeCPU2Page();
+                    break;
+
                 case "memory.fxml":
                     HelloController memoryController = fxmlloader.getController();
                     memoryController.initializeMemoryPage();
@@ -212,6 +217,10 @@ public class HelloController {
                 case "peripherals.fxml":
                     HelloController peripheralsController = fxmlloader.getController();
                     peripheralsController.initializePeripheralsPage();
+
+                case "peripherals2.fxml":
+                    HelloController peripheralsUSBController = fxmlloader.getController();
+                    peripheralsUSBController.initializePeripheralsUSBPage();
 
 
                 default:
@@ -337,7 +346,7 @@ public class HelloController {
             if(upowerLineByLine.contains("voltage:")) {
                 batteryVoltage = upowerLineByLine.replaceAll(" ", "").replaceAll("voltage:", "").replaceAll("V","");
                 batteryVoltage = "Battery Voltage: " + batteryVoltage + " V";
-                labelBatteryVoltag.setText(batteryVoltage);
+                labelBatteryVoltage.setText(batteryVoltage);
                 System.out.println(batteryVoltage);
             }
             if(upowerLineByLine.contains("temperature")) {
@@ -392,12 +401,12 @@ public class HelloController {
         String macAddress = net.getMacaddr();
         long linkSpeed = net.getSpeed();
 
-       if (linkSpeed > 0) {
-           linkSpeed /= (1000 * 1000);
-       }
+        if (linkSpeed > 0) {
+            linkSpeed /= (1000 * 1000);
+        }
 
         if (labelLinkSpeed != null) {
-            labelLinkSpeed.setText("LInk Speed: " + linkSpeed + " Mbps");}
+            labelLinkSpeed.setText("Link Speed: " + linkSpeed + " Mbps");}
         if (labelInterfaceName != null) {
             labelInterfaceName.setText("Interface: " + interfaceName );}
         if (labelMacAddress != null) {
@@ -579,7 +588,7 @@ public class HelloController {
         long availableMemory = memory.getAvailable();
 
         if (labelTotalMemory != null) {
-            labelTotalMemory.setText("Total Memory: " + totalMemory / (1024 * 1024) + " MiB");
+            labelTotalMemory.setText("Total Memory: " + totalMemory / (1000 * 1000) + " MB");
         }
 
         // Get the list of physical memory modules
@@ -588,7 +597,7 @@ public class HelloController {
             // Get the speed of the first module (All modules should be the same speed)
             long memorySpeed = physicalMemoryList.getFirst().getClockSpeed();
             if (labelMemorySpeed != null) {
-                labelMemorySpeed.setText("Memory Speed: " + (memorySpeed / 1_000_000) + " MHz");
+                labelMemorySpeed.setText("Memory Speed: " + memorySpeed + " MHz");
             }
         } else {
             if (labelMemorySpeed != null) {
@@ -597,10 +606,10 @@ public class HelloController {
         }
 
         if (labelAvailableMemory != null) {
-            labelAvailableMemory.setText("Available Memory: " + (availableMemory / (1024 * 1024)) + " MiB");
+            labelAvailableMemory.setText("Available Memory: " + availableMemory / (1000 * 1000) + " MB");
         }
         if (labelMemoryUsed != null) {
-            labelMemoryUsed.setText("Memory Used: " + ((totalMemory - availableMemory) / (1024 * 1024)) + " MiB");
+            labelMemoryUsed.setText("Memory Used: " + (totalMemory - availableMemory) / (1000 * 1000) + " MB");
 
             // make pie chart data
             PieChart.Data usedData = new PieChart.Data("Used", (totalMemory - availableMemory));
@@ -617,7 +626,7 @@ public class HelloController {
         long usedSwap = swapMemory.getSwapUsed();
 
         if (labelUsedSwapMemory != null) {
-            labelUsedSwapMemory.setText("Used Swap Memory: " + (usedSwap / (1024 * 1024))  + " MiB");
+            labelUsedSwapMemory.setText("Used Swap Memory: " + usedSwap / (1000 * 1000)  + " MB");
         }
 
         // Disk info
@@ -631,21 +640,13 @@ public class HelloController {
             model = disk.getFirst().getModel();
             diskSize = disk.getFirst().getSize();
         }
-        String unit = "Bytes";
 
-        if (diskSize > (1024 * 1024 * 1024) ){
-            diskSize /= (1024 * 1024 * 1024);
-            unit = "GiB";
-        } else if (diskSize > (1024 * 1024 )) {
-            diskSize /= (1024 * 1024);
-            unit = "MiB";
-        }
 
         if (labelDiskModel != null) {
             labelDiskModel.setText("Disk Model: " + model );}
 
         if (labelDiskSize != null) {
-            labelDiskSize.setText("Disk Size: " + diskSize +" " + unit);}
+            labelDiskSize.setText("Disk Size: " + diskSize / (1000 * 1000 * 1000) +" GB");}
     }
 
     public void initializeOperatingSystemPage(){
@@ -657,7 +658,7 @@ public class HelloController {
 
         labelOSName.setText("Operating System: " + os.getFamily());
 
-        labelOSVer.setText("Version: " + os.getVersionInfo().toString());
+        labelOSVer.setText("Version" + os.getVersionInfo().toString());
 
         labelArchitecture.setText("Architecture: " + os.getBitness() + "-bit");
 
@@ -710,8 +711,6 @@ public class HelloController {
 
     public void initializePeripheralsPage() throws IOException {
 
-
-//Checks if OS is linux
         if ((System.getProperty("os.name").equals("Linux"))) {
 
             // Map to store the count of functions for each PCI bus and device.
@@ -729,7 +728,7 @@ public class HelloController {
             ArrayList<String> pciDevicesTotal = new ArrayList<>();
             List<String> vendorIds = new ArrayList<>(); // Creates an arraylist for vendor Ids
             List<String> vendorNames = new ArrayList<>(); // creates an array list for vendor names
-            List<String> pciImportantDeviceInfoArrayList = new ArrayList<>(); // List to store results for a bunch of stats
+            ArrayList<String> pciImportantDeviceInfoArrayList = new ArrayList<>();  // List to store results for a bunch of stats
 
 
             // Execute the lspci command
@@ -766,6 +765,7 @@ public class HelloController {
             String productId = "";
             String vendorName = "";
             String currentBusId = "";
+
             String lSPCIvvvString = "";
 
             // Regex to find PCI bus info, vendor and product IDs
@@ -972,16 +972,16 @@ public class HelloController {
                     System.out.println(arrayEntry);
             }*/
 
-            for (String result : pciImportantDeviceInfoArray) {
-                System.out.println(result);
-            }
+            //for (String result : pciImportantDeviceInfoArray) {
+            //    System.out.println(result);
+            //}
 
-            System.out.println("\nThere are " + functionCountTotal + " PCIe Functions\n");
-            System.out.println("Number of PCIe buses: " + noOfBusesTotal + "\n");
-            System.out.println("Number of unique PCI devices: " + noOfDevicesTotal + "\n");
-            System.out.println(noDevicesPerBus);
-            System.out.println(functionsPerBus);
-            System.out.println(functionsPerDevice);
+
+
+            //Adding pciImportantDeviceInfoArray to an Array List to be used in GUI
+            //List<String> pciInfoArrayListForGUI = new ArrayList<>();
+            //pciInfoArrayListForGUI.addAll(pciImportantDeviceInfoArrayList);
+            //System.out.println("ARRAY LIST FOR GUI: " + pciInfoArrayListForGUI);
 
             //noOfBusesTotal = int of the total number Buses
             //functionCountTotal = int with the total number of functions
@@ -991,8 +991,8 @@ public class HelloController {
             //functionPerDevice = String of how many pci functions each device has
             //noOfDevicesTotal = int of the total number of pcie devices connected
             //noDevicesPerBus = String for the number of devices connected to each bus
-            //pciImportantDeviceInfoArray = Array Containing Bus location, vendor Id, Product Id, Vendor Name, kernal driver, device name, subsystem informatnoin
-            //pciImportantDeviceInfoArrayList  = ArrayList Containing pci pciImportantDeviceInfoArray
+            //pciImportantDeviceInfoArray = String Array Containing Bus location, vendor Id, Product Id, Vendor Name, kernal driver, device name, subsystem informatnoin
+            //pciImportantDeviceInfoArrayList = List for GUI
 
             // Convert ArrayList to ObservableList
             ObservableList<String> pciListForGUI = FXCollections.observableArrayList(pciImportantDeviceInfoArrayList);
@@ -1001,17 +1001,13 @@ public class HelloController {
             System.out.println("PCI LIST FOR GUI" + pciListForGUI);
             listPcie.setItems(pciListForGUI);
 
-            labelDevicesAmount.setText("No. PCI Devices: " + noOfDevicesTotal);
+            labelDevicesAmount.setText("Number of PCI Devices: " + noOfDevicesTotal);
 
-            labelTotalFunctions.setText("Total Number of Functions: " + functionCountTotal);
+            labelTotalFunctions.setText("Total Number of Functions across PCI Devices: " + functionCountTotal);
 
-            labelBusesAmount.setText("No. of Buses: " + noOfBusesTotal);
+            labelBusesAmount.setText("Number of Buses: " + noOfBusesTotal);
 
-            labelDevicesPerBus.setText("No. Devices Per Bus: \n" + noDevicesPerBus);
-
-            labelFunctionsPerBus.setText("No. Functions Per Bus: \n" + functionsPerBus);
-
-            labelFunctionsPerDevice.setText("No. Functions per Device: \n" + functionsPerDevice);
+            labelDevicesPerBus.setText("Number of Devices Per Bus: " + noDevicesPerBus);
 
 
         }
@@ -1019,6 +1015,172 @@ public class HelloController {
 
     }
 
+    public void initializePeripheralsUSBPage() throws IOException {
+
+        //Setting up USB Page
+        //Creates ArrayLists
+        List<String> lsUSBOutputArrayList = new ArrayList<>(); //List for lsusb
+        List<String> usbImportantInfoArrayList = new ArrayList<>(); // List to store results for a bunch of stats
+        // Map to store the count of devices per bus
+        Map<String, Integer> usbDevicesPerBusCount = new LinkedHashMap<>();
+        // String builder
+        StringBuilder devicesPerUsbBus = new StringBuilder();
+
+        // Create a process to run the lsusb command
+        Process lsUSB = Runtime.getRuntime().exec("lsusb");
+        Process lsUSB_vvv = Runtime.getRuntime().exec("lsusb -vvv");
+
+        // Read the output from the command
+        BufferedReader lsUSBReader = new BufferedReader(new InputStreamReader(lsUSB.getInputStream()));
+        BufferedReader lsUSB_vvvReader = new BufferedReader(new InputStreamReader(lsUSB_vvv.getInputStream()));
+        String usb_VVVLineByLine;
+        String usbLineByLine;
+
+        // Counts number of usb devices
+        int usbDeviceCount = 0;
+        while ((usbLineByLine = lsUSBReader.readLine()) != null) {
+            usbDeviceCount++;
+
+            lsUSBOutputArrayList.add(usbLineByLine);
+
+            // Splits up into each individual word then inputs the second word into a string
+            String wordByWordUsb = usbLineByLine.trim().split(" ")[1];
+
+            // Count devices for each bus
+            usbDevicesPerBusCount.put(wordByWordUsb, usbDevicesPerBusCount.getOrDefault(wordByWordUsb, 0) + 1);
+        }
+
+        while ((usb_VVVLineByLine = lsUSB_vvvReader.readLine()) != null) {
+            usb_VVVLineByLine = usb_VVVLineByLine.trim();
+
+            //Capture Bus and Device numbers
+            //Checks if it starts with Bus and contains device and : ID
+            if(usb_VVVLineByLine.startsWith("Bus ") && usb_VVVLineByLine.contains("Device ") && usb_VVVLineByLine.contains(": ID")) {
+                //Splits based on :
+                String usbBusNumberDeviceNumber = usb_VVVLineByLine.split(":")[0];
+                // Store the device and bus info into the array list
+                usbImportantInfoArrayList.add(usbBusNumberDeviceNumber);
+            }
+
+            //Captures the vendor and vendor id
+            //Checks if it starts with idProduct          0x
+            if(usb_VVVLineByLine.startsWith("idVendor           0x")){
+                //Splits based on 0x and saves second string
+                String usbProductAndProductID = usb_VVVLineByLine.split("0x")[1];
+                //Splits based on a space and saves first string
+                String idVendor = usbProductAndProductID.split(" ")[0];
+                //Removes the AAAA
+                String usbVendorName = usbProductAndProductID.replaceAll("[0-9a-fA-F]{4} ", "");
+                //Stores the product and product id into the arraylist
+                usbImportantInfoArrayList.add("Vendor ID: " + idVendor + "\nVendor: " + usbVendorName);
+
+            }
+
+            //Captures the product and product id
+            //Checks if it starts with idProduct          0x
+            if(usb_VVVLineByLine.startsWith("idProduct          0x")){
+                //Splits based on 0x and saves second string
+                String usbProductAndProductID = usb_VVVLineByLine.split("0x")[1];
+                //Splits based on a space and saves first string
+                String idProduct = usbProductAndProductID.split(" ")[0];
+                //Removes the AAAA
+                String usbProductName = usbProductAndProductID.replaceAll("[0-9a-fA-F]{4} ", "");
+                //Stores the product and product id into the arraylist
+                usbImportantInfoArrayList.add("Product ID: " + idProduct + "\nDevice Name: " + usbProductName + "\n");
+
+            }
+
+
+        }
+
+        // Build the result string for number of devices per bus
+        for (Map.Entry<String, Integer> entryDevicesPerUsbBus : usbDevicesPerBusCount.entrySet()) {
+            //if else statement for correct grammar device for one and devices for plural
+            if (entryDevicesPerUsbBus.getValue() == 1) {
+                devicesPerUsbBus.append("Bus ").append(entryDevicesPerUsbBus.getKey())
+                        .append(" has ").append(entryDevicesPerUsbBus.getValue()).append(" device\n");
+            } else {
+                devicesPerUsbBus.append("Bus ").append(entryDevicesPerUsbBus.getKey())
+                        .append(" has ").append(entryDevicesPerUsbBus.getValue()).append(" devices\n");
+            }
+        }
+
+        // Convert ArrayList to Array
+        String[] lsUSBOutputArray = lsUSBOutputArrayList.toArray(new String[0]);
+        String[] usbImportantDeviceInfoArray = usbImportantInfoArrayList.toArray(new String[0]);
+
+        int totalNoOfUsbBuses = usbDevicesPerBusCount.size();
+
+        // Print the output
+        // for (String arrayEntry : lsUSBOutputArray) {
+        //  System.out.println(arrayEntry);
+        //  }
+
+        for (String result : usbImportantDeviceInfoArray) {
+            System.out.println(result);
+        }
+
+        System.out.println("\nThis computer has " + usbDeviceCount + " USB devices connected\n");
+
+        System.out.println(devicesPerUsbBus);
+        System.out.println("There are " + totalNoOfUsbBuses + " USB buses");
+
+        //lsUSBOutputArray = array containing lsusb, nothing really importaing in this usbImportantInfoArray covers all of this
+        //usbDeviceCount = int with the number of devices connected to the computer
+        //devicesPerUsbBus = Sting containing the number of devices connected to each unique Usb bus
+        //totalNoOfUsbBuses = int with the total number of usb buses
+        //usbImportantInfoArray = array containing bus id, device id, vendor id, vendor name, product id, product name
+
+        ObservableList<String> usbListForGUI = FXCollections.observableArrayList(usbImportantInfoArrayList);
+        if(listUSB != null) listUSB.setItems(usbListForGUI);
+
+
+    }
+
+    public void initializeCPU2Page() throws IOException {
+        //Creates ArrayLists
+        ArrayList<String> cpuVulnerablitiesArrayList = new ArrayList<>(); //ArrayList for cpu
+
+        // Create a process to run the lscpu command
+        Process lsCpu = Runtime.getRuntime().exec("lscpu");
+
+        // Read the output from the command
+        BufferedReader lsCpuReader = new BufferedReader(new InputStreamReader(lsCpu.getInputStream()));
+        String cpuLineByLine;
+
+        while ((cpuLineByLine = lsCpuReader.readLine()) != null) {
+
+            //Removes excess whitespaces
+            cpuLineByLine = cpuLineByLine.trim();
+
+            //Checks if it starts with Vulnerability
+            if(cpuLineByLine.startsWith("Vulnerability")) {
+                //Removes the vulnerability part at the start
+                String cpuVulnerabilities = cpuLineByLine.replaceAll("Vulnerability ", "");
+
+                //Creates Variable for checking if a cpu has any vulnerabilities
+                String cpuVulnerabilityChecker = cpuVulnerabilities.split(":")[1];
+
+                //Checks if the cpu is Vulnerable to any vulnerabilities
+                if(cpuVulnerabilityChecker.contains("Vulnerable")){
+                    String cpuVulnerability = cpuVulnerabilities.split(":")[0];
+                    cpuVulnerablitiesArrayList.add("WARNING, your Cpu is vulnerable to " + cpuVulnerability.toUpperCase() + ", WARNING");
+                }else{
+                    cpuVulnerablitiesArrayList.add(cpuVulnerabilities);
+                }
+            }
+
+        }
+
+        // Convert ArrayList to Array
+        String[] cpuVulnerablitiesArray = cpuVulnerablitiesArrayList.toArray(new String[0]);
+
+        //cpuVulnerablitiesArray = Array with all cpu vulnerabilities and warnings next to the ones you're vulnerable to and have no mitgations
+
+        //Setting up GUI
+        ObservableList<String> cpuVulnerabilitiesForGUI = FXCollections.observableArrayList(cpuVulnerablitiesArrayList);
+        if(listCPUVulnerabilities != null)listCPUVulnerabilities.setItems(cpuVulnerabilitiesForGUI);
+    }
 
     @FXML
     protected void onHomeButtonClick() {
@@ -1028,6 +1190,11 @@ public class HelloController {
     @FXML
     protected void onCPUButtonClick() {
         changeScene("cpu.fxml");
+    }
+
+    @FXML
+    protected void onCPU2ButtonClick() {
+        changeScene("cpu2.fxml");
     }
 
     @FXML
@@ -1043,6 +1210,11 @@ public class HelloController {
     @FXML
     protected void onPeripheralsButtonClick() {
         changeScene("peripherals.fxml");
+    }
+
+    @FXML
+    protected void onUSBButtonClick() {
+        changeScene("peripherals2.fxml");
     }
 
 }
