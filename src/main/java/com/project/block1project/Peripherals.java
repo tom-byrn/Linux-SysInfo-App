@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-public class Peripherals {
+public class Peripherals extends HelloController {
     public static void main(String[] args) throws IOException {
 
         //Creates ArrayLists

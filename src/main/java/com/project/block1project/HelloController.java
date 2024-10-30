@@ -169,12 +169,17 @@ public class HelloController {
     private Label labelBusesAmount;
     @FXML
     private Label labelDevicesPerBus;
-  //  @FXML
-  //  private Label labelDevicesPerBus;
     @FXML
     private Label labelFunctionsPerBus;
     @FXML
     private Label labelFunctionsPerDevice;
+    @FXML
+    private Label labelDevicesAmountUsb;
+    @FXML
+    private Label labelTotalFunctionsUsb;
+    @FXML
+    private Label labelBusesAmountUsb;
+
 
 
 
@@ -1153,12 +1158,12 @@ public class HelloController {
         //totalNoOfUsbBuses = int with the total number of usb buses
         //usbImportantInfoArray = array containing bus id, device id, vendor id, vendor name, product id, product name
 
-        ObservableList<String> usbListForGUI = FXCollections.observableArrayList(usbImportantInfoArrayList);
-        if(listUSB != null) listUSB.setItems(usbListForGUI);
 
+        labelBusesAmountUsb.setText("Number of USB Buses: " + totalNoOfUsbBuses);
+        labelDevicesPerBus.setText("Number of Devices Per Bus: " + devicesPerUsbBus);
+        labelDevicesPerBus.setText("Number of Devices Total: " + usbDeviceCount);
 
     }
-
     public void initializeCPU2Page() throws IOException {
         //Creates ArrayLists
         ArrayList<String> cpuVulnerablitiesArrayList = new ArrayList<>(); //ArrayList for cpu
