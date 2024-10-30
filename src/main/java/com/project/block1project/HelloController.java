@@ -846,8 +846,8 @@ public class HelloController {
                         productId = findRegexSubSystem.group(2); // Get the product ID
                     }
 
-                    pciImportantDeviceInfoArrayList.add("\t\tSubsystem Vendor ID: " + vendorId +
-                            ", Subsystem ProductID: " + productId);
+                    pciImportantDeviceInfoArrayList.add("\t\tSubsystem Vendor ID: " + vendorId);
+                    pciImportantDeviceInfoArrayList.add("\t\tSubsystem Product ID: " + productId);
 
                     // Adds Subsystem to arraylist
                     // pciImportantDeviceInfoArrayList.add("\t\tSubsystem: " + subsystemForCurrentDevice);
@@ -871,8 +871,9 @@ public class HelloController {
                         }
                     }
                     //adds buslocation, vendor id, product id, and vendor to arraylist
-                    pciImportantDeviceInfoArrayList.add("\n" + busInfo + "\tVendor ID: " + vendorId + ", Product ID: " + productId);
+                    pciImportantDeviceInfoArrayList.add("\n" + busInfo + "\tVendor ID: " + vendorId);
                     pciImportantDeviceInfoArrayList.add("\t\tVendor Name: " + (vendorName != null ? vendorName : "Vendor ID not found. Please check the ID."));
+
                     // Detects XX:XX:X using regex
                     if (lSPCIvvvString.matches("[0-9]{2}:[0-9]{2}\\.[0-9].*")) {
                         // Finds XX.X Device [XXXX]. Splits by using :
@@ -884,6 +885,7 @@ public class HelloController {
                         //Detects [AAAA] and replaces it with nothing where A is a letter or number
                         String deviceName = deviceNameSquareBrackets.replaceAll("\\[[0-9a-fA-F]{4}]", "");
                         // Store the deviceName into the Important Array list
+                        pciImportantDeviceInfoArrayList.add( "\t\tProduct ID: " + productId);
                         pciImportantDeviceInfoArrayList.add("\t\tDevice Name: " + deviceName);
                     }
                 }
