@@ -285,7 +285,6 @@ public class HelloController {
         String batterySize = "";
         String powerDraw = "";
         String timeRemaining = "";
-        String batteryState = "";
         String batteryCharge = "";
         String batteryVoltage = "";
         String temperature = "";
