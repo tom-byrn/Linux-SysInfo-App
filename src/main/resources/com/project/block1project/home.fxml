@@ -73,7 +73,7 @@
       <Label fx:id="labelBatteryVendor" layoutX="775.0" layoutY="368.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="Battery Vendor: N/A" />
       <Label fx:id="labelBatterySize" layoutX="775.0" layoutY="438.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="Battery Size: N/A" />
       <Label fx:id="labelPowerDraw" layoutX="775.0" layoutY="508.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="Power Draw: N/A" />
-      <Label fx:id="labelTimeRemaining" layoutX="775.0" layoutY="579.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="Time Remaining N/A" />
+      <Label fx:id="labelTimeRemaining" layoutX="775.0" layoutY="579.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="Battery Status: Charging" />
       <Label fx:id="labelBatteryCharge" layoutX="775.0" layoutY="719.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="Battery Charge: N/A" />
       <Label fx:id="labelBatteryVoltage" layoutX="775.0" layoutY="789.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="Battery Voltage: N/A" />
       <Label fx:id="labelTemperature" layoutX="775.0" layoutY="649.0" prefHeight="52.0" prefWidth="345.0" styleClass="homeLabels" text="Temperature: N/A" />

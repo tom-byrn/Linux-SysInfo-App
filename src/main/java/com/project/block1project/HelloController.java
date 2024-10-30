@@ -20,10 +20,7 @@ import oshi.util.FormatUtil;
 
 import java.awt.*;
 import java.awt.im.InputContext;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -185,7 +182,8 @@ public class HelloController {
     private ListView<String> listUSB;
     @FXML
     private Label labelNoDevicesUSB;
-
+    @FXML
+    private Label labelDiskFreeSize;
 
 
 
@@ -641,6 +639,8 @@ public class HelloController {
 
         long usedSwap = swapMemory.getSwapUsed();
 
+
+
         if (labelUsedSwapMemory != null) {
             labelUsedSwapMemory.setText("Used Swap Memory: " + usedSwap / (1024 * 1024)  + " MiB");
         }
@@ -648,15 +648,27 @@ public class HelloController {
         // Disk info
         List<HWDiskStore> disk = hal.getDiskStores();
         String model = "Unknown";
+        //initilize variable
         long diskSize = 0;
+        long freeSpace = 0;
+
+        // Get the list of all file system roots (/ directory)
+        File[] roots = File.listRoots();
+
+        // Iterate through each root
+        for (File root : roots) {
+            // Get total, free, and usable space
+            diskSize = root.getTotalSpace();
+            freeSpace = root.getFreeSpace();
+        }
 
         if (!disk.isEmpty()) {
             HWDiskStore diskStores = disk.getFirst();
-
             model = disk.getFirst().getModel();
-            diskSize = disk.getFirst().getSize();
         }
-
+        if(labelDiskFreeSize != null){
+            labelDiskFreeSize.setText("Disk Free: "+ freeSpace/1024/1024/1024 + " GiB");
+        }
 
         if (labelDiskModel != null) {
             labelDiskModel.setText("Disk Model: " + model );}
@@ -952,7 +964,7 @@ public class HelloController {
                             .append(" has ").append(entryDeviceFunctionCount.getValue()).append(" function\n");
                 } else {
                     numberOfFunctionsForEachDevice.append("Device ").append(entryDeviceFunctionCount.getKey())
-                            .append(" has ").append(entryDeviceFunctionCount.getValue()).append(" functionss\n");
+                            .append(" has ").append(entryDeviceFunctionCount.getValue()).append(" functions\n");
                 }
 
             }
