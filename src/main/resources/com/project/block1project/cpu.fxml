@@ -83,7 +83,7 @@
          </yAxis>
       </LineChart>
 
-
+      <ToggleButton fx:id="toggleCPUVulnerabilities" layoutX="42.0" layoutY="759.0" mnemonicParsing="false" onAction="#onCPU2ButtonClick" prefHeight="44.0" prefWidth="147.0" text="Vulnerabilities" />
 
    </children>
    <effect>

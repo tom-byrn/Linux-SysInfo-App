@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="972.0" prefWidth="1728.0" style="-fx-background-color: rgb(41, 41, 41);" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.project.block1project.HelloController">
+    <children>
+        <Rectangle id="side-bar" arcHeight="15.0" arcWidth="15.0" fill="#f2f2f2" height="713.0" layoutX="17.0" layoutY="128.0" stroke="#ffffff00" strokeType="INSIDE" styleClass="side-bar" width="200.0">
+            <effect>
+                <DropShadow />
+            </effect></Rectangle>
+        <Label id="header-label" alignment="CENTER" contentDisplay="CENTER" layoutX="-8.0" layoutY="-3.0" prefHeight="93.0" prefWidth="1737.0" styleClass="header-label" text="SysFlow" textAlignment="CENTER">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+        <VBox />
+        <Button layoutX="43.0" layoutY="147.0" mnemonicParsing="false" onAction="#onHomeButtonClick" prefHeight="108.0" prefWidth="147.0" text="Home">
+            <effect>
+                <DropShadow>
+                    <color>
+                        <Color opacity="0.5" />
+                    </color>
+                </DropShadow>
+            </effect></Button>
+        <Button layoutX="43.0" layoutY="265.0" mnemonicParsing="false" onAction="#onCPUButtonClick" prefHeight="108.0" prefWidth="147.0" text="CPU">
+            <effect>
+                <DropShadow>
+                    <color>
+                        <Color opacity="0.5" />
+                    </color>
+                </DropShadow>
+            </effect></Button>
+        <Button layoutX="43.0" layoutY="385.0" mnemonicParsing="false" onAction="#onMemoryButtonClick" prefHeight="108.0" prefWidth="147.0" text="Memory">
+            <effect>
+                <DropShadow>
+                    <color>
+                        <Color opacity="0.5" />
+                    </color>
+                </DropShadow>
+            </effect></Button>
+        <Button layoutX="43.0" layoutY="503.0" mnemonicParsing="false" onAction="#onOperatingSystemButtonClick" prefHeight="108.0" prefWidth="147.0" text="OS">
+            <effect>
+                <DropShadow>
+                    <color>
+                        <Color opacity="0.5" />
+                    </color>
+                </DropShadow>
+            </effect></Button>
+        <Button layoutX="43.0" layoutY="623.0" mnemonicParsing="false" onAction="#onPeripheralsButtonClick" prefHeight="108.0" prefWidth="147.0" text="Interconnects">
+            <effect>
+                <DropShadow>
+                    <color>
+                        <Color opacity="0.5" />
+                    </color>
+                </DropShadow>
+            </effect></Button>
+
+        <ListView fx:id="listUSB" layoutX="958.0" layoutY="239.0" prefHeight="619.0" prefWidth="712.0" styleClass="processList" />
+        <Label layoutX="958.0" layoutY="147.0" prefHeight="64.0" prefWidth="712.0" styleClass="homeHeaderLabels" text="USB List" textAlignment="CENTER" />
+
+        <Label layoutX="338.0" layoutY="147.0" prefHeight="64.0" prefWidth="560.0" styleClass="homeHeaderLabels" text="PCIe and Buses Information" textAlignment="CENTER" />
+        <Label fx:id="labelDevicesAmount" layoutX="338.0" layoutY="239.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="[Bus Amount]" />
+        <Label fx:id="labelTotalFunctions" layoutX="338.0" layoutY="304.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="[Function Amount]" />
+        <Label fx:id="labelBusesAmount" layoutX="338.0" layoutY="373.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="[Buses Amount]" />
+        <Label fx:id="labelDevicesPerBus" layoutX="338.0" layoutY="442.0" prefHeight="415.0" prefWidth="560.0" styleClass="homeLabels" text="[Devices Per Bus]" />
+        <ToggleButton fx:id="togglePCIe" layoutX="42.0" layoutY="759.0" mnemonicParsing="false" onAction="#onPeripheralsButtonClick" prefHeight="44.0" prefWidth="147.0" text="PCIe" />
+
+    </children>
+    <effect>
+        <Blend />
+    </effect>
+</AnchorPane>

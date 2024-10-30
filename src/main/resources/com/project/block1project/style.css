@@ -115,7 +115,7 @@
 .processList {
     -fx-background-color: #1e1e1e;
     -fx-border-color: #00ffcc;
-    -fx-border-width: 1px;
+    -fx-border-width: 2px;
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
     -fx-padding: 10px;
@@ -200,20 +200,33 @@
 
 
 
-//Label for Devices with smaller text
-.devicesPerBus {
-    -fx-font-size: 1.4em;
+//Toggle Buttons
+.toggle-button {
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: #00ffcc;
+    -fx-font-size: 1em;
     -fx-font-weight: bold;
-    -fx-text-fill: #ffffff;
     -fx-border-color: #00ffcc;
     -fx-border-radius: 10px;
-    -fx-background-color: #333333;
-    -fx-padding: 10px;
-    -fx-border-width: 2px;
     -fx-background-radius: 10px;
-    -fx-alignment: center-left;
+    -fx-border-width: 2px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+    -fx-alignment: center;
 }
 
-.devicesPerBus:hover {
-    -fx-border-color: #ff00ff;
+.toggle-button:selected {
+    -fx-background-color: #00ffcc;
+    -fx-text-fill: #1e1e1e;
 }
+
+.toggle-button:hover {
+    -fx-background-color: #00ffcc;
+    -fx-text-fill: #1e1e1e;
+}
+
+.toggle-button:pressed {
+    -fx-background-color: #abffee;
+    -fx-text-fill: #1e1e1e;
+}
+
