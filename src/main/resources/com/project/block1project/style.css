@@ -233,7 +233,7 @@
 
 //Small Text labels
 .smallText {
-    -fx-font-size: 1em;
+    -fx-font-size: 1.28em;
     -fx-font-weight: bold;
     -fx-text-fill: #ffffff;
     -fx-border-color: #00ffcc;
