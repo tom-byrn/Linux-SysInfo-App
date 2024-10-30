@@ -1,5 +1,7 @@
 package com.project.block1project;
 
+import oshi.jna.platform.unix.SolarisLibc;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,8 +13,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PCIe {
-    public void main(String[] args) throws IOException {
+public class PCIe extends HelloController{
+
+    public static void PCIeMethod () throws IOException {
 
         //Checks if OS is linux
         if ((System.getProperty("os.name").equals("Linux"))) {
@@ -32,7 +35,7 @@ public class PCIe {
             ArrayList<String> pciDevicesTotal = new ArrayList<>();
             List<String> vendorIds = new ArrayList<>(); // Creates an arraylist for vendor Ids
             List<String> vendorNames = new ArrayList<>(); // creates an array list for vendor names
-            List<String> pciImportantDeviceInfoArrayList = new ArrayList<>(); // List to store results for a bunch of stats
+            ArrayList<String> pciImportantDeviceInfoArrayList = new ArrayList<>();  // List to store results for a bunch of stats
 
 
             // Execute the lspci command
@@ -287,6 +290,11 @@ public class PCIe {
             System.out.println(functionsPerBus);
             System.out.println(functionsPerDevice);
 
+            //Adding pciImportantDeviceInfoArray to an Array List to be used in GUI
+            //List<String> pciInfoArrayListForGUI = new ArrayList<>();
+            //pciInfoArrayListForGUI.addAll(pciImportantDeviceInfoArrayList);
+            //System.out.println("ARRAY LIST FOR GUI: " + pciInfoArrayListForGUI);
+
             //noOfBusesTotal = int of the total number Buses
             //functionCountTotal = int with the total number of functions
             //lSPCIOutputArray = Array of the output of lspci -vvv -nn not really nessesary because of other outputs
@@ -295,12 +303,14 @@ public class PCIe {
             //functionPerDevice = String of how many pci functions each device has
             //noOfDevicesTotal = int of the total number of pcie devices connected
             //noDevicesPerBus = String for the number of devices connected to each bus
-            //pciImportantDeviceInfoArray = Array Containing Bus location, vendor Id, Product Id, Vendor Name, kernal driver, device name, subsystem informatnoin
-            //pciImportantDeviceInfoArrayList  = ArrayList Containing pci pciImportantDeviceInfoArray
+            //pciImportantDeviceInfoArray = String Array Containing Bus location, vendor Id, Product Id, Vendor Name, kernal driver, device name, subsystem informatnoin
+            //pciImportantDeviceInfoArrayList = List for GUI
+
+
         }
+
     }
+
 }
-
-
 
 

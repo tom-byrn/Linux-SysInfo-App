@@ -231,7 +231,7 @@
 }
 
 
-//Small text label
+//Small Text labels
 .smallText {
     -fx-font-size: 1em;
     -fx-font-weight: bold;
@@ -248,3 +248,4 @@
 .smallText:hover {
     -fx-border-color: #ff00ff;
 }
+

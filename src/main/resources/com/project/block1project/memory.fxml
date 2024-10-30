@@ -68,8 +68,6 @@
       <Label fx:id="labelUsedSwapMemory" layoutX="338.0" layoutY="506.0" prefHeight="52.0" prefWidth="443.0" styleClass="homeLabels" text="[Total Swap Memory]" />
       <Label fx:id="labelDiskModel" layoutX="338.0" layoutY="571.0" prefHeight="52.0" prefWidth="443.0" styleClass="homeLabels" text="[Total Swap Memory]" />
       <Label fx:id="labelDiskSize" layoutX="338.0" layoutY="637.0" prefHeight="52.0" prefWidth="443.0" styleClass="homeLabels" text="[Total Swap Memory]" />
-      <Label fx:id="labelDiskfree" layoutX="338.0" layoutY="703.0" prefHeight="52.0" prefWidth="443.0" styleClass="homeLabels" text="[Total Swap Memory]" />
-
 
       <PieChart fx:id="memoryPieChart" layoutX="802.0" layoutY="238.0" prefHeight="535.0" prefWidth="773.0" styleClass="memoryChart" stylesheets="@chartStyle.css" title="Memory Usage" />
    </children>

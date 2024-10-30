@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CPU {
 
-    // Method to start monitoring CPU usage
     public static void runCpuUsageChart() {
 
         SystemInfo si = new SystemInfo();
@@ -26,7 +25,7 @@ public class CPU {
 
             while (true) {
                 try {
-                    Thread.sleep(1000); // Update every second
+                    Thread.sleep(1000); // Update every second (1000 milliseconds)
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt(); // Restore the interrupted status
                     return;
@@ -43,7 +42,7 @@ public class CPU {
                         data.setXValue(data.getXValue().intValue() - 1);  // Shift left
                     }
 
-                    // Add the new data point at the end (x=60)
+                    // Add the new data point at the end of the minute window (x=60)
                     HelloController.series.getData().add(new XYChart.Data<>(60, cpuUsage));
 
                     // Remove the oldest data point at x=0

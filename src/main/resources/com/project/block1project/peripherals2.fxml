@@ -63,10 +63,9 @@
         <ListView fx:id="listUSB" layoutX="958.0" layoutY="239.0" prefHeight="619.0" prefWidth="712.0" styleClass="processList" />
         <Label layoutX="958.0" layoutY="147.0" prefHeight="64.0" prefWidth="712.0" styleClass="homeHeaderLabels" text="USB List" textAlignment="CENTER" />
 
-        <Label layoutX="338.0" layoutY="147.0" prefHeight="64.0" prefWidth="560.0" styleClass="homeHeaderLabels" text="PCIe and Buses Information" textAlignment="CENTER" />
-        <Label fx:id="labelDevicesAmountUsb" layoutX="338.0" layoutY="239.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="[Bus Amount]" />
-        <Label fx:id="labelBusesAmountUsb" layoutX="338.0" layoutY="373.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="[Buses Amount]" />
-        <Label fx:id="labelDevicesPerBusUsb" layoutX="338.0" layoutY="442.0" prefHeight="415.0" prefWidth="560.0" styleClass="homeLabels" text="[Devices Per Bus]" />
+        <Label layoutX="338.0" layoutY="147.0" prefHeight="64.0" prefWidth="560.0" styleClass="homeHeaderLabels" text="USB Information" textAlignment="CENTER" />
+        <Label fx:id="labelBusesAmountUsb" layoutX="338.0" layoutY="239.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="[Bus Amount]" />
+        <Label fx:id="labelDevicesPerBusUsb" layoutX="338.0" layoutY="310.0" prefHeight="545.0" prefWidth="560.0" styleClass="homeLabels" text="[Devices Per Bus]" />
         <ToggleButton fx:id="togglePCIe" layoutX="42.0" layoutY="759.0" mnemonicParsing="false" onAction="#onPeripheralsButtonClick" prefHeight="44.0" prefWidth="147.0" text="PCIe" />
 
     </children>

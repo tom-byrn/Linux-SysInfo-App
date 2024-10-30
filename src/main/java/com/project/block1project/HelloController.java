@@ -20,7 +20,10 @@ import oshi.util.FormatUtil;
 
 import java.awt.*;
 import java.awt.im.InputContext;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -135,9 +138,6 @@ public class HelloController {
     private Label labelDiskModel;
     @FXML
     private Label labelDiskSize;
-    @FXML
-    private Label labelDiskfree;
-
 
 
     //FXML components for the Operating System Page
@@ -178,9 +178,12 @@ public class HelloController {
     @FXML
     private Label labelTotalFunctionsUsb;
     @FXML
+    private Label labelDevicesPerBusUsb;
+    @FXML
     private Label labelBusesAmountUsb;
     @FXML
-    private Labe listUSB;
+    private ListView<String> listUSB;
+
 
 
 
@@ -294,7 +297,7 @@ public class HelloController {
         if (labelOSBit != null) labelOSBit.setText("Bits: " + osBit +  "-bit");
         if (labelOSVersion != null) labelOSVersion.setText("Version: " + osVersion);
         if (labelOSArchitecture != null) labelOSArchitecture.setText("Architecture: " + osArchitecture);
-        if (labelEndian != null) labelEndian.setText("Endian: " + capitalizeFirstWord(endian) + " Endian");
+        if (labelEndian != null) labelEndian.setText("Endian: " + endian + " endian");
         if (labelCountry != null) labelCountry.setText("Country: " + country);
         if (labelKeyboard != null) labelKeyboard.setText("Keyboard: " + keyboard.getLocale());
         if (labelLanguageAbbreviation != null) labelLanguageAbbreviation.setText("Language: " + language);
@@ -421,7 +424,7 @@ public class HelloController {
         if (labelInterfaceName != null) {
             labelInterfaceName.setText("Interface: " + interfaceName );}
         if (labelMacAddress != null) {
-            labelMacAddress.setText("mac Address: " + macAddress );}
+            labelMacAddress.setText("MAC Address: " + macAddress );}
     }
 
     //Initialize the CPU page
@@ -599,7 +602,7 @@ public class HelloController {
         long availableMemory = memory.getAvailable();
 
         if (labelTotalMemory != null) {
-            labelTotalMemory.setText("Total Memory: " + totalMemory / (1024 * 1024) + " MiB");
+            labelTotalMemory.setText("Total Memory: " + totalMemory / (1000 * 1000) + " MB");
         }
 
         // Get the list of physical memory modules
@@ -608,19 +611,19 @@ public class HelloController {
             // Get the speed of the first module (All modules should be the same speed)
             long memorySpeed = physicalMemoryList.getFirst().getClockSpeed();
             if (labelMemorySpeed != null) {
-                labelMemorySpeed.setText("Memory Speed: " + memorySpeed + " Hz");
+                labelMemorySpeed.setText("Memory Speed: " + memorySpeed + " MHz");
             }
         } else {
             if (labelMemorySpeed != null) {
-                labelMemorySpeed.setText("Memory Speed: Needs sudo to run");
+                labelMemorySpeed.setText("Memory Speed: Unknown");
             }
         }
 
         if (labelAvailableMemory != null) {
-            labelAvailableMemory.setText("Available Memory: " + availableMemory / (1024 * 1024) + " MiB");
+            labelAvailableMemory.setText("Available Memory: " + availableMemory / (1000 * 1000) + " MB");
         }
         if (labelMemoryUsed != null) {
-            labelMemoryUsed.setText("Memory Used: " + (totalMemory - availableMemory) / (1024 * 1024) + " MiB");
+            labelMemoryUsed.setText("Memory Used: " + (totalMemory - availableMemory) / (1000 * 1000) + " MB");
 
             // make pie chart data
             PieChart.Data usedData = new PieChart.Data("Used", (totalMemory - availableMemory));
@@ -637,28 +640,19 @@ public class HelloController {
         long usedSwap = swapMemory.getSwapUsed();
 
         if (labelUsedSwapMemory != null) {
-            labelUsedSwapMemory.setText("Used Swap Memory: " + usedSwap / (1024 * 1024)  + " MiB");
+            labelUsedSwapMemory.setText("Used Swap Memory: " + usedSwap / (1000 * 1000)  + " MB");
         }
 
         // Disk info
         List<HWDiskStore> disk = hal.getDiskStores();
         String model = "Unknown";
+        long diskSize = 0;
 
         if (!disk.isEmpty()) {
+            HWDiskStore diskStores = disk.getFirst();
+
             model = disk.getFirst().getModel();
-        }
-
-        long totalSpace = 0;
-        long freeSpace = 0;
-
-        // Get the list of all file system roots (/ directory)
-        File[] roots = File.listRoots();
-
-        // Iterate through each root
-        for (File root : roots) {
-            // Get total, free, and usable space
-            totalSpace = root.getTotalSpace();
-            freeSpace = root.getFreeSpace();
+            diskSize = disk.getFirst().getSize();
         }
 
 
@@ -666,10 +660,7 @@ public class HelloController {
             labelDiskModel.setText("Disk Model: " + model );}
 
         if (labelDiskSize != null) {
-            labelDiskSize.setText("Disk Size: " + totalSpace / (1024 * 1024 * 1024) +" GiB");}
-        if(labelDiskfree !=null){
-            labelDiskfree.setText(("Disk free: " + freeSpace/1024/1024/1024 + " GiB"));
-        }
+            labelDiskSize.setText("Disk Size: " + diskSize / (1000 * 1000 * 1000) +" GB");}
     }
 
     public void initializeOperatingSystemPage(){
@@ -681,7 +672,7 @@ public class HelloController {
 
         labelOSName.setText("Operating System: " + os.getFamily());
 
-        labelOSVer.setText("Version: " + os.getVersionInfo().toString());
+        labelOSVer.setText("Version" + os.getVersionInfo().toString());
 
         labelArchitecture.setText("Architecture: " + os.getBitness() + "-bit");
 
@@ -1022,24 +1013,25 @@ public class HelloController {
 
             // Set the ObservableList as the items for the ListView
             System.out.println("PCI LIST FOR GUI" + pciListForGUI);
-            listPcie.setItems(pciListForGUI);
+            if(listPcie != null)listPcie.setItems(pciListForGUI);
 
-            labelDevicesAmount.setText("Number of PCI Devices: " + noOfDevicesTotal);
+            if(labelDevicesAmount != null)labelDevicesAmount.setText("Number of PCI Devices: " + noOfDevicesTotal);
 
-            labelTotalFunctions.setText("Total Number of Functions across PCI Devices: " + functionCountTotal);
+            if(labelTotalFunctions != null)labelTotalFunctions.setText("Total Number of Functions across PCI Devices: " + functionCountTotal);
 
-            labelBusesAmount.setText("Number of Buses: " + noOfBusesTotal);
+            if(labelBusesAmount != null)labelBusesAmount.setText("Number of Buses: " + noOfBusesTotal);
 
-            labelDevicesPerBus.setText("Number of Devices Per Bus: " + noDevicesPerBus);
+            if(labelDevicesPerBus != null)labelDevicesPerBus.setText("Number of Devices Per Bus:\n\n" + noDevicesPerBus);
 
-            labelFunctionsPerBus.setText("No. Functions Per Bus: " + functionsPerBus);
+            if(labelFunctionsPerBus != null)labelFunctionsPerBus.setText("No. Functions Per Bus:\n\n" + functionsPerBus);
 
-            labelFunctionsPerDevice.setText("No. Functions Per Device" + functionsPerDevice);
+            if(labelFunctionsPerDevice != null)labelFunctionsPerDevice.setText("No. Functions Per Device:\n\n" + functionsPerDevice);
 
-            labelDevicesPerBus.setText("No. Devices Per Bus: " + devicesPerBus);
+            if(labelDevicesPerBus != null)labelDevicesPerBus.setText("No. Devices Per Bus: \n\n" + devicesPerBus);
 
 
         }
+
 
 
     }
@@ -1163,12 +1155,21 @@ public class HelloController {
         //usbImportantInfoArray = array containing bus id, device id, vendor id, vendor name, product id, product name
 
 
-        listPcie.setItems((ObservableList<String>) usbImportantInfoArrayList);
-        labelBusesAmountUsb.setText("Number of USB Buses: " + totalNoOfUsbBuses);
-        labelDevicesPerBus.setText("Number of Devices Per Bus: " + devicesPerUsbBus);
-        labelDevicesPerBus.setText("Number of Devices Total: " + usbDeviceCount);
+        ObservableList<String> usbInfoArrayListForGui = FXCollections.observableArrayList(usbImportantInfoArrayList);
+        if (listUSB != null) {
+            listUSB.setItems(usbInfoArrayListForGui);
+        }
+        if (labelBusesAmountUsb != null) {
+            labelBusesAmountUsb.setText("Number of USB Buses: " + totalNoOfUsbBuses);
+            System.out.println("TOTAL NO BUSES: " + totalNoOfUsbBuses);
+        }
+        if (labelDevicesPerBusUsb != null) {
+            labelDevicesPerBusUsb.setText("Number of Devices Per Bus:\n\n" + devicesPerUsbBus);
+        }
+
 
     }
+
     public void initializeCPU2Page() throws IOException {
         //Creates ArrayLists
         ArrayList<String> cpuVulnerablitiesArrayList = new ArrayList<>(); //ArrayList for cpu
@@ -1212,17 +1213,6 @@ public class HelloController {
         //Setting up GUI
         ObservableList<String> cpuVulnerabilitiesForGUI = FXCollections.observableArrayList(cpuVulnerablitiesArrayList);
         if(listCPUVulnerabilities != null)listCPUVulnerabilities.setItems(cpuVulnerabilitiesForGUI);
-    }
-    public static String capitalizeFirstWord(String str) {
-        if (str == null || str.isEmpty()) {
-            return str; // Return the same string if it's null or empty
-        }
-        // Split the string into words
-        String[] words = str.split(" ", 2); // Split into at most 2 parts
-        // Capitalize the first word
-        words[0] = words[0].substring(0, 1).toUpperCase() + words[0].substring(1);
-        // Reconstruct the string
-        return String.join(" ", words);
     }
 
     @FXML
