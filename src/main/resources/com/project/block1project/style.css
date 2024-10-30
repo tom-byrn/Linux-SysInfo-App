@@ -197,3 +197,23 @@
     -fx-text-fill: white;
     -fx-font-weight: bold;
 }
+
+
+
+//Label for Devices with smaller text
+.devicesPerBus {
+    -fx-font-size: 1.31em;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: #00ffcc;
+    -fx-border-radius: 10px;
+    -fx-background-color: #333333;
+    -fx-padding: 10px;
+    -fx-border-width: 2px;
+    -fx-background-radius: 10px;
+    -fx-alignment: center-left;
+}
+
+.devicesPerBus:hover {
+    -fx-border-color: #ff00ff;
+}

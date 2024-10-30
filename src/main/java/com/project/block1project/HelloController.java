@@ -706,6 +706,8 @@ public class HelloController {
 
     public void initializePeripheralsPage() throws IOException {
 
+
+//Checks if OS is linux
         if ((System.getProperty("os.name").equals("Linux"))) {
 
             // Map to store the count of functions for each PCI bus and device.
@@ -723,7 +725,7 @@ public class HelloController {
             ArrayList<String> pciDevicesTotal = new ArrayList<>();
             List<String> vendorIds = new ArrayList<>(); // Creates an arraylist for vendor Ids
             List<String> vendorNames = new ArrayList<>(); // creates an array list for vendor names
-            ArrayList<String> pciImportantDeviceInfoArrayList = new ArrayList<>();  // List to store results for a bunch of stats
+            List<String> pciImportantDeviceInfoArrayList = new ArrayList<>(); // List to store results for a bunch of stats
 
 
             // Execute the lspci command
@@ -760,7 +762,6 @@ public class HelloController {
             String productId = "";
             String vendorName = "";
             String currentBusId = "";
-
             String lSPCIvvvString = "";
 
             // Regex to find PCI bus info, vendor and product IDs
@@ -967,16 +968,16 @@ public class HelloController {
                     System.out.println(arrayEntry);
             }*/
 
-            //for (String result : pciImportantDeviceInfoArray) {
-            //    System.out.println(result);
-            //}
+            for (String result : pciImportantDeviceInfoArray) {
+                System.out.println(result);
+            }
 
-
-
-            //Adding pciImportantDeviceInfoArray to an Array List to be used in GUI
-            //List<String> pciInfoArrayListForGUI = new ArrayList<>();
-            //pciInfoArrayListForGUI.addAll(pciImportantDeviceInfoArrayList);
-            //System.out.println("ARRAY LIST FOR GUI: " + pciInfoArrayListForGUI);
+            System.out.println("\nThere are " + functionCountTotal + " PCIe Functions\n");
+            System.out.println("Number of PCIe buses: " + noOfBusesTotal + "\n");
+            System.out.println("Number of unique PCI devices: " + noOfDevicesTotal + "\n");
+            System.out.println(noDevicesPerBus);
+            System.out.println(functionsPerBus);
+            System.out.println(functionsPerDevice);
 
             //noOfBusesTotal = int of the total number Buses
             //functionCountTotal = int with the total number of functions
@@ -986,8 +987,8 @@ public class HelloController {
             //functionPerDevice = String of how many pci functions each device has
             //noOfDevicesTotal = int of the total number of pcie devices connected
             //noDevicesPerBus = String for the number of devices connected to each bus
-            //pciImportantDeviceInfoArray = String Array Containing Bus location, vendor Id, Product Id, Vendor Name, kernal driver, device name, subsystem informatnoin
-            //pciImportantDeviceInfoArrayList = List for GUI
+            //pciImportantDeviceInfoArray = Array Containing Bus location, vendor Id, Product Id, Vendor Name, kernal driver, device name, subsystem informatnoin
+            //pciImportantDeviceInfoArrayList  = ArrayList Containing pci pciImportantDeviceInfoArray
 
             // Convert ArrayList to ObservableList
             ObservableList<String> pciListForGUI = FXCollections.observableArrayList(pciImportantDeviceInfoArrayList);
@@ -996,13 +997,13 @@ public class HelloController {
             System.out.println("PCI LIST FOR GUI" + pciListForGUI);
             listPcie.setItems(pciListForGUI);
 
-            labelDevicesAmount.setText("Number of PCI Devices: " + noOfDevicesTotal);
+            labelDevicesAmount.setText("No. PCI Devices: " + noOfDevicesTotal);
 
-            labelTotalFunctions.setText("Total Number of Functions across PCI Devices: " + functionCountTotal);
+            labelTotalFunctions.setText("Total Number of Functions: " + functionCountTotal);
 
-            labelBusesAmount.setText("Number of Buses: " + noOfBusesTotal);
+            labelBusesAmount.setText("No. of Buses: " + noOfBusesTotal);
 
-            labelDevicesPerBus.setText("Number of Devices Per Bus: " + noDevicesPerBus);
+            labelDevicesPerBus.setText("No. Devices Per Bus: \n" + noDevicesPerBus);
 
 
         }
