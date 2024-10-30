@@ -1219,7 +1219,7 @@ public class HelloController {
                     String cpuVulnerability = cpuVulnerabilities.split(":")[0];
                     cpuVulnerablitiesArrayList.add("WARNING, your Cpu is vulnerable to " + cpuVulnerability.toUpperCase() + ", WARNING");
                 }else{
-                    cpuVulnerablitiesArrayList.add(cpuVulnerabilities);
+                    cpuVulnerablitiesArrayList.add(removeSpaces(cpuVulnerabilities));
                 }
             }
 
@@ -1244,6 +1244,16 @@ public class HelloController {
         words[0] = words[0].substring(0, 1).toUpperCase() + words[0].substring(1);
         // Reconstruct the string
         return String.join(" ", words);
+    }
+
+    //remove random extra spaces
+    public static String removeSpaces(String input) {
+        //Find spaces between a colon and a letter
+        Pattern regexRandomSpacesPattern = Pattern.compile(":(\\s+)([A-Za-z])");
+        Matcher regexRamdomSpacePattern = regexRandomSpacesPattern.matcher(input);
+
+        // Replace the matched pattern with the colon and the letter without the spaces
+        return regexRamdomSpacePattern.replaceAll(": $2");
     }
 
     @FXML
