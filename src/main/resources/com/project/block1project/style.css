@@ -202,7 +202,7 @@
 
 //Label for Devices with smaller text
 .devicesPerBus {
-    -fx-font-size: 1.31em;
+    -fx-font-size: 1.4em;
     -fx-font-weight: bold;
     -fx-text-fill: #ffffff;
     -fx-border-color: #00ffcc;

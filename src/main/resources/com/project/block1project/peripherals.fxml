@@ -68,7 +68,9 @@
       <Label fx:id="labelTotalFunctions" layoutX="338.0" layoutY="304.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="[Function Amount]" />
       <Label fx:id="labelBusesAmount" layoutX="338.0" layoutY="373.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="[Buses Amount]" />
       <Label fx:id="labelDevicesPerBus" layoutX="338.0" layoutY="442.0" prefHeight="250.0" prefWidth="300.0" styleClass="devicesPerBus" text="[Devices Per Bus]" />
-      <Label fx:id="labelFunctionsPerBus" layoutX="638.0" layoutY="442.0" prefHeight="250.0" prefWidth="300.0" styleClass="devicesPerBus" text="[Devices Per Bus]" />
+      <Label fx:id="labelFunctionsPerDevice" layoutX="638.0" layoutY="442.0" prefHeight="500.0" prefWidth="300.0" styleClass="devicesPerBus" text="[Devices Per Bus]" />
+      <Label fx:id="labelFunctionsPerBus" layoutX="338.0" layoutY="700.0" prefHeight="250.0" prefWidth="300.0" styleClass="devicesPerBus" text="[Devices Per Bus]" />
+      <Label fx:id="labelBusesAmoufnt" layoutX="338.0" layoutY="373.0" prefHeight="52.0" prefWidth="560.0" styleClass="homeLabels" text="[Buses Amount]" />
 
    </children>
    <effect>

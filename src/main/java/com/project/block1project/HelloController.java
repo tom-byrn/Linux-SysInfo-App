@@ -168,6 +168,8 @@ public class HelloController {
     @FXML
     private Label labelDevicesPerBus;
     @FXML
+    private Label labelFunctionsPerDevice;
+    @FXML
     private Label labelFunctionsPerBus;
 
 
@@ -1007,7 +1009,9 @@ public class HelloController {
 
             labelDevicesPerBus.setText("No. Devices Per Bus: \n" + noDevicesPerBus);
 
-            labelFunctionsPerBus.setText("No. Funtions Per Bus: \n" + functionsPerBus);
+            labelFunctionsPerBus.setText("No. Functions Per Bus: \n" + functionsPerBus);
+
+            labelFunctionsPerDevice.setText("No. Functions per Device: \n" + functionsPerDevice);
 
 
         }
