@@ -283,7 +283,7 @@ public class HelloController {
         if (labelOSBit != null) labelOSBit.setText("Bits: " + osBit +  "-bit");
         if (labelOSVersion != null) labelOSVersion.setText("Version: " + osVersion);
         if (labelOSArchitecture != null) labelOSArchitecture.setText("Architecture: " + osArchitecture);
-        if (labelEndian != null) labelEndian.setText("Endian: " + endian + " endian");
+        if (labelEndian != null) labelEndian.setText("Endian: " + capitalizeFirstWord(endian) + " Endian");
         if (labelCountry != null) labelCountry.setText("Country: " + country);
         if (labelKeyboard != null) labelKeyboard.setText("Keyboard: " + keyboard.getLocale());
         if (labelLanguageAbbreviation != null) labelLanguageAbbreviation.setText("Language: " + language);
@@ -601,7 +601,7 @@ public class HelloController {
             }
         } else {
             if (labelMemorySpeed != null) {
-                labelMemorySpeed.setText("Memory Speed: Unknown");
+                labelMemorySpeed.setText("Memory Speed: Needs sudo to run");
             }
         }
 
@@ -1180,6 +1180,17 @@ public class HelloController {
         //Setting up GUI
         ObservableList<String> cpuVulnerabilitiesForGUI = FXCollections.observableArrayList(cpuVulnerablitiesArrayList);
         if(listCPUVulnerabilities != null)listCPUVulnerabilities.setItems(cpuVulnerabilitiesForGUI);
+    }
+    public static String capitalizeFirstWord(String str) {
+        if (str == null || str.isEmpty()) {
+            return str; // Return the same string if it's null or empty
+        }
+        // Split the string into words
+        String[] words = str.split(" ", 2); // Split into at most 2 parts
+        // Capitalize the first word
+        words[0] = words[0].substring(0, 1).toUpperCase() + words[0].substring(1);
+        // Reconstruct the string
+        return String.join(" ", words);
     }
 
     @FXML
